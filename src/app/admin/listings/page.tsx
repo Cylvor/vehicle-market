@@ -1,35 +1,12 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Eye, MoreHorizontal, Check, X, Trash2 } from "lucide-react";
+import { getAdminVehicles, updateVehicleStatus } from "@/actions/vehicle";
+import { revalidatePath } from "next/cache";
 
-const LISTINGS = [
-    {
-        id: "1",
-        title: "2023 Tesla Model 3 Long Range",
-        seller: "John Smith",
-        price: "$58,900",
-        date: "Today, 10:23 AM",
-        status: "Pending",
-    },
-    {
-        id: "2",
-        title: "2018 Ford Ranger Wildtrak",
-        seller: "Dealership 1",
-        price: "$45,000",
-        date: "Yesterday",
-        status: "Active",
-    },
-    {
-        id: "3",
-        title: "2015 Toyota Corolla",
-        seller: "Sarah Jones",
-        price: "$15,500",
-        date: "Yesterday",
-        status: "Rejected",
-    },
-];
+export default async function AdminListingsPage() {
+    const listings = await getAdminVehicles();
 
-export default function AdminListingsPage() {
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
@@ -44,51 +21,54 @@ export default function AdminListingsPage() {
                     <thead className="bg-muted/50 text-muted-foreground font-medium border-b">
                         <tr>
                             <th className="px-6 py-4">Vehicle</th>
-                            <th className="px-6 py-4">Seller</th>
+                            <th className="px-6 py-4">Seller ID</th>
                             <th className="px-6 py-4">Price</th>
                             <th className="px-6 py-4">Status</th>
                             <th className="px-6 py-4 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y">
-                        {LISTINGS.map((listing) => (
+                        {listings.map((listing) => (
                             <tr key={listing.id} className="hover:bg-muted/50 transition-colors">
                                 <td className="px-6 py-4">
                                     <div className="flex flex-col">
-                                        <span className="font-medium">{listing.title}</span>
-                                        <span className="text-xs text-muted-foreground">{listing.date}</span>
+                                        <span className="font-medium">{listing.year} {listing.make} {listing.model}</span>
+                                        <span className="text-xs text-muted-foreground">{listing.createdAt.toLocaleDateString()}</span>
                                     </div>
                                 </td>
-                                <td className="px-6 py-4">{listing.seller}</td>
-                                <td className="px-6 py-4">{listing.price}</td>
+                                <td className="px-6 py-4 font-mono text-xs">{listing.userId.slice(0, 10)}...</td>
+                                <td className="px-6 py-4">${listing.price.toLocaleString()}</td>
                                 <td className="px-6 py-4">
                                     <Badge variant={
-                                        listing.status === 'Active' ? 'default' :
-                                            listing.status === 'Rejected' ? 'destructive' : 'secondary'
+                                        listing.status === 'active' ? 'default' :
+                                            listing.status === 'rejected' ? 'destructive' : 'secondary'
                                     }>
                                         {listing.status}
                                     </Badge>
                                 </td>
                                 <td className="px-6 py-4 text-right">
                                     <div className="flex items-center justify-end gap-2">
-                                        {listing.status === 'Pending' && (
+                                        {listing.status === 'pending' && (
                                             <>
-                                                <Button size="icon" variant="ghost" className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50" title="Approve">
-                                                    <Check className="h-4 w-4" />
-                                                </Button>
-                                                <Button size="icon" variant="ghost" className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50" title="Reject">
-                                                    <X className="h-4 w-4" />
-                                                </Button>
+                                                <form action={async () => {
+                                                    "use server";
+                                                    await updateVehicleStatus(listing.id, "active");
+                                                }}>
+                                                    <Button size="icon" variant="ghost" className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50" title="Approve">
+                                                        <Check className="h-4 w-4" />
+                                                    </Button>
+                                                </form>
+                                                <form action={async () => {
+                                                    "use server";
+                                                    await updateVehicleStatus(listing.id, "rejected");
+                                                }}>
+                                                    <Button size="icon" variant="ghost" className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50" title="Reject">
+                                                        <X className="h-4 w-4" />
+                                                    </Button>
+                                                </form>
                                             </>
                                         )}
-                                        <Button size="icon" variant="ghost" className="h-8 w-8" title="View">
-                                            <Eye className="h-4 w-4" />
-                                        </Button>
-                                        {listing.status !== 'Pending' && (
-                                            <Button size="icon" variant="ghost" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10" title="Delete">
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
-                                        )}
+                                        {/* View button would go here */}
                                     </div>
                                 </td>
                             </tr>
