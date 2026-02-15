@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Car, Menu, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 export function Header() {
     return (
@@ -41,11 +42,21 @@ export function Header() {
                     </button>
 
                     <div className="hidden md:flex items-center gap-3">
-                        <Link href="/auth/signin">
-                            <Button variant="ghost" size="sm" className="font-semibold text-muted-foreground hover:text-primary hover:bg-primary/5">
-                                Sign In
-                            </Button>
-                        </Link>
+                        <SignedOut>
+                            <SignInButton mode="modal">
+                                <Button variant="ghost" size="sm" className="font-semibold text-muted-foreground hover:text-primary hover:bg-primary/5">
+                                    Sign In
+                                </Button>
+                            </SignInButton>
+                        </SignedOut>
+                        <SignedIn>
+                            <Link href="/dashboard" className="hidden md:flex">
+                                <Button variant="ghost" size="sm" className="font-semibold text-muted-foreground hover:text-primary hover:bg-primary/5">
+                                    Dashboard
+                                </Button>
+                            </Link>
+                            <UserButton />
+                        </SignedIn>
                         <Link href="/sell/create">
                             <Button size="sm" className="font-semibold shadow-premium hover:shadow-lg transition-all">
                                 List for Free
