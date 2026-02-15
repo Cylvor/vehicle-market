@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Car, Truck, Bike, Bus } from "lucide-react"; // Using available icons, might need custom SVGs for specific vehicle types
+import { Car, Truck, Bike, Bus } from "lucide-react";
 
 const VEHICLE_TYPES = [
     { label: "SUVs", icon: Car, count: "14,250" },
@@ -14,19 +14,27 @@ const VEHICLE_TYPES = [
 
 export function BrowseByType() {
     return (
-        <section className="bg-muted/30 py-16">
-            <div className="container mx-auto px-4">
-                <h2 className="text-2xl font-bold tracking-tight mb-8">Browse by Type</h2>
+        <section className="py-20 lg:py-24 bg-gradient-to-b from-background to-muted/30">
+            <div className="container-width">
+                <div className="flex items-center justify-between mb-10">
+                    <h2 className="text-3xl font-bold tracking-tight text-foreground">Browse by Type</h2>
+                    <Link href="/search" className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors">
+                        View all types &rarr;
+                    </Link>
+                </div>
+
                 <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
                     {VEHICLE_TYPES.map((type) => (
                         <Link
                             key={type.label}
                             href={`/search?type=${type.label.toLowerCase()}`}
-                            className="flex flex-col items-center justify-center p-4 bg-background rounded-lg hover:shadow-md transition-shadow border"
+                            className="group flex flex-col items-center justify-center p-6 bg-card hover:bg-card/80 border border-border/40 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1"
                         >
-                            <type.icon className="h-8 w-8 text-primary mb-3" />
-                            <span className="font-medium text-sm text-foreground">{type.label}</span>
-                            <span className="text-xs text-muted-foreground mt-1">{type.count}</span>
+                            <div className="p-3 rounded-full bg-primary/5 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300 mb-3">
+                                <type.icon className="h-6 w-6" />
+                            </div>
+                            <span className="font-semibold text-sm text-foreground">{type.label}</span>
+                            <span className="text-xs text-muted-foreground mt-1 group-hover:text-muted-foreground/80">{type.count}</span>
                         </Link>
                     ))}
                 </div>
