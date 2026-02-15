@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { SignupForm } from "@/components/modules/auth/signup-form";
 import Link from "next/link";
 import { Github, Mail } from "lucide-react";
 
@@ -16,40 +15,7 @@ export default function SignUpPage() {
                 </p>
             </div>
             <div className="grid gap-6">
-                <form>
-                    <div className="grid gap-4">
-                        <div className="grid gap-2">
-                            <Label htmlFor="name">Full Name</Label>
-                            <Input
-                                id="name"
-                                placeholder="John Doe"
-                                type="text"
-                                autoCapitalize="words"
-                                autoCorrect="off"
-                            />
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
-                                id="email"
-                                placeholder="name@example.com"
-                                type="email"
-                                autoCapitalize="none"
-                                autoComplete="email"
-                                autoCorrect="off"
-                            />
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="password">Password</Label>
-                            <Input id="password" type="password" />
-                        </div>
-                        <Link href="/dashboard">
-                            <Button className="w-full">
-                                Create Account
-                            </Button>
-                        </Link>
-                    </div>
-                </form>
+                <SignupForm />
                 <div className="relative">
                     <div className="absolute inset-0 flex items-center">
                         <span className="w-full border-t" />
