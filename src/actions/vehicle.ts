@@ -28,12 +28,46 @@ export async function createVehicle(input: z.infer<typeof vehicleSchema>) {
     });
 
     revalidatePath("/admin/listings");
+    revalidatePath("/dashboard/listings");
+}
+
+export async function getUserVehicles() {
+    const { userId } = await auth();
+
+    if (!userId) {
+        throw new Error("Unauthorized");
+    }
+
+    const data = await db
+        .select()
+        .from(vehicles)
+        .where(eq(vehicles.userId, userId))
+        .orderBy(desc(vehicles.createdAt));
+
+    return data;
 }
 
 export async function getVehicles() {
     // Public fetch - only active vehicles
     const data = await db.select().from(vehicles).where(eq(vehicles.status, "active")).orderBy(desc(vehicles.createdAt));
     return data;
+}
+
+export async function getVehicleById(id: string) {
+    const { userId } = await auth();
+
+    const [vehicle] = await db
+        .select()
+        .from(vehicles)
+        .where(eq(vehicles.id, id))
+        .limit(1);
+
+    if (!vehicle) {
+        return null;
+    }
+
+    const canView = vehicle.status === "active" || (userId && vehicle.userId === userId);
+    return canView ? vehicle : null;
 }
 
 export async function getAdminVehicles() {

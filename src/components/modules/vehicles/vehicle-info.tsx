@@ -5,6 +5,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 
 interface VehicleInfoProps {
     title: string;
+    year: number;
     price: string;
     description: string;
     specs: {
@@ -18,7 +19,7 @@ interface VehicleInfoProps {
     features: string[];
 }
 
-export function VehicleInfo({ title, price, description, specs, features }: VehicleInfoProps) {
+export function VehicleInfo({ title, year, price, description, specs, features }: VehicleInfoProps) {
     return (
         <div className="space-y-6">
             <div>
@@ -35,7 +36,7 @@ export function VehicleInfo({ title, price, description, specs, features }: Vehi
                     <Calendar className="h-5 w-5 text-muted-foreground" />
                     <div className="text-sm">
                         <p className="text-muted-foreground">Year</p>
-                        <p className="font-medium">2023</p>
+                        <p className="font-medium">{year}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2 p-3 bg-muted/40 rounded-lg">
@@ -74,14 +75,18 @@ export function VehicleInfo({ title, price, description, specs, features }: Vehi
                 <AccordionItem value="features">
                     <AccordionTrigger>Features & Options</AccordionTrigger>
                     <AccordionContent>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            {features.map((feature) => (
-                                <div key={feature} className="flex items-center gap-2 text-sm text-muted-foreground">
-                                    <CheckCircle2 className="h-4 w-4 text-green-500" />
-                                    <span>{feature}</span>
-                                </div>
-                            ))}
-                        </div>
+                        {features.length === 0 ? (
+                            <p className="text-sm text-muted-foreground">No features listed.</p>
+                        ) : (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                {features.map((feature) => (
+                                    <div key={feature} className="flex items-center gap-2 text-sm text-muted-foreground">
+                                        <CheckCircle2 className="h-4 w-4 text-green-500" />
+                                        <span>{feature}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="specs">

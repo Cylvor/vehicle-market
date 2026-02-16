@@ -1,51 +1,51 @@
 import { VehicleGallery } from "@/components/modules/vehicles/vehicle-gallery";
 import { VehicleInfo } from "@/components/modules/vehicles/vehicle-info";
 import { SellerContact } from "@/components/modules/vehicles/seller-contact";
+import { getVehicleById } from "@/actions/vehicle";
+import { notFound } from "next/navigation";
 
-// Mock Data for individual vehicle
-const MOCK_VEHICLE = {
-    id: "1",
-    title: "2023 Tesla Model 3 Long Range",
-    price: "$58,900",
-    description: `Experience the future of driving with this pristine 2023 Tesla Model 3 Long Range. 
-  
-  Featuring dual motor all-wheel drive, this vehicle offers incredible acceleration and handling. The minimalist interior is highlighted by the 15-inch touchscreen display, giving you control over everything from navigation to climate control. 
-  
-  This car has been meticulously maintained and comes with the remainder of the factory warranty.`,
-    specs: {
-        mileage: "12,500 km",
-        transmission: "Automatic",
-        fuel: "Electric",
-        bodyType: "Sedan",
-        engine: "Dual Motor",
-        color: "Pearl White Multi-Coat",
-    },
-    features: [
-        "Autopilot",
-        "Premium Interior",
-        "Heated Seats",
-        "Glass Roof",
-        "Wireless Charging",
-        "Sentry Mode",
-    ],
-    images: [
-        "/vehicles/tesla-model-3.svg",
-        "/vehicles/tesla-model-3.svg",
-        "/vehicles/tesla-model-3.svg",
-        "/vehicles/tesla-model-3.svg",
-    ],
-};
+function formatPrice(price: number) {
+    return new Intl.NumberFormat("en-AU", {
+        style: "currency",
+        currency: "AUD",
+        maximumFractionDigits: 0,
+    }).format(price);
+}
 
-export default function VehicleDetailsPage({ params }: { params: { id: string } }) {
-    // In a real app, we would fetch data based on params.id
+export default async function VehicleDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    const vehicle = await getVehicleById(id);
+
+    if (!vehicle) {
+        notFound();
+    }
+
+    const title = `${vehicle.year} ${vehicle.make} ${vehicle.model}${vehicle.variant ? ` ${vehicle.variant}` : ""}`;
+    const description = vehicle.description ?? "No description provided.";
+    const features = vehicle.features ?? [];
+    const images = vehicle.images?.length ? vehicle.images : ["/vehicles/tesla-model-3.svg"];
 
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Left Column: Gallery & Info */}
                 <div className="lg:col-span-2 space-y-8">
-                    <VehicleGallery images={MOCK_VEHICLE.images} />
-                    <VehicleInfo {...MOCK_VEHICLE} />
+                    <VehicleGallery images={images} />
+                    <VehicleInfo
+                        title={title}
+                        year={vehicle.year}
+                        price={formatPrice(vehicle.price)}
+                        description={description}
+                        specs={{
+                            mileage: `${vehicle.odometer.toLocaleString("en-AU")} km`,
+                            transmission: vehicle.transmission,
+                            fuel: vehicle.fuel,
+                            bodyType: vehicle.bodyType,
+                            engine: "N/A",
+                            color: vehicle.colour ?? "N/A",
+                        }}
+                        features={features}
+                    />
                 </div>
 
                 {/* Right Column: Contact Seller (Sticky) */}

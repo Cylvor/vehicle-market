@@ -1,31 +1,39 @@
 import { Button } from "@/components/ui/button";
-import { Edit, Eye, MoreHorizontal, Trash2 } from "lucide-react";
+import { Edit, Eye, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { getUserVehicles } from "@/actions/vehicle";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
-// Mock listings
-const MY_LISTINGS = [
-    {
-        id: "1",
-        title: "2020 Toyota Corolla ZR Hybrid",
-        price: "$32,500",
-        status: "Active",
-        views: 145,
-        enquiries: 3,
-        date: "12 Feb 2024"
-    },
-    {
-        id: "2",
-        title: "2018 Ford Ranger Wildtrak",
-        price: "$45,000",
-        status: "Sold",
-        views: 890,
-        enquiries: 12,
-        date: "10 Jan 2024"
+function formatPrice(price: number) {
+    return new Intl.NumberFormat("en-AU", {
+        style: "currency",
+        currency: "AUD",
+        maximumFractionDigits: 0,
+    }).format(price);
+}
+
+function getStatusBadgeVariant(status: "pending" | "active" | "rejected" | "sold") {
+    switch (status) {
+        case "active":
+            return "default";
+        case "rejected":
+            return "destructive";
+        case "sold":
+            return "outline";
+        case "pending":
+        default:
+            return "secondary";
     }
-];
+}
 
-export default function MyListingsPage() {
+export default async function MyListingsPage() {
+    const { userId } = await auth();
+    if (!userId) redirect("/sign-in");
+
+    const listings = await getUserVehicles();
+
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
@@ -50,31 +58,42 @@ export default function MyListingsPage() {
                         </tr>
                     </thead>
                     <tbody className="divide-y">
-                        {MY_LISTINGS.map((listing) => (
-                            <tr key={listing.id} className="bg-card hover:bg-muted/50 transition-colors">
-                                <td className="px-4 py-3 font-medium">{listing.title}</td>
-                                <td className="px-4 py-3">
-                                    <Badge variant={listing.status === 'Active' ? 'default' : 'secondary'}>
-                                        {listing.status}
-                                    </Badge>
-                                </td>
-                                <td className="px-4 py-3">{listing.price}</td>
-                                <td className="px-4 py-3 text-muted-foreground">
-                                    {listing.views} views • {listing.enquiries} enquiries
-                                </td>
-                                <td className="px-4 py-3 text-right space-x-2">
-                                    <Button variant="ghost" size="icon" title="View">
-                                        <Eye className="h-4 w-4" />
-                                    </Button>
-                                    <Button variant="ghost" size="icon" title="Edit">
-                                        <Edit className="h-4 w-4" />
-                                    </Button>
-                                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" title="Delete">
-                                        <Trash2 className="h-4 w-4" />
-                                    </Button>
+                        {listings.length === 0 ? (
+                            <tr className="bg-card">
+                                <td className="px-4 py-8 text-center text-muted-foreground" colSpan={5}>
+                                    No listings yet.
                                 </td>
                             </tr>
-                        ))}
+                        ) : (
+                            listings.map((listing) => {
+                                const title = `${listing.year} ${listing.make} ${listing.model}${listing.variant ? ` ${listing.variant}` : ""}`;
+                                return (
+                                    <tr key={listing.id} className="bg-card hover:bg-muted/50 transition-colors">
+                                        <td className="px-4 py-3 font-medium">{title}</td>
+                                        <td className="px-4 py-3">
+                                            <Badge variant={getStatusBadgeVariant(listing.status)}>
+                                                {listing.status}
+                                            </Badge>
+                                        </td>
+                                        <td className="px-4 py-3">{formatPrice(listing.price)}</td>
+                                        <td className="px-4 py-3 text-muted-foreground">—</td>
+                                        <td className="px-4 py-3 text-right space-x-2">
+                                            <Button asChild variant="ghost" size="icon" title="View">
+                                                <Link href={`/vehicles/${listing.id}`} aria-label="View">
+                                                    <Eye className="h-4 w-4" />
+                                                </Link>
+                                            </Button>
+                                            <Button variant="ghost" size="icon" title="Edit">
+                                                <Edit className="h-4 w-4" />
+                                            </Button>
+                                            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" title="Delete">
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                );
+                            })
+                        )}
                     </tbody>
                 </table>
             </div>
