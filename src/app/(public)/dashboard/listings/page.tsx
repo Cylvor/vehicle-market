@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Edit, Eye, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { getUserVehicles } from "@/actions/vehicle";
+import { deleteVehicle, getUserVehicles } from "@/actions/vehicle";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
@@ -67,6 +67,12 @@ export default async function MyListingsPage() {
                         ) : (
                             listings.map((listing) => {
                                 const title = `${listing.year} ${listing.make} ${listing.model}${listing.variant ? ` ${listing.variant}` : ""}`;
+
+                                const deleteAction = async () => {
+                                    "use server";
+                                    await deleteVehicle(listing.id);
+                                };
+
                                 return (
                                     <tr key={listing.id} className="bg-card hover:bg-muted/50 transition-colors">
                                         <td className="px-4 py-3 font-medium">{title}</td>
@@ -83,12 +89,16 @@ export default async function MyListingsPage() {
                                                     <Eye className="h-4 w-4" />
                                                 </Link>
                                             </Button>
-                                            <Button variant="ghost" size="icon" title="Edit">
-                                                <Edit className="h-4 w-4" />
+                                            <Button asChild variant="ghost" size="icon" title="Edit">
+                                                <Link href={`/sell/${listing.id}/edit`} aria-label="Edit">
+                                                    <Edit className="h-4 w-4" />
+                                                </Link>
                                             </Button>
-                                            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" title="Delete">
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
+                                            <form action={deleteAction} className="inline-block">
+                                                <Button type="submit" variant="ghost" size="icon" className="text-destructive hover:text-destructive" title="Delete">
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            </form>
                                         </td>
                                     </tr>
                                 );

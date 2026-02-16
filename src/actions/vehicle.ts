@@ -70,6 +70,26 @@ export async function getVehicleById(id: string) {
     return canView ? vehicle : null;
 }
 
+export async function getUserVehicleById(id: string) {
+    const { userId } = await auth();
+
+    if (!userId) {
+        throw new Error("Unauthorized");
+    }
+
+    const [vehicle] = await db
+        .select()
+        .from(vehicles)
+        .where(eq(vehicles.id, id))
+        .limit(1);
+
+    if (!vehicle || vehicle.userId !== userId) {
+        return null;
+    }
+
+    return vehicle;
+}
+
 export async function getAdminVehicles() {
     const { userId } = await auth();
     // In a real app, verify admin role here
@@ -86,5 +106,64 @@ export async function updateVehicleStatus(id: string, status: "active" | "reject
 
     await db.update(vehicles).set({ status }).where(eq(vehicles.id, id));
     revalidatePath("/admin/listings");
+    revalidatePath("/search");
+}
+
+export async function updateVehicle(id: string, input: z.infer<typeof vehicleSchema>) {
+    const { userId } = await auth();
+
+    if (!userId) {
+        throw new Error("Unauthorized");
+    }
+
+    const validatedFields = vehicleSchema.safeParse(input);
+
+    if (!validatedFields.success) {
+        throw new Error("Invalid fields");
+    }
+
+    const [existing] = await db
+        .select({ userId: vehicles.userId })
+        .from(vehicles)
+        .where(eq(vehicles.id, id))
+        .limit(1);
+
+    if (!existing || existing.userId !== userId) {
+        throw new Error("Unauthorized");
+    }
+
+    await db
+        .update(vehicles)
+        .set({
+            ...validatedFields.data,
+            updatedAt: new Date(),
+        })
+        .where(eq(vehicles.id, id));
+
+    revalidatePath("/dashboard/listings");
+    revalidatePath(`/vehicles/${id}`);
+    revalidatePath("/search");
+}
+
+export async function deleteVehicle(id: string) {
+    const { userId } = await auth();
+
+    if (!userId) {
+        throw new Error("Unauthorized");
+    }
+
+    const [existing] = await db
+        .select({ userId: vehicles.userId })
+        .from(vehicles)
+        .where(eq(vehicles.id, id))
+        .limit(1);
+
+    if (!existing || existing.userId !== userId) {
+        throw new Error("Unauthorized");
+    }
+
+    await db.delete(vehicles).where(eq(vehicles.id, id));
+
+    revalidatePath("/dashboard/listings");
     revalidatePath("/search");
 }
