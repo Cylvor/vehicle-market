@@ -1,9 +1,48 @@
-import { Search, MapPin } from "lucide-react";
-import { Button } from "@/components/ui/button";
+"use client";
+
+import { useEffect, useState } from "react";
+import Image from "next/image";
+
+const HERO_SLIDES = [
+    {
+        image: "/images/hero/car1.jpg",
+        title: "The perfect place\nto find your car",
+        description:
+            "Explore top-rated new and used vehicles with verified sellers, transparent details, and trusted pricing.",
+    },
+    {
+        image: "/images/hero/car2.jpg",
+        title: "Drive smarter with\ntrusted listings",
+        description:
+            "Compare prices, inspect verified details, and connect with reliable sellers in a few clicks.",
+    },
+    {
+        image: "/images/hero/car3.jpg",
+        title: "Premium models\nfor every journey",
+        description:
+            "From city cars to performance sedans, find your best match with confidence and speed.",
+    },
+    {
+        image: "/images/hero/car4.jpg",
+        title: "Find better deals\nwithout the stress",
+        description:
+            "Get a cleaner buying experience with trusted data, fair pricing, and easy exploration.",
+    },
+];
 
 export function Hero() {
+    const [activeSlide, setActiveSlide] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setActiveSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+        }, 6000);
+
+        return () => clearInterval(interval);
+    }, []);
+
     return (
-        <section className="relative overflow-hidden py-24 lg:py-32">
+        <section className="relative overflow-hidden">
             {/* Background Gradient */}
             <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/50 to-background" />
 
@@ -11,50 +50,73 @@ export function Hero() {
             <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/10 rounded-full blur-3xl opacity-50" />
             <div className="absolute top-1/2 -left-24 w-72 h-72 bg-accent/5 rounded-full blur-3xl opacity-50" />
 
-            <div className="container-width relative z-10">
-                <div className="mx-auto max-w-4xl text-center space-y-8">
-                    <div className="space-y-4">
-                        <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight text-foreground">
-                            Find your next car <br className="hidden sm:block" />
-                            <span className="text-gradient">with confidence</span>
-                        </h1>
-                        <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                            Search thousands of new and used cars from dealers and private sellers across Australia. Simple, transparent, and safe.
-                        </p>
-                    </div>
-
-                    <div className="relative mx-auto max-w-3xl mt-12 p-2 bg-background/80 backdrop-blur-md rounded-2xl shadow-premium border border-border/50">
-                        <div className="flex flex-col sm:flex-row gap-2">
-                            <div className="flex-1 relative group">
-                                <Search className="absolute left-4 top-3.5 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                                <input
-                                    type="text"
-                                    placeholder="Make, model, or keyword"
-                                    className="w-full h-12 pl-12 pr-4 rounded-xl border-transparent bg-transparent text-foreground placeholder:text-muted-foreground focus:bg-background focus:border-border/50 focus:ring-0 transition-all"
-                                />
-                            </div>
-                            <div className="w-px h-8 bg-border hidden sm:block self-center" />
-                            <div className="flex-1 relative sm:max-w-[200px] group">
-                                <MapPin className="absolute left-4 top-3.5 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                                <input
-                                    type="text"
-                                    placeholder="Postcode"
-                                    className="w-full h-12 pl-12 pr-4 rounded-xl border-transparent bg-transparent text-foreground placeholder:text-muted-foreground focus:bg-background focus:border-border/50 focus:ring-0 transition-all"
-                                />
-                            </div>
-                            <Button size="lg" className="h-12 px-8 text-base font-semibold shadow-md shrink-0 rounded-xl">
-                                Search Cars
-                            </Button>
+            <div className="relative z-10 w-full">
+                <div className="relative overflow-hidden w-full h-[calc(100svh-56px)] min-h-[460px] sm:min-h-[560px]">
+                    {HERO_SLIDES.map((slide, index) => (
+                        <div
+                            key={slide.image}
+                            className={`absolute inset-0 transition-[opacity,transform] duration-[1800ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                index === activeSlide
+                                    ? "opacity-100 scale-100"
+                                    : "opacity-0 scale-[1.04]"
+                            }`}
+                        >
+                            <Image
+                                src={slide.image}
+                                alt="Featured luxury sedan"
+                                fill
+                                priority={index === 0}
+                                className="object-cover"
+                            />
                         </div>
+                    ))}
+
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#0c1020]/95 via-[#0c1020]/75 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+
+                    <div className="absolute inset-y-0 left-0 w-full max-w-[92%] sm:max-w-[62%] lg:max-w-[52%] p-6 sm:p-10 lg:p-14 flex flex-col justify-center text-white">
+                        <div className="relative min-h-[220px] sm:min-h-[250px] lg:min-h-[300px]">
+                            {HERO_SLIDES.map((slide, index) => (
+                                <div
+                                    key={`content-${slide.image}`}
+                                    className={`absolute inset-0 transition-all duration-700 ease-out ${
+                                        index === activeSlide
+                                            ? "opacity-100 translate-y-0"
+                                            : "opacity-0 translate-y-5 pointer-events-none"
+                                    }`}
+                                >
+                                    <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.03]">
+                                        {slide.title.split("\n")[0]} <br className="hidden sm:block" />
+                                        {slide.title.split("\n")[1]}
+                                    </h1>
+                                    <p className="mt-4 text-sm sm:text-base lg:text-lg text-white/80 max-w-xl leading-relaxed">
+                                        {slide.description}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+
+                        <a
+                            href="#quick-search"
+                            className="mt-7 inline-flex w-fit items-center rounded-md border border-white/40 bg-white/5 px-4 py-2 text-sm font-medium text-white hover:bg-white/15 transition-colors"
+                        >
+                            Explore Now
+                        </a>
                     </div>
 
-                    <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground pt-4">
-                        <span className="font-medium text-foreground">Popular:</span>
-                        <a href="#" className="hover:text-primary transition-colors hover:underline decoration-primary/30 underline-offset-4">SUV</a>
-                        <a href="#" className="hover:text-primary transition-colors hover:underline decoration-primary/30 underline-offset-4">Ute</a>
-                        <a href="#" className="hover:text-primary transition-colors hover:underline decoration-primary/30 underline-offset-4">Toyota Hilux</a>
-                        <a href="#" className="hover:text-primary transition-colors hover:underline decoration-primary/30 underline-offset-4">Ford Ranger</a>
-                        <a href="#" className="hover:text-primary transition-colors hover:underline decoration-primary/30 underline-offset-4">Tesla Model 3</a>
+                    <div className="absolute left-6 right-6 bottom-6 z-20 flex items-center gap-2 sm:left-10 sm:right-10 sm:bottom-8 lg:left-14 lg:right-14">
+                        {HERO_SLIDES.map((slide, index) => (
+                            <button
+                                key={`indicator-${slide.image}`}
+                                aria-label={`Go to slide ${index + 1}`}
+                                onClick={() => setActiveSlide(index)}
+                                className={`h-1.5 rounded-full transition-all duration-500 ${
+                                    index === activeSlide
+                                        ? "w-14 bg-white"
+                                        : "w-6 bg-white/45 hover:bg-white/70"
+                                }`}
+                            />
+                        ))}
                     </div>
                 </div>
             </div>
