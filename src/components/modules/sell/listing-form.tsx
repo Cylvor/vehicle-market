@@ -1,10 +1,10 @@
 "use client"
 
-import { useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { vehicleSchema, type VehicleInput } from "@/lib/validations/vehicle";
-import { createVehicle } from "@/actions/vehicle";
+import { createVehicle, updateVehicle } from "@/actions/vehicle";
 import { useUploadThing } from "@/lib/uploadthing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,10 +16,17 @@ import { X, Loader2, ImagePlus } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-export function ListingForm() {
+interface ListingFormProps {
+    vehicleId?: string;
+    initialData?: VehicleInput;
+}
+
+export function ListingForm({ vehicleId, initialData }: ListingFormProps) {
+    const isEditMode = Boolean(vehicleId);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-    const [previews, setPreviews] = useState<string[]>([]);
+    const [existingImages, setExistingImages] = useState<string[]>(initialData?.images ?? []);
+    const [newImagePreviews, setNewImagePreviews] = useState<string[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
 
@@ -32,21 +39,27 @@ export function ListingForm() {
     const form = useForm<VehicleInput>({
         resolver: zodResolver(vehicleSchema) as any,
         defaultValues: {
-            year: undefined,
-            make: "",
-            model: "",
-            variant: "",
-            price: undefined,
-            odometer: undefined,
-            description: "",
-            fuel: undefined,
-            transmission: undefined,
-            bodyType: undefined,
-            colour: "",
-            features: [],
-            images: [],
+            year: initialData?.year,
+            make: initialData?.make ?? "",
+            model: initialData?.model ?? "",
+            variant: initialData?.variant ?? "",
+            price: initialData?.price,
+            odometer: initialData?.odometer,
+            description: initialData?.description ?? "",
+            fuel: initialData?.fuel,
+            transmission: initialData?.transmission,
+            bodyType: initialData?.bodyType,
+            colour: initialData?.colour ?? "",
+            features: initialData?.features ?? [],
+            images: initialData?.images ?? [],
         },
     });
+
+    useEffect(() => {
+        return () => {
+            newImagePreviews.forEach((url) => URL.revokeObjectURL(url));
+        };
+    }, [newImagePreviews]);
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
@@ -58,12 +71,12 @@ export function ListingForm() {
 
         // Generate previews for new files
         const newPreviews = files.map((file) => URL.createObjectURL(file));
-        const allPreviews = [...previews, ...newPreviews];
-        setPreviews(allPreviews);
+        const mergedNewPreviews = [...newImagePreviews, ...newPreviews];
+        setNewImagePreviews(mergedNewPreviews);
 
         // Update form value to pass validation (temporarily with placeholder URLs)
         // These will be replaced with real URLs on submit
-        form.setValue("images", allPreviews, {
+        form.setValue("images", [...existingImages, ...mergedNewPreviews], {
             shouldValidate: true,
             shouldDirty: true,
         });
@@ -76,16 +89,28 @@ export function ListingForm() {
     };
 
     const removeImage = (index: number) => {
-        // Revoke the object URL to free memory
-        URL.revokeObjectURL(previews[index]);
+        if (index < existingImages.length) {
+            const updatedExistingImages = existingImages.filter((_, i) => i !== index);
+            setExistingImages(updatedExistingImages);
 
-        const newFiles = selectedFiles.filter((_, i) => i !== index);
-        const newPreviews = previews.filter((_, i) => i !== index);
-        setSelectedFiles(newFiles);
-        setPreviews(newPreviews);
+            form.setValue("images", [...updatedExistingImages, ...newImagePreviews], {
+                shouldValidate: true,
+                shouldDirty: true,
+            });
+
+            return;
+        }
+
+        const newIndex = index - existingImages.length;
+        URL.revokeObjectURL(newImagePreviews[newIndex]);
+
+        const updatedFiles = selectedFiles.filter((_, i) => i !== newIndex);
+        const updatedNewPreviews = newImagePreviews.filter((_, i) => i !== newIndex);
+        setSelectedFiles(updatedFiles);
+        setNewImagePreviews(updatedNewPreviews);
 
         // Update form
-        form.setValue("images", newPreviews.length > 0 ? newPreviews : [], {
+        form.setValue("images", [...existingImages, ...updatedNewPreviews], {
             shouldValidate: true,
             shouldDirty: true,
         });
@@ -95,38 +120,43 @@ export function ListingForm() {
         try {
             setIsSubmitting(true);
 
-            // Step 1: Upload images to UploadThing
-            if (selectedFiles.length === 0) {
+            let uploadedImageUrls: string[] = [];
+
+            if (selectedFiles.length > 0) {
+                toast.info("Uploading images...");
+                const uploadResult = await startUpload(selectedFiles);
+
+                if (!uploadResult || uploadResult.length === 0) {
+                    toast.error("Image upload failed. Please try again.");
+                    setIsSubmitting(false);
+                    return;
+                }
+
+                uploadedImageUrls = uploadResult.map((result) => result.url);
+            }
+
+            const finalImages = [...existingImages, ...uploadedImageUrls];
+
+            if (finalImages.length === 0) {
                 toast.error("Please select at least one image");
                 setIsSubmitting(false);
                 return;
             }
 
-            toast.info("Uploading images...");
-            const uploadResult = await startUpload(selectedFiles);
-
-            if (!uploadResult || uploadResult.length === 0) {
-                toast.error("Image upload failed. Please try again.");
-                setIsSubmitting(false);
-                return;
-            }
-
-            // Step 2: Get the actual URLs from upload result
-            const imageUrls = uploadResult.map((r) => r.url);
-
-            // Step 3: Submit form with real image URLs
             const submissionData = {
                 ...data,
-                images: imageUrls,
+                images: finalImages,
             };
 
-            await createVehicle(submissionData);
-            toast.success("Listing created!", {
-                description: "Your vehicle has been submitted for approval.",
-            });
-
-            // Cleanup previews
-            previews.forEach((url) => URL.revokeObjectURL(url));
+            if (isEditMode && vehicleId) {
+                await updateVehicle(vehicleId, submissionData);
+                toast.success("Listing updated!");
+            } else {
+                await createVehicle(submissionData);
+                toast.success("Listing created!", {
+                    description: "Your vehicle has been submitted for approval.",
+                });
+            }
 
             router.push("/dashboard");
         } catch (error) {
@@ -361,7 +391,7 @@ export function ListingForm() {
                         </p>
 
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                            {previews.map((preview, idx) => (
+                            {[...existingImages, ...newImagePreviews].map((preview, idx) => (
                                 <div key={idx} className="relative aspect-[4/3] group">
                                     <img
                                         src={preview}
@@ -416,7 +446,7 @@ export function ListingForm() {
                         <Button type="button" variant="outline" onClick={() => router.back()}>Cancel</Button>
                         <Button type="submit" size="lg" disabled={isSubmitting || isUploading}>
                             {(isSubmitting || isUploading) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            {isUploading ? "Uploading Images..." : "Publish Listing"}
+                            {isUploading ? "Uploading Images..." : isEditMode ? "Save Changes" : "Publish Listing"}
                         </Button>
                     </div>
                 </form>
