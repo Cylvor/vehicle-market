@@ -11,6 +11,8 @@ export function Header() {
     const pathname = usePathname();
     const { user } = useUser();
     const isHome = pathname === "/";
+    const isSell = pathname === "/sell";
+    const isNews = pathname === "/news";
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -32,7 +34,7 @@ export function Header() {
         }
     }, [isMenuOpen]);
 
-    const isTransparent = isHome && !isScrolled && !isMenuOpen;
+    const isTransparent = (isHome || isSell || isNews) && !isScrolled && !isMenuOpen;
 
     const navLinks = [
         { name: "Buy", href: "/search" },
