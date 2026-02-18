@@ -30,14 +30,16 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     };
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="flex flex-col lg:flex-row gap-8">
-                <aside className="w-full lg:w-64 flex-shrink-0">
-                    <FilterSidebar />
-                </aside>
-                <main className="flex-1">
-                    <ResultsGrid filters={filters} />
-                </main>
+        <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
+            <div className="container-width py-8 lg:py-12">
+                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+                    <aside className="w-full lg:w-72 xl:w-80 flex-shrink-0">
+                        <FilterSidebar />
+                    </aside>
+                    <main className="flex-1 min-w-0">
+                        <ResultsGrid filters={filters} />
+                    </main>
+                </div>
             </div>
         </div>
     );
