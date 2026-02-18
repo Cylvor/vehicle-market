@@ -35,11 +35,11 @@ export async function ResultsGrid({ filters }: ResultsGridProps) {
                             <Grid3x3 className="h-5 w-5" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold tracking-tight text-foreground">
+                            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
                                 {results.length} {results.length === 1 ? "Result" : "Results"} Found
                             </h2>
                             {hasActiveFilters && (
-                                <p className="mt-1 text-sm text-muted-foreground">
+                                <p className="mt-2 text-muted-foreground">
                                     Refined search results
                                 </p>
                             )}
@@ -61,7 +61,7 @@ export async function ResultsGrid({ filters }: ResultsGridProps) {
                     <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-muted mb-4">
                         <Grid3x3 className="h-8 w-8 text-muted-foreground" />
                     </div>
-                    <h3 className="text-xl font-semibold text-foreground mb-2">No vehicles found</h3>
+                    <h3 className="text-xl font-bold tracking-tight text-foreground mb-2">No vehicles found</h3>
                     <p className="text-muted-foreground max-w-md mx-auto">
                         {hasActiveFilters
                             ? "Try adjusting your filters to see more results."

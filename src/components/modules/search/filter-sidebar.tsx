@@ -150,12 +150,12 @@ export function FilterSidebar() {
 
                 {/* Search Input */}
                 <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-foreground">Search Vehicles</Label>
+                    <Label className="text-base font-bold text-foreground">Search Vehicles</Label>
                     <div className="relative">
                         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
                             placeholder="Make, model, or variant..."
-                            className="pl-10 h-11 rounded-xl border-2 border-border/70 bg-background transition-all hover:border-primary/50 focus:border-primary focus:ring-0"
+                            className="pl-10 h-11 rounded-xl border-2 border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:ring-0"
                             ref={inputRef}
                             onChange={handleSearchChange}
                             onKeyDown={handleSearchKeyDown}
@@ -168,7 +168,7 @@ export function FilterSidebar() {
                 <Accordion type="multiple" defaultValue={["make", "price", "body", "year"]} className="w-full">
                     {/* Make & Model */}
                     <AccordionItem value="make" className="border-b border-border/50">
-                        <AccordionTrigger className="text-base font-semibold text-foreground hover:no-underline py-3">
+                        <AccordionTrigger className="text-base font-bold text-foreground hover:no-underline py-3">
                             Make & Model
                         </AccordionTrigger>
                         <AccordionContent className="pt-4">
@@ -197,31 +197,31 @@ export function FilterSidebar() {
 
                     {/* Price Range */}
                     <AccordionItem value="price" className="border-b border-border/50">
-                        <AccordionTrigger className="text-base font-semibold text-foreground hover:no-underline py-3">
+                        <AccordionTrigger className="text-base font-bold text-foreground hover:no-underline py-3">
                             Price Range
                         </AccordionTrigger>
                         <AccordionContent className="pt-4">
                             <div className="grid grid-cols-2 gap-3">
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-medium text-muted-foreground">Min Price</Label>
+                                    <Label className="text-xs font-bold text-foreground">Min Price</Label>
                                     <Input
                                         type="number"
                                         placeholder="$0"
                                         min={0}
                                         value={minPrice}
                                         onChange={(e) => updateParams({ minPrice: e.target.value || undefined })}
-                                        className="h-10 rounded-xl border-2 border-border/70 bg-background transition-all hover:border-primary/50 focus:border-primary focus:ring-0"
+                                        className="h-10 rounded-xl border-2 border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:ring-0"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-medium text-muted-foreground">Max Price</Label>
+                                    <Label className="text-xs font-bold text-foreground">Max Price</Label>
                                     <Input
                                         type="number"
                                         placeholder="$∞"
                                         min={0}
                                         value={maxPrice}
                                         onChange={(e) => updateParams({ maxPrice: e.target.value || undefined })}
-                                        className="h-10 rounded-xl border-2 border-border/70 bg-background transition-all hover:border-primary/50 focus:border-primary focus:ring-0"
+                                        className="h-10 rounded-xl border-2 border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:ring-0"
                                     />
                                 </div>
                             </div>
@@ -230,7 +230,7 @@ export function FilterSidebar() {
 
                     {/* Body Type */}
                     <AccordionItem value="body" className="border-b border-border/50">
-                        <AccordionTrigger className="text-base font-semibold text-foreground hover:no-underline py-3">
+                        <AccordionTrigger className="text-base font-bold text-foreground hover:no-underline py-3">
                             Body Type
                         </AccordionTrigger>
                         <AccordionContent className="pt-4">
@@ -259,13 +259,13 @@ export function FilterSidebar() {
 
                     {/* Year */}
                     <AccordionItem value="year" className="border-b-0">
-                        <AccordionTrigger className="text-base font-semibold text-foreground hover:no-underline py-3">
+                        <AccordionTrigger className="text-base font-bold text-foreground hover:no-underline py-3">
                             Year
                         </AccordionTrigger>
                         <AccordionContent className="pt-4">
                             <div className="grid grid-cols-2 gap-3">
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-medium text-muted-foreground">From</Label>
+                                    <Label className="text-xs font-bold text-foreground">From</Label>
                                     <Input
                                         type="number"
                                         placeholder="1900"
@@ -273,11 +273,11 @@ export function FilterSidebar() {
                                         max={2100}
                                         value={minYear}
                                         onChange={(e) => updateParams({ minYear: e.target.value || undefined })}
-                                        className="h-10 rounded-xl border-2 border-border/70 bg-background transition-all hover:border-primary/50 focus:border-primary focus:ring-0"
+                                        className="h-10 rounded-xl border-2 border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:ring-0"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-medium text-muted-foreground">To</Label>
+                                    <Label className="text-xs font-bold text-foreground">To</Label>
                                     <Input
                                         type="number"
                                         placeholder="2025"
@@ -285,7 +285,7 @@ export function FilterSidebar() {
                                         max={2100}
                                         value={maxYear}
                                         onChange={(e) => updateParams({ maxYear: e.target.value || undefined })}
-                                        className="h-10 rounded-xl border-2 border-border/70 bg-background transition-all hover:border-primary/50 focus:border-primary focus:ring-0"
+                                        className="h-10 rounded-xl border-2 border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:ring-0"
                                     />
                                 </div>
                             </div>
@@ -297,7 +297,7 @@ export function FilterSidebar() {
                 {activeFiltersCount > 0 && (
                     <Button
                         variant="outline"
-                        className="w-full h-11 rounded-xl border-2 border-border/70 hover:border-destructive/50 hover:bg-destructive/5 hover:text-destructive transition-all font-semibold"
+                        className="w-full h-11 rounded-xl border-2 border-border/70 hover:border-destructive/50 hover:bg-destructive/5 hover:text-destructive transition-all font-bold"
                         onClick={handleReset}
                     >
                         <X className="h-4 w-4 mr-2" />
@@ -333,10 +333,10 @@ export function SortSelect() {
 
     return (
         <div className="flex items-center gap-3">
-            <span className="text-sm font-semibold text-muted-foreground">Sort by:</span>
+            <span className="text-sm font-bold text-muted-foreground">Sort by:</span>
             <div className="relative">
                 <select
-                    className="h-10 w-[200px] appearance-none rounded-xl border-2 border-border/70 bg-background px-4 py-2 text-sm font-medium text-foreground shadow-sm transition-all hover:border-primary/50 focus:border-primary focus:outline-none focus:ring-0 focus:shadow-md cursor-pointer"
+                    className="h-10 w-[200px] appearance-none rounded-xl border-2 border-border/70 bg-background px-4 py-2 text-base font-medium text-foreground shadow-sm transition-all hover:border-primary/50 focus:border-primary focus:outline-none focus:ring-0 focus:shadow-md cursor-pointer"
                     value={current}
                     onChange={handleChange}
                 >
