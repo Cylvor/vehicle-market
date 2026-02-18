@@ -9,18 +9,18 @@
 }
 
 :root {
-  /* Brand Colors - Indigo/Slate Theme */
-  --primary: 235 85% 65%;
-  /* #6366f1 Indigo 500 */
+  /* Brand Colors - Dark Blue Theme */
+  --primary: 222 47% 31%;
+  /* #2a4375 Dark Blue */
   --primary-foreground: 210 40% 98%;
 
   --secondary: 215 16% 47%;
   /* Slate 500 */
   --secondary-foreground: 210 40% 98%;
 
-  --accent: 25 95% 53%;
-  /* #f97316 Orange 500 */
-  --accent-foreground: 210 40% 98%;
+  --accent: 210 40% 96.1%;
+  /* Slate 100 - Light Accent for contrast */
+  --accent-foreground: 222 47% 11%;
 
   /* Neutral Colors */
   --background: 210 40% 98%;
@@ -39,7 +39,7 @@
 
   --border: 214 32% 91%;
   --input: 214 32% 91%;
-  --ring: 235 85% 65%;
+  --ring: 222 47% 31%;
 
   /* Status Colors */
   --destructive: 0 84.2% 60.2%;
@@ -50,15 +50,15 @@
 
 .dark {
   /* Brand Colors - Dark Mode */
-  --primary: 235 85% 70%;
-  /* Slightly lighter Indigo for dark mode */
-  --primary-foreground: 210 40% 98%;
+  --primary: 217 91% 60%;
+  /* Lighter Blue for visibility on dark bg */
+  --primary-foreground: 0 0% 100%;
 
   --secondary: 217 19% 27%;
   /* Slate 800 */
   --secondary-foreground: 210 40% 98%;
 
-  --accent: 25 95% 53%;
+  --accent: 217 33% 17%;
   --accent-foreground: 210 40% 98%;
 
   /* Neutral Colors */
@@ -79,7 +79,7 @@
 
   --border: 217 33% 17.5%;
   --input: 217 33% 17.5%;
-  --ring: 235 85% 70%;
+  --ring: 217 91% 60%;
 
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 210 40% 98%;
@@ -172,4 +172,11 @@
   .container-width {
     @apply container mx-auto px-4 sm:px-6 lg:px-8;
   }
+}
+
+/* Clerk avatar color alignment with app primary theme */
+.cl-userButtonAvatarBox,
+.cl-avatarBox {
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
 }

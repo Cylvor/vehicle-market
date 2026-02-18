@@ -1,10 +1,20 @@
 import { VehicleCard } from "@/components/modules/vehicles/vehicle-card";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getVehicles } from "@/actions/vehicle";
 
-export async function ResultsGrid() {
-    const results = await getVehicles();
+type ResultsGridFilters = {
+    make?: string;
+    model?: string;
+    bodyType?: string;
+    minPrice?: string;
+    maxPrice?: string;
+};
+
+type ResultsGridProps = {
+    filters?: ResultsGridFilters;
+};
+
+export async function ResultsGrid({ filters }: ResultsGridProps) {
+    const results = await getVehicles(filters);
 
     return (
         <div className="space-y-6">
