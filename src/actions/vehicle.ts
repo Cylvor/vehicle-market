@@ -6,7 +6,15 @@ import { vehicleSchema } from "@/lib/validations/vehicle";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { eq, desc } from "drizzle-orm";
+import { and, desc, eq, gte, ilike, lte, SQL } from "drizzle-orm";
+
+type VehicleFilters = {
+    make?: string;
+    model?: string;
+    bodyType?: string;
+    minPrice?: string;
+    maxPrice?: string;
+};
 
 export async function createVehicle(input: z.infer<typeof vehicleSchema>) {
     const { userId } = await auth();
@@ -47,9 +55,37 @@ export async function getUserVehicles() {
     return data;
 }
 
-export async function getVehicles() {
-    // Public fetch - only active vehicles
-    const data = await db.select().from(vehicles).where(eq(vehicles.status, "active")).orderBy(desc(vehicles.createdAt));
+export async function getVehicles(filters?: VehicleFilters) {
+    const conditions: SQL[] = [eq(vehicles.status, "active")];
+
+    if (filters?.make) {
+        conditions.push(ilike(vehicles.make, filters.make));
+    }
+
+    if (filters?.model) {
+        conditions.push(ilike(vehicles.model, filters.model));
+    }
+
+    if (filters?.bodyType) {
+        conditions.push(eq(vehicles.bodyType, filters.bodyType as typeof vehicles.bodyType.enumValues[number]));
+    }
+
+    const minPrice = Number(filters?.minPrice);
+    if (Number.isFinite(minPrice) && minPrice > 0) {
+        conditions.push(gte(vehicles.price, minPrice));
+    }
+
+    const maxPrice = Number(filters?.maxPrice);
+    if (Number.isFinite(maxPrice) && maxPrice > 0) {
+        conditions.push(lte(vehicles.price, maxPrice));
+    }
+
+    const data = await db
+        .select()
+        .from(vehicles)
+        .where(and(...conditions))
+        .orderBy(desc(vehicles.createdAt));
+
     return data;
 }
 

@@ -11,12 +11,6 @@ const HERO_SLIDES = [
             "Explore top-rated new and used vehicles with verified sellers, transparent details, and trusted pricing.",
     },
     {
-        image: "/images/hero/car2.jpg",
-        title: "Drive smarter with\ntrusted listings",
-        description:
-            "Compare prices, inspect verified details, and connect with reliable sellers in a few clicks.",
-    },
-    {
         image: "/images/hero/car3.jpg",
         title: "Premium models\nfor every journey",
         description:
@@ -27,6 +21,12 @@ const HERO_SLIDES = [
         title: "Find better deals\nwithout the stress",
         description:
             "Get a cleaner buying experience with trusted data, fair pricing, and easy exploration.",
+    },
+    {
+        image: "/images/hero/car6.jpg",
+        title: "Command the road\nin luxury",
+        description:
+            "Discover iconic SUVs that blend rugged capability with sophisticated comfort and style.",
     },
 ];
 
@@ -47,11 +47,11 @@ export function Hero() {
             <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/50 to-background" />
 
             {/* Abstract Shapes */}
-            <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/10 rounded-full blur-3xl opacity-50" />
+            <div className="absolute -top-24 -right-24 w-96 h-96 bg-accent/10 rounded-full blur-3xl opacity-50" />
             <div className="absolute top-1/2 -left-24 w-72 h-72 bg-accent/5 rounded-full blur-3xl opacity-50" />
 
             <div className="relative z-10 w-full">
-                <div className="relative overflow-hidden w-full h-[calc(100svh-56px)] min-h-[460px] sm:min-h-[560px]">
+                <div className="relative overflow-hidden w-full h-[100svh] min-h-[460px] sm:min-h-[560px]">
                     {HERO_SLIDES.map((slide, index) => (
                         <div
                             key={slide.image}
