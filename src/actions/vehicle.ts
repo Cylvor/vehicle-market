@@ -6,7 +6,7 @@ import { vehicleSchema } from "@/lib/validations/vehicle";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { and, desc, eq, gte, ilike, lte, SQL } from "drizzle-orm";
+import { and, asc, desc, eq, gte, ilike, lte, or, SQL, sql } from "drizzle-orm";
 
 type VehicleFilters = {
     make?: string;
@@ -14,6 +14,10 @@ type VehicleFilters = {
     bodyType?: string;
     minPrice?: string;
     maxPrice?: string;
+    minYear?: string;
+    maxYear?: string;
+    sort?: string;
+    q?: string;
 };
 
 export async function createVehicle(input: z.infer<typeof vehicleSchema>) {
@@ -58,6 +62,20 @@ export async function getUserVehicles() {
 export async function getVehicles(filters?: VehicleFilters) {
     const conditions: SQL[] = [eq(vehicles.status, "active")];
 
+    // General search query - searches across make, model, and variant
+    if (filters?.q && filters.q.trim()) {
+        const searchTerm = `%${filters.q.trim()}%`;
+        const searchConditions = [
+            ilike(vehicles.make, searchTerm),
+            ilike(vehicles.model, searchTerm),
+        ];
+        // Add variant search if variant column exists (handle nullable)
+        searchConditions.push(
+            sql`COALESCE(${vehicles.variant}, '') ILIKE ${searchTerm}`
+        );
+        conditions.push(or(...searchConditions)!);
+    }
+
     if (filters?.make) {
         conditions.push(ilike(vehicles.make, filters.make));
     }
@@ -80,11 +98,31 @@ export async function getVehicles(filters?: VehicleFilters) {
         conditions.push(lte(vehicles.price, maxPrice));
     }
 
+    const minYear = Number(filters?.minYear);
+    if (Number.isFinite(minYear) && minYear > 0) {
+        conditions.push(gte(vehicles.year, minYear));
+    }
+
+    const maxYear = Number(filters?.maxYear);
+    if (Number.isFinite(maxYear) && maxYear > 0) {
+        conditions.push(lte(vehicles.year, maxYear));
+    }
+
+    const sort = filters?.sort || "newest";
+    const orderBy =
+        sort === "price-asc"
+            ? asc(vehicles.price)
+            : sort === "price-desc"
+              ? desc(vehicles.price)
+              : sort === "oldest"
+                ? asc(vehicles.createdAt)
+                : desc(vehicles.createdAt);
+
     const data = await db
         .select()
         .from(vehicles)
         .where(and(...conditions))
-        .orderBy(desc(vehicles.createdAt));
+        .orderBy(orderBy);
 
     return data;
 }

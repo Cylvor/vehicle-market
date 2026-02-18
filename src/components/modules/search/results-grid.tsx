@@ -1,12 +1,17 @@
 import { VehicleCard } from "@/components/modules/vehicles/vehicle-card";
 import { getVehicles } from "@/actions/vehicle";
+import { SortSelect } from "./filter-sidebar";
 
 type ResultsGridFilters = {
+    q?: string;
     make?: string;
     model?: string;
     bodyType?: string;
     minPrice?: string;
     maxPrice?: string;
+    minYear?: string;
+    maxYear?: string;
+    sort?: string;
 };
 
 type ResultsGridProps = {
@@ -18,18 +23,9 @@ export async function ResultsGrid({ filters }: ResultsGridProps) {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between flex-wrap gap-4">
                 <h2 className="font-semibold text-lg">{results.length} Results Found</h2>
-                {/* Sorting - future implementation */}
-                {/* <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground">Sort by:</span>
-                    <select className="h-9 w-[180px] rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
-                        <option value="featured">Featured</option>
-                        <option value="price-low">Price: Low to High</option>
-                        <option value="price-high">Price: High to Low</option>
-                        <option value="newest">Newest Listed</option>
-                    </select>
-                </div> */}
+                <SortSelect />
             </div>
 
             {results.length === 0 ? (
