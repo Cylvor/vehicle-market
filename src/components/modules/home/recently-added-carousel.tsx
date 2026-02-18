@@ -26,8 +26,8 @@ export function RecentlyAddedCarousel({ vehicles }: RecentlyAddedCarouselProps) 
     const slides = useMemo(() => {
         const grouped: RecentVehicleCard[][] = [];
 
-        for (let index = 0; index < vehicles.length; index += 2) {
-            grouped.push(vehicles.slice(index, index + 2));
+        for (let index = 0; index < vehicles.length; index += 4) {
+            grouped.push(vehicles.slice(index, index + 4));
         }
 
         return grouped;
@@ -87,16 +87,16 @@ export function RecentlyAddedCarousel({ vehicles }: RecentlyAddedCarouselProps) 
                 >
                     {slides.map((slide, slideIndex) => (
                         <div key={slideIndex} className="w-full shrink-0">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-1">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-1">
                                 {slide.map((vehicle) => (
                                     <div
                                         key={vehicle.id}
                                         className="group relative rounded-2xl border border-white/5 bg-slate-900/40 transition-all duration-500 hover:-translate-y-2 hover:border-blue-500/50 hover:shadow-[0_10px_30px_-10px_rgba(30,58,138,0.5)]"
                                     >
                                         {/* Luxury Badge */}
-                                        <div className="absolute left-4 top-4 z-30 flex items-center gap-2 rounded-full border border-blue-400/30 bg-[#020617]/80 px-3 py-1.5 shadow-lg backdrop-blur-md">
-                                            <span className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse shadow-[0_0_5px_#3b82f6]"></span>
-                                            <span className="text-[10px] font-bold uppercase tracking-widest text-blue-400">
+                                        <div className="absolute left-3 top-3 z-30 flex items-center gap-1.5 rounded-full border border-blue-400/25 bg-[#020617]/85 px-2.5 py-1 shadow-sm backdrop-blur-md">
+                                            <span className="h-1 w-1 rounded-full bg-blue-500 animate-pulse"></span>
+                                            <span className="text-[9px] font-bold uppercase tracking-widest text-blue-400">
                                                 Just Listed
                                             </span>
                                         </div>
