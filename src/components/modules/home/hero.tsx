@@ -1,125 +1,138 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 
 const HERO_SLIDES = [
     {
         image: "/images/hero/car1.jpg",
         title: "The perfect place\nto find your car",
-        description:
-            "Explore top-rated new and used vehicles with verified sellers, transparent details, and trusted pricing.",
+        description: "Explore top-rated new and used vehicles with verified sellers, transparent details, and trusted pricing.",
     },
     {
         image: "/images/hero/car3.jpg",
         title: "Premium models\nfor every journey",
-        description:
-            "From city cars to performance sedans, find your best match with confidence and speed.",
+        description: "From city cars to performance sedans, find your best match with confidence and speed.",
     },
     {
         image: "/images/hero/car4.jpg",
         title: "Find better deals\nwithout the stress",
-        description:
-            "Get a cleaner buying experience with trusted data, fair pricing, and easy exploration.",
+        description: "Get a cleaner buying experience with trusted data, fair pricing, and easy exploration.",
     },
     {
         image: "/images/hero/car6.jpg",
         title: "Command the road\nin luxury",
-        description:
-            "Discover iconic SUVs that blend rugged capability with sophisticated comfort and style.",
+        description: "Discover iconic SUVs that blend rugged capability with sophisticated comfort and style.",
     },
 ];
+
+const AUTO_PLAY_INTERVAL = 6000;
 
 export function Hero() {
     const [activeSlide, setActiveSlide] = useState(0);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setActiveSlide((prev) => (prev + 1) % HERO_SLIDES.length);
-        }, 6000);
-
-        return () => clearInterval(interval);
+    const nextSlide = useCallback(() => {
+        setActiveSlide((prev) => (prev + 1) % HERO_SLIDES.length);
     }, []);
 
+    useEffect(() => {
+        const interval = setInterval(nextSlide, AUTO_PLAY_INTERVAL);
+        return () => clearInterval(interval);
+    }, [nextSlide]);
+
     return (
-        <section className="relative overflow-hidden">
-            {/* Background Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/50 to-background" />
+        <section className="relative h-[100svh] min-h-[650px] w-full overflow-hidden bg-black text-white">
+            
+            {/* --- Background Image Slider --- */}
+            <div className="absolute inset-0 z-0">
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={activeSlide}
+                        initial={{ opacity: 0, scale: 1.1 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 1.2, ease: "easeInOut" }}
+                        className="relative h-full w-full"
+                    >
+                        <Image
+                            src={HERO_SLIDES[activeSlide].image}
+                            alt="Luxury Car"
+                            fill
+                            priority
+                            className="object-cover brightness-[0.45]"
+                        />
+                        {/* Overlay Gradients */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/40 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
+                    </motion.div>
+                </AnimatePresence>
+            </div>
 
-            {/* Abstract Shapes */}
-            <div className="absolute -top-24 -right-24 w-96 h-96 bg-accent/10 rounded-full blur-3xl opacity-50" />
-            <div className="absolute top-1/2 -left-24 w-72 h-72 bg-accent/5 rounded-full blur-3xl opacity-50" />
-
-            <div className="relative z-10 w-full">
-                <div className="relative overflow-hidden w-full h-[100svh] min-h-[460px] sm:min-h-[560px]">
-                    {HERO_SLIDES.map((slide, index) => (
-                        <div
-                            key={slide.image}
-                            className={`absolute inset-0 transition-[opacity,transform] duration-[1800ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                                index === activeSlide
-                                    ? "opacity-100 scale-100"
-                                    : "opacity-0 scale-[1.04]"
-                            }`}
+            {/* --- Content Overlay --- */}
+            <div className="relative z-10 flex h-full items-center px-6 sm:px-12 lg:px-24">
+                <div className="max-w-4xl">
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={`content-${activeSlide}`}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: 20 }}
+                            transition={{ duration: 0.6, ease: "easeOut" }}
                         >
-                            <Image
-                                src={slide.image}
-                                alt="Featured luxury sedan"
-                                fill
-                                priority={index === 0}
-                                className="object-cover"
-                            />
-                        </div>
-                    ))}
+                            <h1 className="text-5xl font-extrabold tracking-tight sm:text-7xl lg:text-8xl leading-[1.1]">
+                                {HERO_SLIDES[activeSlide].title.split("\n").map((line, i) => (
+                                    <span 
+                                        key={i} 
+                                        className={`block ${i === 1 ? 'text-blue-400' : 'text-white'}`}
+                                    >
+                                        {line}
+                                    </span>
+                                ))}
+                            </h1>
 
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#0c1020]/95 via-[#0c1020]/75 to-transparent" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+                            <p className="mt-6 max-w-xl text-lg text-gray-300 sm:text-xl leading-relaxed">
+                                {HERO_SLIDES[activeSlide].description}
+                            </p>
+                        </motion.div>
+                    </AnimatePresence>
 
-                    <div className="absolute inset-y-0 left-0 w-full max-w-[92%] sm:max-w-[62%] lg:max-w-[52%] p-6 sm:p-10 lg:p-14 flex flex-col justify-center text-white">
-                        <div className="relative min-h-[220px] sm:min-h-[250px] lg:min-h-[300px]">
-                            {HERO_SLIDES.map((slide, index) => (
-                                <div
-                                    key={`content-${slide.image}`}
-                                    className={`absolute inset-0 transition-all duration-700 ease-out ${
-                                        index === activeSlide
-                                            ? "opacity-100 translate-y-0"
-                                            : "opacity-0 translate-y-5 pointer-events-none"
-                                    }`}
-                                >
-                                    <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.03]">
-                                        {slide.title.split("\n")[0]} <br className="hidden sm:block" />
-                                        {slide.title.split("\n")[1]}
-                                    </h1>
-                                    <p className="mt-4 text-sm sm:text-base lg:text-lg text-white/80 max-w-xl leading-relaxed">
-                                        {slide.description}
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
-
-                        <a
-                            href="#quick-search"
-                            className="mt-7 inline-flex w-fit items-center rounded-md border border-white/40 bg-white/5 px-4 py-2 text-sm font-medium text-white hover:bg-white/15 transition-colors"
+                    {/* Buttons Section */}
+                    <div className="mt-10 flex flex-wrap gap-4">
+                        <motion.button 
+                            whileHover={{ scale: 1.05, backgroundColor: "#1e3a8a" }} // Navy Blue Hover
+                            whileTap={{ scale: 0.95 }}
+                            className="rounded-full bg-blue-950 border border-blue-900 px-8 py-4 text-sm font-bold uppercase tracking-wider text-white shadow-xl shadow-blue-950/50 transition-all"
                         >
-                            Explore Now
-                        </a>
+                            View Inventory
+                        </motion.button>
+                        
+                        <motion.button 
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="rounded-full border border-white/20 bg-white/5 px-8 py-4 text-sm font-bold uppercase tracking-wider backdrop-blur-md hover:bg-white/10 transition-colors"
+                        >
+                            Sell Your Car
+                        </motion.button>
                     </div>
 
-                    <div className="absolute left-6 right-6 bottom-6 z-20 flex items-center gap-2 sm:left-10 sm:right-10 sm:bottom-8 lg:left-14 lg:right-14">
-                        {HERO_SLIDES.map((slide, index) => (
-                            <button
-                                key={`indicator-${slide.image}`}
-                                aria-label={`Go to slide ${index + 1}`}
-                                onClick={() => setActiveSlide(index)}
-                                className={`h-1.5 rounded-full transition-all duration-500 ${
-                                    index === activeSlide
-                                        ? "w-14 bg-white"
-                                        : "w-6 bg-white/45 hover:bg-white/70"
+                    {/* Slide Indicators */}
+                    <div className="mt-12 flex gap-2">
+                        {HERO_SLIDES.map((_, index) => (
+                            <div 
+                                key={index}
+                                className={`h-1 transition-all duration-500 rounded-full ${
+                                    activeSlide === index ? "w-12 bg-blue-500" : "w-4 bg-gray-600"
                                 }`}
                             />
                         ))}
                     </div>
                 </div>
             </div>
+
+            {/* Decorative Ambient Glow (Dark Navy) */}
+            <div className="pointer-events-none absolute -bottom-24 -left-24 h-96 w-96 rounded-full bg-blue-900/20 blur-[120px]" />
+            <div className="pointer-events-none absolute top-1/2 right-0 h-64 w-64 rounded-full bg-blue-950/10 blur-[100px]" />
         </section>
     );
 }
