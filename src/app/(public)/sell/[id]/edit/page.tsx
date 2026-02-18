@@ -39,8 +39,24 @@ export default async function EditListingPage({ params }: EditListingPageProps) 
     };
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <ListingForm vehicleId={vehicle.id} initialData={initialData} />
+        <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 py-12 lg:py-16">
+            <div className="container-width">
+                <div className="mb-10 max-w-2xl px-4 md:px-0">
+                    <span className="mb-3 inline-block rounded-full border border-blue-400/30 bg-blue-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-blue-500">
+                        UPDATE YOUR LISTING
+                    </span>
+                    <h1 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">
+                        Edit: {vehicle.year} {vehicle.make} {vehicle.model}
+                    </h1>
+                    <p className="mt-2 text-muted-foreground leading-relaxed">
+                        Update the details of your listing to keep it accurate for potential buyers.
+                    </p>
+                </div>
+
+                <div className="rounded-3xl border border-border/70 bg-card/60 p-5 md:p-8 lg:p-10 backdrop-blur-md shadow-xl">
+                    <ListingForm vehicleId={vehicle.id} initialData={initialData} />
+                </div>
+            </div>
         </div>
     );
 }
