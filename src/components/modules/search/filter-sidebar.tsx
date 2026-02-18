@@ -48,23 +48,29 @@ export function FilterSidebar() {
     const qParam = searchParams.get("q") ?? "";
     const inputRef = useRef<HTMLInputElement | null>(null);
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const priceDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const yearDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const minPriceRef = useRef<HTMLInputElement | null>(null);
+    const maxPriceRef = useRef<HTMLInputElement | null>(null);
+    const minYearRef = useRef<HTMLInputElement | null>(null);
+    const maxYearRef = useRef<HTMLInputElement | null>(null);
 
     const make = searchParams.get("make") ?? undefined;
-    const minPrice = searchParams.get("minPrice") ?? "";
-    const maxPrice = searchParams.get("maxPrice") ?? "";
+    const minPriceParam = searchParams.get("minPrice") ?? "";
+    const maxPriceParam = searchParams.get("maxPrice") ?? "";
     const bodyType = searchParams.get("bodyType") ?? undefined;
-    const minYear = searchParams.get("minYear") ?? "";
-    const maxYear = searchParams.get("maxYear") ?? "";
+    const minYearParam = searchParams.get("minYear") ?? "";
+    const maxYearParam = searchParams.get("maxYear") ?? "";
 
     // Count active filters
     const activeFiltersCount = [
         qParam,
         make,
         bodyType,
-        minPrice,
-        maxPrice,
-        minYear,
-        maxYear,
+        minPriceParam,
+        maxPriceParam,
+        minYearParam,
+        maxYearParam,
     ].filter(Boolean).length;
 
     // Keep input in sync when URL changes (reset, back/forward, etc.)
@@ -74,6 +80,25 @@ export function FilterSidebar() {
             inputRef.current.value = qParam;
         }
     }, [qParam]);
+
+    // Keep numeric inputs in sync with URL changes (reset, back/forward, etc.)
+    useEffect(() => {
+        if (minPriceRef.current && minPriceRef.current.value !== minPriceParam) {
+            minPriceRef.current.value = minPriceParam;
+        }
+        if (maxPriceRef.current && maxPriceRef.current.value !== maxPriceParam) {
+            maxPriceRef.current.value = maxPriceParam;
+        }
+    }, [minPriceParam, maxPriceParam]);
+
+    useEffect(() => {
+        if (minYearRef.current && minYearRef.current.value !== minYearParam) {
+            minYearRef.current.value = minYearParam;
+        }
+        if (maxYearRef.current && maxYearRef.current.value !== maxYearParam) {
+            maxYearRef.current.value = maxYearParam;
+        }
+    }, [minYearParam, maxYearParam]);
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -101,12 +126,20 @@ export function FilterSidebar() {
     useEffect(() => {
         return () => {
             if (debounceRef.current) clearTimeout(debounceRef.current);
+            if (priceDebounceRef.current) clearTimeout(priceDebounceRef.current);
+            if (yearDebounceRef.current) clearTimeout(yearDebounceRef.current);
         };
     }, []);
 
     const handleReset = () => {
         if (debounceRef.current) clearTimeout(debounceRef.current);
+        if (priceDebounceRef.current) clearTimeout(priceDebounceRef.current);
+        if (yearDebounceRef.current) clearTimeout(yearDebounceRef.current);
         if (inputRef.current) inputRef.current.value = "";
+        if (minPriceRef.current) minPriceRef.current.value = "";
+        if (maxPriceRef.current) maxPriceRef.current.value = "";
+        if (minYearRef.current) minYearRef.current.value = "";
+        if (maxYearRef.current) maxYearRef.current.value = "";
         updateParams({
             q: undefined,
             make: undefined,
@@ -118,6 +151,45 @@ export function FilterSidebar() {
             maxYear: undefined,
             sort: undefined,
         });
+    };
+
+    const handlePriceChange = () => {
+        const min = minPriceRef.current?.value ?? "";
+        const max = maxPriceRef.current?.value ?? "";
+
+        if (priceDebounceRef.current) clearTimeout(priceDebounceRef.current);
+
+        // clearing should apply immediately
+        if (!min && !max) {
+            updateParams({ minPrice: undefined, maxPrice: undefined });
+            return;
+        }
+
+        priceDebounceRef.current = setTimeout(() => {
+            updateParams({
+                minPrice: min || undefined,
+                maxPrice: max || undefined,
+            });
+        }, 350);
+    };
+
+    const handleYearChange = () => {
+        const min = minYearRef.current?.value ?? "";
+        const max = maxYearRef.current?.value ?? "";
+
+        if (yearDebounceRef.current) clearTimeout(yearDebounceRef.current);
+
+        if (!min && !max) {
+            updateParams({ minYear: undefined, maxYear: undefined });
+            return;
+        }
+
+        yearDebounceRef.current = setTimeout(() => {
+            updateParams({
+                minYear: min || undefined,
+                maxYear: max || undefined,
+            });
+        }, 350);
     };
 
     return (
@@ -208,8 +280,9 @@ export function FilterSidebar() {
                                         type="number"
                                         placeholder="$0"
                                         min={0}
-                                        value={minPrice}
-                                        onChange={(e) => updateParams({ minPrice: e.target.value || undefined })}
+                                        ref={minPriceRef}
+                                        onChange={handlePriceChange}
+                                        onBlur={handlePriceChange}
                                         className="h-10 rounded-xl border-2 border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:ring-0"
                                     />
                                 </div>
@@ -219,8 +292,9 @@ export function FilterSidebar() {
                                         type="number"
                                         placeholder="$∞"
                                         min={0}
-                                        value={maxPrice}
-                                        onChange={(e) => updateParams({ maxPrice: e.target.value || undefined })}
+                                        ref={maxPriceRef}
+                                        onChange={handlePriceChange}
+                                        onBlur={handlePriceChange}
                                         className="h-10 rounded-xl border-2 border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:ring-0"
                                     />
                                 </div>
@@ -271,8 +345,9 @@ export function FilterSidebar() {
                                         placeholder="1900"
                                         min={1900}
                                         max={2100}
-                                        value={minYear}
-                                        onChange={(e) => updateParams({ minYear: e.target.value || undefined })}
+                                        ref={minYearRef}
+                                        onChange={handleYearChange}
+                                        onBlur={handleYearChange}
                                         className="h-10 rounded-xl border-2 border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:ring-0"
                                     />
                                 </div>
@@ -283,8 +358,9 @@ export function FilterSidebar() {
                                         placeholder="2025"
                                         min={1900}
                                         max={2100}
-                                        value={maxYear}
-                                        onChange={(e) => updateParams({ maxYear: e.target.value || undefined })}
+                                        ref={maxYearRef}
+                                        onChange={handleYearChange}
+                                        onBlur={handleYearChange}
                                         className="h-10 rounded-xl border-2 border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:ring-0"
                                     />
                                 </div>
