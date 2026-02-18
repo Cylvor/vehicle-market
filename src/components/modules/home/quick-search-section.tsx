@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Search, Sparkles, Star } from "lucide-react";
+import { Search, Sparkles, Star, ChevronDown, RotateCcw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -24,22 +24,24 @@ const MAKE_MODELS: Record<string, string[]> = {
     Hyundai: ["i30", "Tucson", "Santa Fe", "Kona"],
     Mitsubishi: ["Triton", "Outlander", "ASX", "Pajero Sport"],
     Kia: ["Sportage", "Cerato", "Seltos", "Sorento"],
-    Tesla: ["Model 3", "Model Y", "Model S", "Model X"],
-    BMW: ["3 Series", "X3", "X5", "M3"],
-    "Mercedes-Benz": ["C-Class", "E-Class", "GLC", "GLE"],
 };
 
-const BODY_TYPE_OPTIONS = ["Sedan", "Hatchback", "SUV", "Ute", "Coupe", "Convertible", "Van", "Wagon"];
+const PRICE_OPTIONS = ["10000", "20000", "30000", "40000", "50000", "75000", "100000"];
+const BODY_TYPE_OPTIONS = ["Sedan", "Hatchback", "SUV", "Ute", "Coupe", "Van"];
 const LOCATION_OPTIONS = ["NSW", "VIC", "QLD", "WA", "SA", "TAS", "ACT", "NT"];
 
 export function QuickSearchSection() {
     const router = useRouter();
     const sectionRef = useRef<HTMLElement | null>(null);
     const [isVisible, setIsVisible] = useState(false);
+
+    // Filter States
     const [selectedMake, setSelectedMake] = useState("");
     const [selectedModel, setSelectedModel] = useState("");
     const [selectedBodyType, setSelectedBodyType] = useState("");
     const [selectedLocation, setSelectedLocation] = useState("");
+    const [minPrice, setMinPrice] = useState("");
+    const [maxPrice, setMaxPrice] = useState("");
 
     const makeOptions = Object.keys(MAKE_MODELS);
     const modelOptions = selectedMake ? MAKE_MODELS[selectedMake] ?? [] : [];
@@ -47,224 +49,135 @@ export function QuickSearchSection() {
     useEffect(() => {
         const node = sectionRef.current;
         if (!node) return;
-
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setIsVisible(true);
-                    observer.unobserve(node);
-                }
-            },
-            {
-                threshold: 0,
-                rootMargin: "0px 0px -2% 0px",
-            }
-        );
-
+        const observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) { setIsVisible(true); observer.unobserve(node); }
+        }, { threshold: 0.1 });
         observer.observe(node);
-
         return () => observer.disconnect();
     }, []);
 
-    function buildSearchQuery(overrides?: {
-        make?: string;
-        model?: string;
-        bodyType?: string;
-        location?: string;
-    }) {
+    const handleClearAll = () => {
+        setSelectedMake(""); setSelectedModel(""); setSelectedBodyType("");
+        setSelectedLocation(""); setMinPrice(""); setMaxPrice("");
+    };
+
+    const handleSubmit = () => {
         const params = new URLSearchParams();
-        const make = overrides?.make ?? selectedMake;
-        const model = overrides?.model ?? selectedModel;
-        const bodyType = overrides?.bodyType ?? selectedBodyType;
-        const location = overrides?.location ?? selectedLocation;
+        if (selectedMake) params.set("make", selectedMake);
+        if (selectedModel) params.set("model", selectedModel);
+        if (selectedBodyType) params.set("bodyType", selectedBodyType);
+        if (selectedLocation) params.set("location", selectedLocation);
+        if (minPrice) params.set("minPrice", minPrice);
+        if (maxPrice) params.set("maxPrice", maxPrice);
+        router.push(`/search?${params.toString()}`);
+    };
 
-        if (make) params.set("make", make);
-        if (model) params.set("model", model);
-        if (bodyType) params.set("bodyType", bodyType);
-        if (location) params.set("location", location);
-
-        return params.toString();
-    }
-
-    function handleSubmit() {
-        const query = buildSearchQuery();
-        router.push(query ? `/search?${query}` : "/search");
-    }
-
-    function handleClearAll() {
-        setSelectedMake("");
-        setSelectedModel("");
-        setSelectedBodyType("");
-        setSelectedLocation("");
-        router.push("/search");
-    }
-
-    function handleBodyTypeTileClick(bodyType?: string) {
-        if (!bodyType) {
-            router.push("/search");
-            return;
-        }
-
-        setSelectedBodyType(bodyType);
-        const query = buildSearchQuery({ bodyType });
-        router.push(query ? `/search?${query}` : "/search");
-    }
+    const inputClasses = "h-[50px] w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-900 transition-all hover:border-blue-900/30 focus:border-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-900/5 cursor-pointer";
 
     return (
-        <section
-            id="quick-search"
-            ref={sectionRef}
-            className={`pt-10 lg:pt-14 pb-16 transition-all duration-700 ease-out ${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-            }`}
-        >
-            <div className="container-width">
-                <div className="rounded-3xl border border-border shadow-sm bg-card p-6 md:p-10">
-                    <div className="flex flex-col md:flex-row items-start justify-between gap-6 pb-8 border-b border-border/50 mb-8">
+        <section ref={sectionRef} className={`py-12 bg-slate-50 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+            <div className="container-width px-6">
+                <div className="rounded-[32px] bg-white border border-slate-200/60 shadow-xl p-8 md:p-10">
+                    
+                    {/* Header */}
+                    <div className="flex flex-col md:flex-row items-start justify-between gap-6 mb-8">
                         <div>
-                            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">Find your next car</h2>
-                            <p className="mt-2 text-muted-foreground text-lg">Search through thousands of verified listings.</p>
+                            <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Find your next car</h2>
+                            <p className="mt-1 text-slate-500">Browse thousands of trusted local listings.</p>
                         </div>
-                        <div className="hidden md:flex items-center gap-3 rounded-full bg-accent/10 px-6 py-3 border border-transparent shadow-none">
-                            <Sparkles className="h-5 w-5 text-foreground" />
-                            <span className="text-lg font-bold text-foreground">Quick search</span>
-                            <Badge className="ml-2 bg-foreground text-background hover:bg-foreground/90 rounded-full px-3">NEW</Badge>
+                        <div className="flex items-center gap-4">
+                            <button onClick={handleClearAll} className="flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-red-500 transition-colors">
+                                <RotateCcw className="h-4 w-4" /> Clear Filters
+                            </button>
+                            <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full border border-blue-100">
+                                <Sparkles className="h-4 w-4 text-blue-900" />
+                                <span className="text-xs font-bold text-blue-900 uppercase tracking-tight">Quick Search</span>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-                        <div className="space-y-4">
-                            <label className="text-base font-bold text-foreground ml-1">Make</label>
+                    {/* Filter Grid - Row 1 */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                        <div className="space-y-1.5">
+                            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider ml-1">Make</label>
                             <div className="relative">
-                                <select
-                                    className="h-[60px] w-full appearance-none rounded-2xl border-2 border-slate-200 bg-background px-6 text-lg font-medium text-foreground shadow-sm transition-all hover:border-primary/50 focus:border-primary focus:outline-none focus:ring-0 focus:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
-                                    value={selectedMake}
-                                    onChange={(event) => {
-                                        const nextMake = event.target.value;
-                                        setSelectedMake(nextMake);
-                                        setSelectedModel("");
-                                    }}
-                                >
+                                <select className={inputClasses} value={selectedMake} onChange={(e) => { setSelectedMake(e.target.value); setSelectedModel(""); }}>
                                     <option value="">All makes</option>
-                                    {makeOptions.map((make) => (
-                                        <option key={make} value={make}>
-                                            {make}
-                                        </option>
-                                    ))}
+                                    {makeOptions.map(m => <option key={m} value={m}>{m}</option>)}
                                 </select>
-                                <div className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5"><path d="m6 9 6 6 6-6"/></svg>
-                                </div>
+                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4 pointer-events-none" />
                             </div>
                         </div>
-
-                        <div className="space-y-4">
-                            <label className="text-base font-bold text-foreground ml-1">Model</label>
+                        <div className="space-y-1.5">
+                            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider ml-1">Model</label>
                             <div className="relative">
-                                <select
-                                    className="h-[60px] w-full appearance-none rounded-2xl border-2 border-slate-200 bg-background px-6 text-lg font-medium text-foreground shadow-sm transition-all hover:border-primary/50 focus:border-primary focus:outline-none focus:ring-0 focus:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
-                                    value={selectedModel}
-                                    onChange={(event) => setSelectedModel(event.target.value)}
-                                    disabled={!selectedMake}
-                                >
+                                <select className={inputClasses} value={selectedModel} onChange={(e) => setSelectedModel(e.target.value)} disabled={!selectedMake}>
                                     <option value="">All models</option>
-                                    {modelOptions.map((model) => (
-                                        <option key={model} value={model}>
-                                            {model}
-                                        </option>
-                                    ))}
+                                    {modelOptions.map(m => <option key={m} value={m}>{m}</option>)}
                                 </select>
-                                <div className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5"><path d="m6 9 6 6 6-6"/></svg>
-                                </div>
+                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4 pointer-events-none" />
                             </div>
                         </div>
-
-                        <div className="space-y-4">
-                            <label className="text-base font-bold text-foreground ml-1">Body type</label>
+                        <div className="space-y-1.5">
+                            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider ml-1">Body Type</label>
                             <div className="relative">
-                                <select
-                                    className="h-[60px] w-full appearance-none rounded-2xl border-2 border-slate-200 bg-background px-6 text-lg font-medium text-foreground shadow-sm transition-all hover:border-primary/50 focus:border-primary focus:outline-none focus:ring-0 focus:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
-                                    value={selectedBodyType}
-                                    onChange={(event) => setSelectedBodyType(event.target.value)}
-                                >
-                                    <option value="">All body types</option>
-                                    {BODY_TYPE_OPTIONS.map((bodyType) => (
-                                        <option key={bodyType} value={bodyType}>
-                                            {bodyType}
-                                        </option>
-                                    ))}
+                                <select className={inputClasses} value={selectedBodyType} onChange={(e) => setSelectedBodyType(e.target.value)}>
+                                    <option value="">Any body type</option>
+                                    {BODY_TYPE_OPTIONS.map(b => <option key={b} value={b}>{b}</option>)}
                                 </select>
-                                <div className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5"><path d="m6 9 6 6 6-6"/></svg>
-                                </div>
+                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4 pointer-events-none" />
                             </div>
                         </div>
-
-                        <div className="space-y-4">
-                            <label className="text-base font-bold text-foreground ml-1">Location</label>
+                        <div className="space-y-1.5">
+                            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider ml-1">Location</label>
                             <div className="relative">
-                                <select
-                                    className="h-[60px] w-full appearance-none rounded-2xl border-2 border-slate-200 bg-background px-6 text-lg font-medium text-foreground shadow-sm transition-all hover:border-primary/50 focus:border-primary focus:outline-none focus:ring-0 focus:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
-                                    value={selectedLocation}
-                                    onChange={(event) => setSelectedLocation(event.target.value)}
-                                >
-                                    <option value="">All states</option>
-                                    {LOCATION_OPTIONS.map((location) => (
-                                        <option key={location} value={location}>
-                                            {location}
-                                        </option>
-                                    ))}
+                                <select className={inputClasses} value={selectedLocation} onChange={(e) => setSelectedLocation(e.target.value)}>
+                                    <option value="">All locations</option>
+                                    {LOCATION_OPTIONS.map(l => <option key={l} value={l}>{l}</option>)}
                                 </select>
-                                <div className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5"><path d="m6 9 6 6 6-6"/></svg>
-                                </div>
+                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4 pointer-events-none" />
                             </div>
                         </div>
+                    </div>
 
-                        <div className="flex items-end">
-                            <Button 
-                                className="h-[60px] w-full rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90 text-xl font-bold shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] hover:shadow-primary/30" 
-                                onClick={handleSubmit}
-                            >
-                                <Search className="mr-2 h-6 w-6" />
-                                Search
+                    {/* Filter Grid - Row 2 (Price & Search) */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 items-end">
+                        <div className="space-y-1.5">
+                            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider ml-1">Min Price</label>
+                            <div className="relative">
+                                <select className={inputClasses} value={minPrice} onChange={(e) => setMinPrice(e.target.value)}>
+                                    <option value="">No Min</option>
+                                    {PRICE_OPTIONS.map(p => <option key={p} value={p}>${Number(p).toLocaleString()}</option>)}
+                                </select>
+                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4 pointer-events-none" />
+                            </div>
+                        </div>
+                        <div className="space-y-1.5">
+                            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider ml-1">Max Price</label>
+                            <div className="relative">
+                                <select className={inputClasses} value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)}>
+                                    <option value="">No Max</option>
+                                    {PRICE_OPTIONS.map(p => <option key={p} value={p}>${Number(p).toLocaleString()}</option>)}
+                                </select>
+                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4 pointer-events-none" />
+                            </div>
+                        </div>
+                        <div className="lg:col-span-2">
+                            <Button onClick={handleSubmit} className="h-[50px] w-full rounded-xl bg-[#001f3f] hover:bg-blue-900 text-white font-bold text-lg shadow-lg shadow-blue-900/10 transition-all active:scale-[0.98]">
+                                <Search className="mr-2 h-5 w-5" /> Search
                             </Button>
                         </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-between gap-y-4 pt-4">
-                        <div className="flex flex-wrap items-center gap-6 text-foreground/80">
-                            <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Quick Filters:</span>
-                            <button className="text-base font-medium hover:text-primary transition-colors underline-offset-4 hover:underline">New Arrivals</button>
-                            <button className="text-base font-medium hover:text-primary transition-colors underline-offset-4 hover:underline">Under $50k</button>
-                            <button className="text-base font-medium hover:text-primary transition-colors underline-offset-4 hover:underline">Electric</button>
-                            <button className="text-base font-medium text-muted-foreground hover:text-destructive transition-colors flex items-center gap-1" onClick={handleClearAll}>
-                                Clear all filters
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-5 pt-7">
+                    {/* Body Type Icons */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4 pt-10 mt-8 border-t border-slate-100">
                         {BODY_TYPES.map((type) => (
-                            <button
-                                key={type.label}
-                                className="group flex flex-col items-center text-center"
-                                onClick={() => handleBodyTypeTileClick(type.value)}
-                            >
-                                <div className="relative h-16 w-full max-w-[160px]">
-                                    <Image
-                                        src={type.image}
-                                        alt={type.label}
-                                        fill
-                                        sizes="(max-width: 768px) 130px, 160px"
-                                        className="object-contain"
-                                    />
+                            <button key={type.label} className="group flex flex-col items-center p-3 rounded-2xl hover:bg-slate-50 transition-all" onClick={() => { setSelectedBodyType(type.value || type.label); handleSubmit(); }}>
+                                <div className="relative h-10 w-full max-w-[100px] transition-transform group-hover:scale-110">
+                                    <Image src={type.image} alt={type.label} fill className="object-contain" />
                                 </div>
-
-                                <span className="mt-3 text-xl md:text-xl font-semibold text-foreground leading-none">
-                                    {type.isBrandNew ? <Star className="inline h-6 w-6 fill-current mr-1" /> : null}
-                                    {type.label}
+                                <span className="mt-3 text-[13px] font-bold text-slate-600 flex items-center gap-1 group-hover:text-blue-900">
+                                    {type.isBrandNew && <Star className="h-3 w-3 fill-blue-900 text-blue-900" />} {type.label}
                                 </span>
                             </button>
                         ))}
