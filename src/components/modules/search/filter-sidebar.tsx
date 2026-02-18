@@ -193,8 +193,8 @@ export function FilterSidebar() {
     };
 
     return (
-        <aside className="sticky top-6 h-fit">
-            <div className="rounded-2xl border border-border/70 bg-card shadow-sm p-6 space-y-6">
+        <aside className="sticky top-28 lg:top-32 h-fit">
+            <div className="rounded-md border border-border/70 bg-card shadow-md p-6 space-y-6">
                 {/* Header */}
                 <div className="flex items-center justify-between pb-4 border-b border-border/50">
                     <div className="flex items-center gap-2">
@@ -227,7 +227,7 @@ export function FilterSidebar() {
                         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
                             placeholder="Make, model, or variant..."
-                            className="pl-10 h-11 rounded-xl border-2 border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:ring-0"
+                            className="pl-10 h-11 border border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
                             ref={inputRef}
                             onChange={handleSearchChange}
                             onKeyDown={handleSearchKeyDown}
@@ -283,7 +283,7 @@ export function FilterSidebar() {
                                         ref={minPriceRef}
                                         onChange={handlePriceChange}
                                         onBlur={handlePriceChange}
-                                        className="h-10 rounded-xl border-2 border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:ring-0"
+                                        className="h-10 border border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -295,7 +295,7 @@ export function FilterSidebar() {
                                         ref={maxPriceRef}
                                         onChange={handlePriceChange}
                                         onBlur={handlePriceChange}
-                                        className="h-10 rounded-xl border-2 border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:ring-0"
+                                        className="h-10 border border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
                                     />
                                 </div>
                             </div>
@@ -348,7 +348,7 @@ export function FilterSidebar() {
                                         ref={minYearRef}
                                         onChange={handleYearChange}
                                         onBlur={handleYearChange}
-                                        className="h-10 rounded-xl border-2 border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:ring-0"
+                                        className="h-10 border border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -361,7 +361,7 @@ export function FilterSidebar() {
                                         ref={maxYearRef}
                                         onChange={handleYearChange}
                                         onBlur={handleYearChange}
-                                        className="h-10 rounded-xl border-2 border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:ring-0"
+                                        className="h-10 border border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
                                     />
                                 </div>
                             </div>
@@ -373,7 +373,7 @@ export function FilterSidebar() {
                 {activeFiltersCount > 0 && (
                     <Button
                         variant="outline"
-                        className="w-full h-11 rounded-xl border-2 border-border/70 hover:border-destructive/50 hover:bg-destructive/5 hover:text-destructive transition-all font-bold"
+                        className="w-full h-11 border-2 border-border/70 hover:border-destructive/50 hover:bg-destructive/5 hover:text-destructive transition-all font-bold"
                         onClick={handleReset}
                     >
                         <X className="h-4 w-4 mr-2" />
@@ -412,7 +412,7 @@ export function SortSelect() {
             <span className="text-sm font-bold text-muted-foreground">Sort by:</span>
             <div className="relative">
                 <select
-                    className="h-10 w-[200px] appearance-none rounded-xl border-2 border-border/70 bg-background px-4 py-2 text-base font-medium text-foreground shadow-sm transition-all hover:border-primary/50 focus:border-primary focus:outline-none focus:ring-0 focus:shadow-md cursor-pointer"
+                    className="h-10 w-[200px] appearance-none border-2 border-border/70 bg-background px-4 py-2 text-base font-medium text-foreground shadow-sm transition-all hover:border-primary/50 focus:border-primary focus:outline-none focus:ring-0 focus:shadow-md cursor-pointer"
                     value={current}
                     onChange={handleChange}
                 >

@@ -28,7 +28,7 @@ export async function ResultsGrid({ filters }: ResultsGridProps) {
     return (
         <div className="space-y-6">
             {/* Header Section */}
-            <div className="rounded-2xl border border-border/70 bg-card shadow-sm p-6">
+            <div className="rounded-md border border-border/70 bg-card shadow-md p-6">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
                         <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent ring-1 ring-accent/20">
@@ -57,7 +57,7 @@ export async function ResultsGrid({ filters }: ResultsGridProps) {
 
             {/* Results Grid */}
             {results.length === 0 ? (
-                <div className="rounded-2xl border border-border/70 bg-card shadow-sm p-12 md:p-16 text-center">
+                <div className="rounded-md border border-border/70 bg-card shadow-md p-12 md:p-16 text-center">
                     <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-muted mb-4">
                         <Grid3x3 className="h-8 w-8 text-muted-foreground" />
                     </div>
@@ -69,7 +69,7 @@ export async function ResultsGrid({ filters }: ResultsGridProps) {
                     </p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {results.map((vehicle) => (
                         <VehicleCard
                             key={vehicle.id}
