@@ -16,7 +16,7 @@ interface VehicleCardProps {
 
 export function VehicleCard({ id, title, price, image, mileage, fuel, year, transmission }: VehicleCardProps) {
     return (
-        <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-colors hover:border-foreground/20">
+        <article className="group relative flex h-full flex-col overflow-hidden rounded-md border border-border bg-card shadow-md hover:shadow-lg transition-all hover:border-foreground/20 font-sans">
             <Link href={`/vehicles/${id}`} className="absolute inset-0 z-10">
                 <span className="sr-only">View {title}</span>
             </Link>
