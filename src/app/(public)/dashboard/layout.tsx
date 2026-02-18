@@ -8,7 +8,7 @@ export default function DashboardLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col pt-16 md:pt-20">
             <Suspense fallback={<div className="h-12 border-b bg-muted" />}>
                 <DashboardModeToggle />
             </Suspense>

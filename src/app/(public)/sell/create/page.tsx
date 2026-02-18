@@ -20,6 +20,10 @@ export default function CreateListingPage() {
                     <ListingForm />
                 </div>
             </div>
+            
+        <div className="container mx-auto px-4 pt-24 md:pt-28 pb-8">
+            <ListingForm />
+        </div>
         </div>
     );
 }

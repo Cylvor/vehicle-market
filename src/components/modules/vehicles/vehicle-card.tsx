@@ -1,7 +1,11 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Gauge, Heart, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { isVehicleSaved, toggleVehicleSaved } from "@/lib/saved-vehicles";
 
 interface VehicleCardProps {
     id: string;
@@ -12,9 +16,32 @@ interface VehicleCardProps {
     fuel: string;
     year: string;
     transmission: string;
+    onSaveChange?: (isSaved: boolean) => void;
 }
 
-export function VehicleCard({ id, title, price, image, mileage, fuel, year, transmission }: VehicleCardProps) {
+export function VehicleCard({ id, title, price, image, mileage, fuel, year, transmission, onSaveChange }: VehicleCardProps) {
+    const [isSaved, setIsSaved] = useState(false);
+
+    useEffect(() => {
+        setIsSaved(isVehicleSaved(id));
+    }, [id]);
+
+    const toggleSaveVehicle = () => {
+        const { isSaved: nextIsSaved } = toggleVehicleSaved({
+            id,
+            title,
+            price,
+            image,
+            mileage,
+            fuel,
+            year,
+            transmission,
+        });
+
+        setIsSaved(nextIsSaved);
+        onSaveChange?.(nextIsSaved);
+    };
+
     return (
         <article className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-border/80 bg-gradient-to-b from-background via-card to-card shadow-md hover:shadow-xl transition-all hover:border-primary/40 hover:-translate-y-1 font-sans">
             <Link href={`/vehicles/${id}`} className="absolute inset-0 z-10">
@@ -37,12 +64,16 @@ export function VehicleCard({ id, title, price, image, mileage, fuel, year, tran
                         {title}
                     </h3>
                     <Button
+                        type="button"
                         variant="ghost"
                         size="icon"
-                        className="z-20 h-8 w-8 shrink-0 rounded-full text-accent hover:bg-accent/10 hover:text-accent"
+                        onClick={toggleSaveVehicle}
+                        aria-pressed={isSaved}
+                        aria-label={isSaved ? "Unsave vehicle" : "Save vehicle"}
+                        className="z-20 h-9 w-9 shrink-0 rounded-full text-primary hover:bg-primary/10 hover:text-primary"
                     >
-                        <Heart className="h-5 w-5" />
-                        <span className="sr-only">Save vehicle</span>
+                        <Heart className="h-6 w-6" fill={isSaved ? "currentColor" : "none"} />
+                        <span className="sr-only">{isSaved ? "Unsave vehicle" : "Save vehicle"}</span>
                     </Button>
                 </div>
 
