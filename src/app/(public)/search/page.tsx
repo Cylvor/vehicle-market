@@ -32,18 +32,18 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     return (
         <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 font-sans">
             <div className="pt-28 pb-10 lg:pt-26 lg:pb-16">
-                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-                    {/* Left filter bar fixed to page edge */}
-                    <aside className="w-full lg:w-72 xl:w-80 flex-shrink-0">
-                        <FilterSidebar />
-                    </aside>
+                <div className="container-width px-4 lg:px-6">
+                    <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+                        {/* Left filter bar with gap from page edge */}
+                        <aside className="w-full lg:w-72 xl:w-80 flex-shrink-0">
+                            <FilterSidebar />
+                        </aside>
 
-                    {/* Main results area balanced within site container */}
-                    <main className="flex-1 min-w-0">
-                        <div className="container-width">
+                        {/* Main results area balanced within site container */}
+                        <main className="flex-1 min-w-0">
                             <ResultsGrid filters={filters} />
-                        </div>
-                    </main>
+                        </main>
+                    </div>
                 </div>
             </div>
         </div>

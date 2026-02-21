@@ -163,7 +163,7 @@ export function QuickSearchSection() {
                             </div>
                         </div>
                         <div className="lg:col-span-2">
-                            <Button onClick={handleSubmit} className="h-[50px] w-full rounded-xl bg-[#001f3f] hover:bg-blue-900 text-white font-bold text-lg shadow-lg shadow-blue-900/10 transition-all active:scale-[0.98]">
+                            <Button onClick={handleSubmit} className="h-[50px] w-full rounded-[6px] bg-[#001f3f] hover:bg-blue-900 text-white font-bold text-lg shadow-lg shadow-blue-900/10 transition-all active:scale-[0.98]">
                                 <Search className="mr-2 h-5 w-5" /> Search
                             </Button>
                         </div>

@@ -102,7 +102,7 @@ export function Hero() {
                         <motion.button 
                             whileHover={{ scale: 1.05, backgroundColor: "#1e3a8a" }} // Navy Blue Hover
                             whileTap={{ scale: 0.95 }}
-                            className="rounded-full bg-blue-950 border border-blue-900 px-8 py-4 text-sm font-bold uppercase tracking-wider text-white shadow-xl shadow-blue-950/50 transition-all"
+                            className="rounded-[6px] bg-blue-950 border border-blue-900 px-8 py-4 text-sm font-bold uppercase tracking-wider text-white shadow-xl shadow-blue-950/50 transition-all"
                         >
                             View Inventory
                         </motion.button>
@@ -110,7 +110,7 @@ export function Hero() {
                         <motion.button 
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="rounded-full border border-white/20 bg-white/5 px-8 py-4 text-sm font-bold uppercase tracking-wider backdrop-blur-md hover:bg-white/10 transition-colors"
+                            className="rounded-[6px] border border-white/20 bg-white/5 px-8 py-4 text-sm font-bold uppercase tracking-wider backdrop-blur-md hover:bg-white/10 transition-colors"
                         >
                             Sell Your Car
                         </motion.button>
