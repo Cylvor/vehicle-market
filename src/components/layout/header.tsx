@@ -13,6 +13,7 @@ export function Header() {
     const isHome = pathname === "/";
     const isSell = pathname === "/sell";
     const isNews = pathname === "/news";
+    const isContact = pathname === "/contact";
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -34,21 +35,22 @@ export function Header() {
         }
     }, [isMenuOpen]);
 
-    const isTransparent = (isHome || isSell || isNews) && !isScrolled && !isMenuOpen;
+    const isTransparent = (isHome || isSell || isNews || isContact) && !isScrolled && !isMenuOpen;
 
     const navLinks = [
         { name: "Buy", href: "/search" },
         { name: "Sell", href: "/sell" },
         { name: "Research", href: "/research/compare" },
         { name: "News & Reviews", href: "/news" },
+        { name: "Contact", href: "/contact" },
     ];
 
     return (
         <>
             <header
                 className={`fixed top-0 z-[60] w-full transition-all duration-300 font-sans ${isTransparent
-                        ? "bg-transparent border-transparent text-white"
-                        : "bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm text-slate-900"
+                    ? "bg-transparent border-transparent text-white"
+                    : "bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm text-slate-900"
                     }`}
             >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
