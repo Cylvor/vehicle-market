@@ -30,7 +30,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 font-sans">
+        <div className="min-h-screen bg-white text-slate-900 font-sans">
             <div className="pt-28 pb-10 lg:pt-26 lg:pb-16">
                 <div className="container-width px-4 lg:px-6">
                     <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
