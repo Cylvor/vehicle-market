@@ -46,26 +46,23 @@ export function Header() {
     return (
         <>
             <header
-                className={`fixed top-0 z-[60] w-full transition-all duration-300 ${
-                    isTransparent
+                className={`fixed top-0 z-[60] w-full transition-all duration-300 font-sans ${isTransparent
                         ? "bg-transparent border-transparent text-white"
                         : "bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm text-slate-900"
-                }`}
+                    }`}
             >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 md:h-20 items-center justify-between">
-                        
+
                         {/* Logo */}
                         <div className="flex-shrink-0">
                             <Link href="/" onClick={() => setIsMenuOpen(false)} className="group flex items-center gap-3">
-                                <div className={`p-2 rounded-lg transition-all duration-300 ${
-                                    isTransparent ? "bg-white/10 text-white" : "bg-blue-600 text-white"
-                                }`}>
+                                <div className={`p-2 rounded-lg transition-all duration-300 ${isTransparent ? "bg-white/10 text-white" : "bg-blue-600 text-white"
+                                    }`}>
                                     <Car className="h-6 w-6" />
                                 </div>
-                                <span className={`text-2xl font-black tracking-tighter ${
-                                    isTransparent ? "text-white" : "text-slate-900"
-                                }`}>
+                                <span className={`text-2xl font-black tracking-tighter ${isTransparent ? "text-white" : "text-slate-900"
+                                    }`}>
                                     RIDE<span className="text-blue-600">MARKET</span>
                                 </span>
                             </Link>
@@ -102,19 +99,17 @@ export function Header() {
                             </div>
 
                             <Link href="/sell/create" className="hidden sm:block">
-                                <Button className={`rounded-full px-6 font-bold transition-all shadow-md ${
-                                    isTransparent ? "bg-white text-blue-600 hover:bg-slate-100" : "bg-blue-600 text-white hover:bg-blue-700 shadow-blue-100"
-                                }`}>
+                                <Button className={`rounded-full px-6 font-bold transition-all shadow-md ${isTransparent ? "bg-white text-blue-600 hover:bg-slate-100" : "bg-blue-600 text-white hover:bg-blue-700 shadow-blue-100"
+                                    }`}>
                                     List for Free
                                 </Button>
                             </Link>
 
                             {/* Mobile Toggle */}
-                            <button 
+                            <button
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                                className={`lg:hidden p-2 rounded-lg transition-colors ${
-                                    isTransparent ? "text-white hover:bg-white/10" : "text-slate-900 hover:bg-slate-100"
-                                }`}
+                                className={`lg:hidden p-2 rounded-lg transition-colors ${isTransparent ? "text-white hover:bg-white/10" : "text-slate-900 hover:bg-slate-100"
+                                    }`}
                             >
                                 {isMenuOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
                             </button>
@@ -124,16 +119,14 @@ export function Header() {
             </header>
 
             {/* Mobile Menu Overlay */}
-            <div className={`fixed inset-0 z-[55] lg:hidden transition-all duration-500 ${
-                isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
-            }`}>
-                <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)} />
-                
-                <aside className={`absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white shadow-2xl transition-transform duration-500 ease-out ${
-                    isMenuOpen ? "translate-x-0" : "translate-x-full"
+            <div className={`fixed inset-0 z-[55] lg:hidden transition-all duration-500 ${isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
                 }`}>
+                <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)} />
+
+                <aside className={`absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white shadow-2xl transition-transform duration-500 ease-out ${isMenuOpen ? "translate-x-0" : "translate-x-full"
+                    }`}>
                     <div className="flex flex-col h-full pt-20 pb-8 px-6">
-                        
+
                         {/* Mobile User Section */}
                         <div className="mb-8 p-4 bg-slate-50 rounded-2xl border border-slate-100">
                             <SignedIn>
@@ -144,8 +137,8 @@ export function Header() {
                                         <p className="text-xs text-slate-500">{user?.primaryEmailAddress?.emailAddress}</p>
                                     </div>
                                 </div>
-                                <Link 
-                                    href="/dashboard" 
+                                <Link
+                                    href="/dashboard"
                                     onClick={() => setIsMenuOpen(false)}
                                     className="flex items-center gap-2 text-sm font-bold text-blue-600 bg-blue-50 p-2 rounded-lg"
                                 >
