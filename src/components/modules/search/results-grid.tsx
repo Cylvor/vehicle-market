@@ -28,10 +28,10 @@ export async function ResultsGrid({ filters }: ResultsGridProps) {
     return (
         <div className="space-y-6">
             {/* Header Section */}
-            <div className="rounded-xl border border-primary/20 bg-gradient-to-r from-primary/5 via-background to-background shadow-md p-6">
+            <div className="rounded-3xl border border-border/70 bg-card/70 backdrop-blur-sm shadow-xl p-6 md:p-8">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
-                        <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent ring-1 ring-accent/20">
+                        <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/40">
                             <Grid3x3 className="h-5 w-5" />
                         </div>
                         <div>
@@ -45,7 +45,7 @@ export async function ResultsGrid({ filters }: ResultsGridProps) {
                             )}
                         </div>
                         {hasActiveFilters && (
-                            <Badge className="ml-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-3 py-1">
+                            <Badge className="ml-2 bg-blue-500 text-white hover:bg-blue-600 rounded-full px-3 py-1 border border-blue-400/60 shadow-sm shadow-blue-500/40">
                                 <Sparkles className="h-3 w-3 mr-1" />
                                 Filtered
                             </Badge>
@@ -57,8 +57,8 @@ export async function ResultsGrid({ filters }: ResultsGridProps) {
 
             {/* Results Grid */}
             {results.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-primary/30 bg-muted/60 shadow-md p-12 md:p-16 text-center">
-                    <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary mb-4">
+                <div className="rounded-3xl border border-dashed border-border/70 bg-card/70 backdrop-blur-sm shadow-xl p-12 md:p-16 text-center">
+                    <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-blue-500/15 text-blue-400 mb-4 ring-2 ring-blue-900/60">
                         <Grid3x3 className="h-8 w-8" />
                     </div>
                     <h3 className="text-xl font-bold tracking-tight text-foreground mb-2">No vehicles found</h3>

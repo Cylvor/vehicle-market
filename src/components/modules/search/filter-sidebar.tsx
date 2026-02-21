@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, X, Filter, SlidersHorizontal } from "lucide-react";
+import { Search, X, SlidersHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const MAKES = ["Toyota", "Mazda", "Ford", "Hyundai", "Mitsubishi", "Kia", "Tesla", "BMW", "Mercedes-Benz"];
@@ -194,16 +194,16 @@ export function FilterSidebar() {
 
     return (
         <aside className="sticky top-28 lg:top-32 h-fit">
-            <div className="rounded-md border border-border/70 bg-card shadow-md p-6 space-y-6">
+            <div className="rounded-3xl border border-border/70 bg-card/70 backdrop-blur-sm shadow-xl p-6 md:p-8 space-y-6">
                 {/* Header */}
                 <div className="flex items-center justify-between pb-4 border-b border-border/50">
                     <div className="flex items-center gap-2">
-                        <div className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-accent/10 text-accent ring-1 ring-accent/20">
+                        <div className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/40">
                             <SlidersHorizontal className="h-4 w-4" />
                         </div>
                         <h3 className="text-xl font-bold tracking-tight text-foreground">Filters</h3>
                         {activeFiltersCount > 0 && (
-                            <Badge className="ml-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-2 py-0.5 text-xs font-semibold">
+                            <Badge className="ml-2 bg-blue-500 text-white hover:bg-blue-600 rounded-full px-2 py-0.5 text-xs font-semibold border border-blue-400/60 shadow-sm shadow-blue-500/40">
                                 {activeFiltersCount}
                             </Badge>
                         )}
@@ -227,7 +227,7 @@ export function FilterSidebar() {
                         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
                             placeholder="Make, model, or variant..."
-                            className="pl-10 h-11 border border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                            className="pl-10 h-11 border border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-blue-500/50 focus:border-blue-500 focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:ring-offset-0 rounded-[6px]"
                             ref={inputRef}
                             onChange={handleSearchChange}
                             onKeyDown={handleSearchKeyDown}
@@ -253,11 +253,11 @@ export function FilterSidebar() {
                                             onCheckedChange={(checked) =>
                                                 updateParams({ make: checked ? m : undefined })
                                             }
-                                            className="h-5 w-5 rounded-md border-2 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                                            className="h-5 w-5 rounded-[6px] border-2 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
                                         />
                                         <Label
                                             htmlFor={`filter-make-${m}`}
-                                            className="text-sm font-medium text-foreground cursor-pointer group-hover:text-primary transition-colors flex-1"
+                                            className="text-sm font-medium text-foreground cursor-pointer group-hover:text-blue-500 transition-colors flex-1"
                                         >
                                             {m}
                                         </Label>
@@ -283,7 +283,7 @@ export function FilterSidebar() {
                                         ref={minPriceRef}
                                         onChange={handlePriceChange}
                                         onBlur={handlePriceChange}
-                                        className="h-10 border border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                                        className="h-10 border border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-blue-500/50 focus:border-blue-500 focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:ring-offset-0 rounded-[6px]"
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -295,7 +295,7 @@ export function FilterSidebar() {
                                         ref={maxPriceRef}
                                         onChange={handlePriceChange}
                                         onBlur={handlePriceChange}
-                                        className="h-10 border border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                                        className="h-10 border border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-blue-500/50 focus:border-blue-500 focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:ring-offset-0 rounded-[6px]"
                                     />
                                 </div>
                             </div>
@@ -317,11 +317,11 @@ export function FilterSidebar() {
                                             onCheckedChange={(checked) =>
                                                 updateParams({ bodyType: checked ? type : undefined })
                                             }
-                                            className="h-5 w-5 rounded-md border-2 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                                            className="h-5 w-5 rounded-[6px] border-2 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
                                         />
                                         <Label
                                             htmlFor={`filter-body-${type}`}
-                                            className="text-sm font-medium text-foreground cursor-pointer group-hover:text-primary transition-colors flex-1"
+                                            className="text-sm font-medium text-foreground cursor-pointer group-hover:text-blue-500 transition-colors flex-1"
                                         >
                                             {type}
                                         </Label>
@@ -348,7 +348,7 @@ export function FilterSidebar() {
                                         ref={minYearRef}
                                         onChange={handleYearChange}
                                         onBlur={handleYearChange}
-                                        className="h-10 border border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                                        className="h-10 border border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-blue-500/50 focus:border-blue-500 focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:ring-offset-0 rounded-[6px]"
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -361,7 +361,7 @@ export function FilterSidebar() {
                                         ref={maxYearRef}
                                         onChange={handleYearChange}
                                         onBlur={handleYearChange}
-                                        className="h-10 border border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-primary/50 focus:border-primary focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                                        className="h-10 border border-border/70 bg-background text-base font-medium text-foreground transition-all hover:border-blue-500/50 focus:border-blue-500 focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:ring-offset-0 rounded-[6px]"
                                     />
                                 </div>
                             </div>
@@ -373,7 +373,7 @@ export function FilterSidebar() {
                 {activeFiltersCount > 0 && (
                     <Button
                         variant="outline"
-                        className="w-full h-11 border-2 border-border/70 hover:border-destructive/50 hover:bg-destructive/5 hover:text-destructive transition-all font-bold"
+                        className="w-full h-11 border-2 border-border/70 hover:border-destructive/50 hover:bg-destructive/5 hover:text-destructive transition-all font-bold rounded-[6px]"
                         onClick={handleReset}
                     >
                         <X className="h-4 w-4 mr-2" />
@@ -412,7 +412,7 @@ export function SortSelect() {
             <span className="text-sm font-bold text-muted-foreground">Sort by:</span>
             <div className="relative">
                 <select
-                    className="h-10 w-[200px] appearance-none border-2 border-border/70 bg-background px-4 py-2 text-base font-medium text-foreground shadow-sm transition-all hover:border-primary/50 focus:border-primary focus:outline-none focus:ring-0 focus:shadow-md cursor-pointer"
+                    className="h-10 w-[200px] appearance-none border-2 border-border/70 bg-background px-4 py-2 text-base font-medium text-foreground shadow-sm transition-all hover:border-blue-500/50 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:shadow-md cursor-pointer rounded-[6px]"
                     value={current}
                     onChange={handleChange}
                 >

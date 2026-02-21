@@ -62,7 +62,7 @@ export function RecentlyAddedCarousel({ vehicles }: RecentlyAddedCarouselProps) 
                 <Button
                     variant="outline"
                     size="icon"
-                    className="h-10 w-10 rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all duration-300 hover:border-blue-500 hover:bg-blue-500 hover:shadow-[0_0_15px_rgba(59,130,246,0.5)]"
+                    className="h-10 w-10 rounded-[6px] border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all duration-300 hover:border-blue-500 hover:bg-blue-500 hover:shadow-[0_0_15px_rgba(59,130,246,0.5)]"
                     onClick={handlePrevious}
                     aria-label="Previous cars"
                 >
@@ -71,7 +71,7 @@ export function RecentlyAddedCarousel({ vehicles }: RecentlyAddedCarouselProps) 
                 <Button
                     variant="outline"
                     size="icon"
-                    className="h-10 w-10 rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all duration-300 hover:border-blue-500 hover:bg-blue-500 hover:shadow-[0_0_15px_rgba(59,130,246,0.5)]"
+                    className="h-10 w-10 rounded-[6px] border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all duration-300 hover:border-blue-500 hover:bg-blue-500 hover:shadow-[0_0_15px_rgba(59,130,246,0.5)]"
                     onClick={handleNext}
                     aria-label="Next cars"
                 >

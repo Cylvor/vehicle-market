@@ -27,7 +27,7 @@ export async function RecentlyAddedCars() {
                             <h2 className="mt-2 text-xl md:text-2xl font-bold tracking-tight text-foreground">Recently Added Cars</h2>
                             <p className="mt-1 text-sm text-muted-foreground">Fresh listings from verified sellers.</p>
                         </div>
-                        <Link href="/search" className="hidden sm:inline rounded-full border border-border bg-background px-4 py-2 text-sm font-semibold text-foreground hover:border-foreground/20 hover:bg-muted transition-colors">
+                        <Link href="/search" className="hidden sm:inline rounded-[6px] border border-border bg-background px-4 py-2 text-sm font-semibold text-foreground hover:border-foreground/20 hover:bg-muted transition-colors">
                             Explore all →
                         </Link>
                     </div>
