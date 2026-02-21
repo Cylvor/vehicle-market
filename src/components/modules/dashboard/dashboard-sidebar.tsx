@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { useClerk } from "@clerk/nextjs";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import {
     LayoutDashboard,
@@ -70,9 +72,17 @@ const sellerItems = [
 export function DashboardSidebar() {
     const pathname = usePathname();
     const searchParams = useSearchParams();
+    const { signOut } = useClerk();
+    const [isSigningOut, setIsSigningOut] = useState(false);
     const mode = searchParams.get("mode") === "seller" ? "seller" : "buyer";
 
     const items = mode === "seller" ? sellerItems : buyerItems;
+
+    const handleSignOut = async () => {
+        if (isSigningOut) return;
+        setIsSigningOut(true);
+        await signOut({ redirectUrl: "/" });
+    };
 
     return (
         <div className="flex flex-col h-full bg-card border-r border-border/50 min-h-[calc(100vh-4rem)]">
@@ -114,9 +124,14 @@ export function DashboardSidebar() {
             </div>
 
             <div className="p-4 border-t border-border/50">
-                <Button variant="ghost" className="w-full justify-start gap-3 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors">
+                <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-3 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                    onClick={handleSignOut}
+                    disabled={isSigningOut}
+                >
                     <LogOut className="h-4 w-4" />
-                    Sign Out
+                    {isSigningOut ? "Signing Out..." : "Sign Out"}
                 </Button>
             </div>
         </div>
