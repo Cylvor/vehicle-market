@@ -194,7 +194,7 @@ export function FilterSidebar() {
 
     return (
         <aside className="sticky top-28 lg:top-32 h-fit">
-            <div className="rounded-3xl border border-border/70 bg-card/70 backdrop-blur-sm shadow-xl p-6 md:p-8 space-y-6">
+            <div className="rounded-[6px] border border-border/70 bg-card/70 backdrop-blur-sm shadow-xl p-6 md:p-8 space-y-6">
                 {/* Header */}
                 <div className="flex items-center justify-between pb-4 border-b border-border/50">
                     <div className="flex items-center gap-2">
