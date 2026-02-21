@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 type ProfileMetadata = {
+    location?: string;
     address?: string;
     phone?: string;
 };
@@ -30,25 +31,25 @@ export default function AccountSettingsPage() {
         return {
             fullName: user?.fullName ?? "",
             email: user?.primaryEmailAddress?.emailAddress ?? "",
-            address: metadata.address ?? "",
+            location: metadata.location ?? metadata.address ?? "",
             phone: metadata.phone ?? "",
         };
     }, [user]);
 
     const [fullName, setFullName] = useState("");
-    const [address, setAddress] = useState("");
+    const [location, setLocation] = useState("");
     const [phone, setPhone] = useState("");
 
     useEffect(() => {
         if (!isLoaded || !user || isEditing) return;
         setFullName(initialValues.fullName);
-        setAddress(initialValues.address);
+        setLocation(initialValues.location);
         setPhone(initialValues.phone);
     }, [initialValues, isEditing, isLoaded, user]);
 
     const syncFromUser = () => {
         setFullName(initialValues.fullName);
-        setAddress(initialValues.address);
+        setLocation(initialValues.location);
         setPhone(initialValues.phone);
     };
 
@@ -76,13 +77,17 @@ export default function AccountSettingsPage() {
             const lastName = nameParts.length > 0
                 ? nameParts.slice(1).join(" ")
                 : user.lastName ?? "";
+            const metadataWithoutLegacyAddress = Object.fromEntries(
+                Object.entries((user.unsafeMetadata ?? {}) as Record<string, unknown>)
+                    .filter(([key]) => key !== "address")
+            );
 
             await user.update({
                 firstName,
                 lastName,
                 unsafeMetadata: {
-                    ...(user.unsafeMetadata ?? {}),
-                    address: address.trim(),
+                    ...metadataWithoutLegacyAddress,
+                    location: location.trim(),
                     phone: phone.trim(),
                 },
             });
@@ -146,13 +151,13 @@ export default function AccountSettingsPage() {
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="address">Address</Label>
+                        <Label htmlFor="location">Location</Label>
                         <Input
-                            id="address"
-                            value={isEditing ? address : initialValues.address}
-                            onChange={(e) => setAddress(e.target.value)}
+                            id="location"
+                            value={isEditing ? location : initialValues.location}
+                            onChange={(e) => setLocation(e.target.value)}
                             disabled={!isEditing}
-                            placeholder="Enter your address"
+                            placeholder="Enter your location"
                         />
                     </div>
 

@@ -3,6 +3,7 @@ import { VehicleInfo } from "@/components/modules/vehicles/vehicle-info";
 import { SellerContact } from "@/components/modules/vehicles/seller-contact";
 import { getVehicleById } from "@/actions/vehicle";
 import { notFound } from "next/navigation";
+import { clerkClient } from "@clerk/nextjs/server";
 
 function formatPrice(price: number) {
     return new Intl.NumberFormat("en-AU", {
@@ -24,6 +25,30 @@ export default async function VehicleDetailsPage({ params }: { params: Promise<{
     const description = vehicle.description ?? "No description provided.";
     const features = vehicle.features ?? [];
     const images = vehicle.images?.length ? vehicle.images : ["/vehicles/tesla-model-3.svg"];
+
+    let sellerName = "Seller";
+    let sellerLocation = "Location not available";
+    let sellerImageUrl = "/images/avatar-placeholder.svg";
+
+    try {
+        const client = await clerkClient();
+        const seller = await client.users.getUser(vehicle.userId);
+        const unsafeMetadata = (seller.unsafeMetadata ?? {}) as { location?: string; address?: string };
+        const publicMetadata = (seller.publicMetadata ?? {}) as { location?: string; address?: string };
+        sellerName =
+            seller.fullName?.trim() ||
+            [seller.firstName, seller.lastName].filter(Boolean).join(" ") ||
+            "Seller";
+        sellerLocation =
+            unsafeMetadata.location?.trim() ||
+            unsafeMetadata.address?.trim() ||
+            publicMetadata.location?.trim() ||
+            publicMetadata.address?.trim() ||
+            "Location not available";
+        sellerImageUrl = seller.imageUrl || "/images/avatar-placeholder.svg";
+    } catch {
+        // ignore and fallback to generic seller details
+    }
 
     return (
         <div className="container mx-auto px-4 pt-24 md:pt-28 pb-8">
@@ -51,7 +76,11 @@ export default async function VehicleDetailsPage({ params }: { params: Promise<{
                 {/* Right Column: Contact Seller (Sticky) */}
                 <div className="lg:col-span-1">
                     <div className="sticky top-24">
-                        <SellerContact />
+                        <SellerContact
+                            sellerName={sellerName}
+                            sellerLocation={sellerLocation}
+                            sellerImageUrl={sellerImageUrl}
+                        />
                     </div>
                 </div>
             </div>
