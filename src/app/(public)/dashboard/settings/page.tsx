@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -9,43 +9,68 @@ import {
     CardContent,
     CardDescription,
     CardHeader,
-    CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { getAccountSettings, updateAccountSettings } from "@/actions/user";
 
-type ProfileMetadata = {
-    location?: string;
-    address?: string;
-    phone?: string;
+type AccountValues = {
+    fullName: string;
+    email: string;
+    location: string;
+    phone: string;
+    imageUrl: string;
 };
 
 export default function AccountSettingsPage() {
     const { isLoaded, user } = useUser();
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [isFetching, setIsFetching] = useState(true);
     const [statusMessage, setStatusMessage] = useState<string | null>(null);
-
-    const initialValues = useMemo(() => {
-        const metadata = (user?.unsafeMetadata ?? {}) as ProfileMetadata;
-        return {
-            fullName: user?.fullName ?? "",
-            email: user?.primaryEmailAddress?.emailAddress ?? "",
-            location: metadata.location ?? metadata.address ?? "",
-            phone: metadata.phone ?? "",
-        };
-    }, [user]);
+    const [initialValues, setInitialValues] = useState<AccountValues>({
+        fullName: "",
+        email: "",
+        location: "",
+        phone: "",
+        imageUrl: "",
+    });
 
     const [fullName, setFullName] = useState("");
     const [location, setLocation] = useState("");
     const [phone, setPhone] = useState("");
 
     useEffect(() => {
-        if (!isLoaded || !user || isEditing) return;
-        setFullName(initialValues.fullName);
-        setLocation(initialValues.location);
-        setPhone(initialValues.phone);
-    }, [initialValues, isEditing, isLoaded, user]);
+        if (!isLoaded || !user) return;
+
+        let isMounted = true;
+
+        const load = async () => {
+            setIsFetching(true);
+            setStatusMessage(null);
+            try {
+                const data = await getAccountSettings();
+                if (!isMounted) return;
+                setInitialValues(data);
+                setFullName(data.fullName);
+                setLocation(data.location);
+                setPhone(data.phone);
+            } catch {
+                if (!isMounted) return;
+                setStatusMessage("Failed to load account details.");
+            } finally {
+                if (isMounted) {
+                    setIsFetching(false);
+                }
+            }
+        };
+
+        load();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [isLoaded, user]);
 
     const syncFromUser = () => {
         setFullName(initialValues.fullName);
@@ -72,25 +97,18 @@ export default function AccountSettingsPage() {
         setIsSaving(true);
 
         try {
-            const nameParts = fullName.trim().split(" ").filter(Boolean);
-            const firstName = nameParts[0] ?? user.firstName ?? "";
-            const lastName = nameParts.length > 0
-                ? nameParts.slice(1).join(" ")
-                : user.lastName ?? "";
-            const metadataWithoutLegacyAddress = Object.fromEntries(
-                Object.entries((user.unsafeMetadata ?? {}) as Record<string, unknown>)
-                    .filter(([key]) => key !== "address")
-            );
-
-            await user.update({
-                firstName,
-                lastName,
-                unsafeMetadata: {
-                    ...metadataWithoutLegacyAddress,
-                    location: location.trim(),
-                    phone: phone.trim(),
-                },
+            const updated = await updateAccountSettings({
+                fullName: fullName.trim(),
+                email: initialValues.email,
+                location: location.trim(),
+                phone: phone.trim(),
+                imageUrl: initialValues.imageUrl,
             });
+
+            setInitialValues(updated);
+            setFullName(updated.fullName);
+            setLocation(updated.location);
+            setPhone(updated.phone);
 
             setStatusMessage("Profile updated successfully.");
             setIsEditing(false);
@@ -109,6 +127,10 @@ export default function AccountSettingsPage() {
         return <div className="text-sm text-muted-foreground">Please sign in to manage account settings.</div>;
     }
 
+    if (isFetching) {
+        return <div className="text-sm text-muted-foreground">Loading account details...</div>;
+    }
+
     return (
         <div className="space-y-6">
             <div>
@@ -125,7 +147,7 @@ export default function AccountSettingsPage() {
                 <CardContent className="space-y-6">
                     <div className="flex items-center gap-6 pb-2">
                         <Image
-                            src={user.imageUrl}
+                            src={initialValues.imageUrl || user.imageUrl}
                             alt={`${initialValues.fullName || "User"} profile`}
                             width={120}
                             height={120}

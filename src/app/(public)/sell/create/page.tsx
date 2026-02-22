@@ -1,6 +1,35 @@
 import { ListingForm } from "@/components/modules/sell/listing-form";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
-export default function CreateListingPage() {
+export default async function CreateListingPage() {
+    const { userId } = await auth();
+
+    let sellerName = "";
+    let sellerLocation = "";
+
+    if (userId) {
+        try {
+            const client = await clerkClient();
+            const user = await client.users.getUser(userId);
+            const unsafeMetadata = (user.unsafeMetadata ?? {}) as { location?: string; address?: string };
+            const publicMetadata = (user.publicMetadata ?? {}) as { location?: string; address?: string };
+
+            sellerName =
+                user.fullName?.trim() ||
+                [user.firstName, user.lastName].filter(Boolean).join(" ") ||
+                "";
+            sellerLocation =
+                unsafeMetadata.location?.trim() ||
+                unsafeMetadata.address?.trim() ||
+                publicMetadata.location?.trim() ||
+                publicMetadata.address?.trim() ||
+                "";
+        } catch {
+            sellerName = "";
+            sellerLocation = "";
+        }
+    }
+
     return (
         <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 py-12 lg:py-16">
             <div className="container-width">
@@ -17,13 +46,9 @@ export default function CreateListingPage() {
                 </div>
                 
                 <div className="rounded-3xl border border-border/70 bg-card/60 p-5 md:p-8 lg:p-10 backdrop-blur-md shadow-xl">
-                    <ListingForm />
+                    <ListingForm sellerName={sellerName} sellerLocation={sellerLocation} />
                 </div>
             </div>
-            
-        <div className="container mx-auto px-4 pt-24 md:pt-28 pb-8">
-            <ListingForm />
-        </div>
         </div>
     );
 }

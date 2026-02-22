@@ -22,6 +22,27 @@
       "when": 1771134674971,
       "tag": "0002_goofy_hannibal_king",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1771727241200,
+      "tag": "0003_luxuriant_sister_grimm",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1771727689818,
+      "tag": "0004_tough_blink",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1771731000000,
+      "tag": "0005_account_settings_users",
+      "breakpoints": true
     }
   ]
 }
