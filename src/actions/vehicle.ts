@@ -173,6 +173,20 @@ export async function getAdminVehicles() {
     return data;
 }
 
+export async function getAdminVehicleById(id: string) {
+    const { userId } = await auth();
+    // In a real app, verify admin role here
+    if (!userId) throw new Error("Unauthorized");
+
+    const [vehicle] = await db
+        .select()
+        .from(vehicles)
+        .where(eq(vehicles.id, id))
+        .limit(1);
+
+    return vehicle ?? null;
+}
+
 export async function updateVehicleStatus(id: string, status: "active" | "rejected") {
     const { userId } = await auth();
     // In a real app, verify admin role here
@@ -238,6 +252,21 @@ export async function deleteVehicle(id: string) {
 
     await db.delete(vehicles).where(eq(vehicles.id, id));
 
+    revalidatePath("/dashboard/listings");
+    revalidatePath("/search");
+}
+
+export async function deleteVehicleAsAdmin(id: string) {
+    const { userId } = await auth();
+    // In a real app, verify admin role here
+    if (!userId) {
+        throw new Error("Unauthorized");
+    }
+
+    await db.delete(vehicles).where(eq(vehicles.id, id));
+
+    revalidatePath("/admin/listings");
+    revalidatePath(`/admin/listings/${id}`);
     revalidatePath("/dashboard/listings");
     revalidatePath("/search");
 }
