@@ -5,7 +5,9 @@ import Link from "next/link";
 import { Gauge, Heart, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { isVehicleSaved, toggleVehicleSaved } from "@/lib/saved-vehicles";
+import { useAuth } from "@clerk/nextjs";
+import { isVehicleSaved, toggleVehicleSaved, addSavedVehicle, removeSavedVehicle } from "@/lib/saved-vehicles";
+import { isVehicleSavedInDb, toggleVehicleSavedInDb } from "@/actions/saved-vehicles";
 
 interface VehicleCardProps {
     id: string;
@@ -20,13 +22,62 @@ interface VehicleCardProps {
 }
 
 export function VehicleCard({ id, title, price, image, mileage, fuel, year, transmission, onSaveChange }: VehicleCardProps) {
+    const { userId } = useAuth();
     const [isSaved, setIsSaved] = useState(false);
+    const [isToggling, setIsToggling] = useState(false);
+
+    const canPersistInDb = Boolean(userId) && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id);
 
     useEffect(() => {
-        setIsSaved(isVehicleSaved(id));
-    }, [id]);
+        let isActive = true;
 
-    const toggleSaveVehicle = () => {
+        async function resolveSavedState() {
+            if (canPersistInDb) {
+                const savedInDb = await isVehicleSavedInDb(id);
+                if (!isActive) return;
+
+                setIsSaved(savedInDb);
+                if (savedInDb) {
+                    addSavedVehicle({ id, title, price, image, mileage, fuel, year, transmission });
+                } else {
+                    removeSavedVehicle(id);
+                }
+                return;
+            }
+
+            setIsSaved(isVehicleSaved(id));
+        }
+
+        void resolveSavedState();
+
+        return () => {
+            isActive = false;
+        };
+    }, [canPersistInDb, id, title, price, image, mileage, fuel, year, transmission]);
+
+    const toggleSaveVehicle = async () => {
+        if (isToggling) {
+            return;
+        }
+
+        setIsToggling(true);
+
+        if (canPersistInDb) {
+            const result = await toggleVehicleSavedInDb(id);
+
+            if (result) {
+                setIsSaved(result.isSaved);
+                if (result.isSaved) {
+                    addSavedVehicle({ id, title, price, image, mileage, fuel, year, transmission });
+                } else {
+                    removeSavedVehicle(id);
+                }
+                onSaveChange?.(result.isSaved);
+                setIsToggling(false);
+                return;
+            }
+        }
+
         const { isSaved: nextIsSaved } = toggleVehicleSaved({
             id,
             title,
@@ -40,6 +91,7 @@ export function VehicleCard({ id, title, price, image, mileage, fuel, year, tran
 
         setIsSaved(nextIsSaved);
         onSaveChange?.(nextIsSaved);
+        setIsToggling(false);
     };
 
     return (
@@ -68,6 +120,7 @@ export function VehicleCard({ id, title, price, image, mileage, fuel, year, tran
                         variant="ghost"
                         size="icon"
                         onClick={toggleSaveVehicle}
+                        disabled={isToggling}
                         aria-pressed={isSaved}
                         aria-label={isSaved ? "Unsave vehicle" : "Save vehicle"}
                         className="z-20 h-10 w-10 shrink-0 rounded-full text-primary hover:bg-primary/10 hover:text-primary"

@@ -43,6 +43,20 @@
       "when": 1771731000000,
       "tag": "0005_account_settings_users",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1771800000000,
+      "tag": "0006_enquiries",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1771805000000,
+      "tag": "0007_saved_vehicles",
+      "breakpoints": true
     }
   ]
 }

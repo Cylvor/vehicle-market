@@ -1,11 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 import { VehicleCard } from "@/components/modules/vehicles/vehicle-card";
-import { getSavedVehicles, SavedVehicle } from "@/lib/saved-vehicles";
+import { getSavedVehicles, setSavedVehicles as setSavedVehiclesStorage, SavedVehicle } from "@/lib/saved-vehicles";
+import { getSavedVehiclesForCurrentUser } from "@/actions/saved-vehicles";
 
 export default function SavedVehiclesPage() {
+    const { userId } = useAuth();
     const [savedVehicles, setSavedVehicles] = useState<SavedVehicle[]>(() => getSavedVehicles());
+
+    useEffect(() => {
+        let isActive = true;
+
+        async function loadSavedVehicles() {
+            if (!userId) {
+                setSavedVehicles(getSavedVehicles());
+                return;
+            }
+
+            const dbSavedVehicles = await getSavedVehiclesForCurrentUser();
+            if (!isActive) return;
+
+            setSavedVehicles(dbSavedVehicles);
+            setSavedVehiclesStorage(dbSavedVehicles);
+        }
+
+        void loadSavedVehicles();
+
+        return () => {
+            isActive = false;
+        };
+    }, [userId]);
 
     const handleSaveChange = (vehicleId: string, isSaved: boolean) => {
         if (isSaved) {

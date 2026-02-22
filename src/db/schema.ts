@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid, pgEnum, integer, json } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid, pgEnum, integer, json, uniqueIndex } from "drizzle-orm/pg-core";
 
 export const statusEnum = pgEnum("status", ["pending", "active", "rejected", "sold"]);
 export const fuelEnum = pgEnum("fuel", ["Petrol", "Diesel", "Electric", "Hybrid", "LPG"]);
@@ -50,3 +50,29 @@ export const vehicles = pgTable("vehicles", {
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+
+export const enquiries = pgTable("enquiries", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    vehicleId: uuid("vehicle_id").notNull().references(() => vehicles.id, { onDelete: "cascade" }),
+    sellerUserId: text("seller_user_id").notNull(),
+    buyerUserId: text("buyer_user_id"),
+    firstName: text("first_name").notNull(),
+    lastName: text("last_name"),
+    email: text("email").notNull(),
+    phone: text("phone"),
+    message: text("message").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const savedVehicles = pgTable(
+    "saved_vehicles",
+    {
+        id: uuid("id").primaryKey().defaultRandom(),
+        userId: text("user_id").notNull(),
+        vehicleId: uuid("vehicle_id").notNull().references(() => vehicles.id, { onDelete: "cascade" }),
+        createdAt: timestamp("created_at").defaultNow().notNull(),
+    },
+    (table) => ({
+        savedVehiclesUserVehicleUnique: uniqueIndex("saved_vehicles_user_vehicle_unique").on(table.userId, table.vehicleId),
+    })
+);

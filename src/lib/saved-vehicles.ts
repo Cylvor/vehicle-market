@@ -35,6 +35,24 @@ export function setSavedVehicles(vehicles: SavedVehicle[]) {
     window.localStorage.setItem(SAVED_VEHICLES_STORAGE_KEY, JSON.stringify(vehicles));
 }
 
+export function addSavedVehicle(vehicle: SavedVehicle) {
+    const savedVehicles = getSavedVehicles();
+    const exists = savedVehicles.some((savedVehicle) => savedVehicle.id === vehicle.id);
+    const updated = exists
+        ? savedVehicles.map((savedVehicle) => (savedVehicle.id === vehicle.id ? vehicle : savedVehicle))
+        : [...savedVehicles, vehicle];
+
+    setSavedVehicles(updated);
+    return updated;
+}
+
+export function removeSavedVehicle(id: string) {
+    const savedVehicles = getSavedVehicles();
+    const updated = savedVehicles.filter((savedVehicle) => savedVehicle.id !== id);
+    setSavedVehicles(updated);
+    return updated;
+}
+
 export function isVehicleSaved(id: string) {
     return getSavedVehicles().some((vehicle) => vehicle.id === id);
 }
@@ -43,11 +61,7 @@ export function toggleVehicleSaved(vehicle: SavedVehicle) {
     const savedVehicles = getSavedVehicles();
     const exists = savedVehicles.some((savedVehicle) => savedVehicle.id === vehicle.id);
 
-    const updated = exists
-        ? savedVehicles.filter((savedVehicle) => savedVehicle.id !== vehicle.id)
-        : [...savedVehicles, vehicle];
-
-    setSavedVehicles(updated);
+    const updated = exists ? removeSavedVehicle(vehicle.id) : addSavedVehicle(vehicle);
     return {
         isSaved: !exists,
         savedVehicles: updated,
