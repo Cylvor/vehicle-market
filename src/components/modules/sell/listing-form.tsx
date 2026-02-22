@@ -19,9 +19,11 @@ import { useRouter } from "next/navigation";
 interface ListingFormProps {
     vehicleId?: string;
     initialData?: VehicleInput;
+    sellerName?: string;
+    sellerLocation?: string;
 }
 
-export function ListingForm({ vehicleId, initialData }: ListingFormProps) {
+export function ListingForm({ vehicleId, initialData, sellerName, sellerLocation }: ListingFormProps) {
     const isEditMode = Boolean(vehicleId);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -39,6 +41,8 @@ export function ListingForm({ vehicleId, initialData }: ListingFormProps) {
     const form = useForm<VehicleInput>({
         resolver: zodResolver(vehicleSchema) as any,
         defaultValues: {
+            sellerName: initialData?.sellerName ?? sellerName ?? "",
+            sellerLocation: initialData?.sellerLocation ?? sellerLocation ?? "",
             year: initialData?.year,
             make: initialData?.make ?? "",
             model: initialData?.model ?? "",
@@ -51,6 +55,7 @@ export function ListingForm({ vehicleId, initialData }: ListingFormProps) {
             bodyType: initialData?.bodyType,
             colour: initialData?.colour ?? "",
             features: initialData?.features ?? [],
+            tags: initialData?.tags ?? [],
             images: initialData?.images ?? [],
         },
     });
@@ -180,6 +185,40 @@ export function ListingForm({ vehicleId, initialData }: ListingFormProps) {
 
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">Seller Details</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <FormField
+                                control={form.control}
+                                name="sellerName"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Name</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Your full name" {...field} value={field.value ?? ''} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="sellerLocation"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Location</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="City, State" {...field} value={field.value ?? ''} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                    </div>
+
+                    <Separator />
+
                     {/* Vehicle Identity */}
                     <div className="space-y-4">
                         <h3 className="text-lg font-semibold">Vehicle Details</h3>
@@ -335,6 +374,69 @@ export function ListingForm({ vehicleId, initialData }: ListingFormProps) {
                                 />
                             </div>
                         </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <FormField
+                                control={form.control}
+                                name="colour"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Colour</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="White" {...field} value={field.value ?? ''} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="tags"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Tags</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="One owner, Service history, Rego included"
+                                                value={(field.value ?? []).join(", ")}
+                                                onChange={(e) => {
+                                                    const tags = e.target.value
+                                                        .split(",")
+                                                        .map((tag) => tag.trim())
+                                                        .filter(Boolean);
+                                                    field.onChange(tags);
+                                                }}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+
+                        <FormField
+                            control={form.control}
+                            name="features"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Features</FormLabel>
+                                    <FormControl>
+                                        <Textarea
+                                            placeholder="Enter features separated by commas"
+                                            value={(field.value ?? []).join(", ")}
+                                            onChange={(e) => {
+                                                const features = e.target.value
+                                                    .split(",")
+                                                    .map((feature) => feature.trim())
+                                                    .filter(Boolean);
+                                                field.onChange(features);
+                                            }}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                     </div>
 
                     <Separator />

@@ -1,7 +1,7 @@
 import { getUserVehicleById } from "@/actions/vehicle";
 import { ListingForm } from "@/components/modules/sell/listing-form";
 import { VehicleInput } from "@/lib/validations/vehicle";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { notFound, redirect } from "next/navigation";
 
 interface EditListingPageProps {
@@ -22,7 +22,33 @@ export default async function EditListingPage({ params }: EditListingPageProps) 
         notFound();
     }
 
+    let sellerName = "";
+    let sellerLocation = "";
+
+    try {
+        const client = await clerkClient();
+        const user = await client.users.getUser(userId);
+        const unsafeMetadata = (user.unsafeMetadata ?? {}) as { location?: string; address?: string };
+        const publicMetadata = (user.publicMetadata ?? {}) as { location?: string; address?: string };
+
+        sellerName =
+            user.fullName?.trim() ||
+            [user.firstName, user.lastName].filter(Boolean).join(" ") ||
+            "";
+        sellerLocation =
+            unsafeMetadata.location?.trim() ||
+            unsafeMetadata.address?.trim() ||
+            publicMetadata.location?.trim() ||
+            publicMetadata.address?.trim() ||
+            "";
+    } catch {
+        sellerName = "";
+        sellerLocation = "";
+    }
+
     const initialData: VehicleInput = {
+        sellerName: vehicle.sellerName ?? sellerName,
+        sellerLocation: vehicle.sellerLocation ?? sellerLocation,
         year: vehicle.year,
         make: vehicle.make,
         model: vehicle.model,
@@ -35,6 +61,7 @@ export default async function EditListingPage({ params }: EditListingPageProps) 
         bodyType: vehicle.bodyType,
         colour: vehicle.colour ?? "",
         features: Array.isArray(vehicle.features) ? vehicle.features : [],
+        tags: Array.isArray(vehicle.tags) ? vehicle.tags : [],
         images: Array.isArray(vehicle.images) ? vehicle.images : [],
     };
 
@@ -54,7 +81,12 @@ export default async function EditListingPage({ params }: EditListingPageProps) 
                 </div>
 
                 <div className="rounded-3xl border border-border/70 bg-card/60 p-5 md:p-8 lg:p-10 backdrop-blur-md shadow-xl">
-                    <ListingForm vehicleId={vehicle.id} initialData={initialData} />
+                    <ListingForm
+                        vehicleId={vehicle.id}
+                        initialData={initialData}
+                        sellerName={sellerName}
+                        sellerLocation={sellerLocation}
+                    />
                 </div>
             </div>
         </div>
