@@ -3,7 +3,7 @@
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { z } from "zod";
 
 const accountSettingsSchema = z.object({
@@ -99,4 +99,27 @@ export async function updateAccountSettings(input: AccountSettingsInput) {
         phone: validated.phone ?? "",
         imageUrl: validated.imageUrl ?? "",
     } satisfies AccountSettingsInput;
+}
+
+export async function getAdminUsers() {
+    const { userId } = await auth();
+
+    if (!userId) {
+        throw new Error("Unauthorized");
+    }
+
+    const data = await db
+        .select({
+            id: users.id,
+            name: users.name,
+            email: users.email,
+            location: users.location,
+            phone: users.phone,
+            imageUrl: users.imageUrl,
+            createdAt: users.createdAt,
+        })
+        .from(users)
+        .orderBy(desc(users.createdAt));
+
+    return data;
 }
