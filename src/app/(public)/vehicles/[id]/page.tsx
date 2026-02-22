@@ -77,6 +77,7 @@ export default async function VehicleDetailsPage({ params }: { params: Promise<{
                 <div className="lg:col-span-1">
                     <div className="sticky top-24">
                         <SellerContact
+                            vehicleId={vehicle.id}
                             sellerName={sellerName}
                             sellerLocation={sellerLocation}
                             sellerImageUrl={sellerImageUrl}
