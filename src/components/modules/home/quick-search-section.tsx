@@ -278,14 +278,22 @@ export function QuickSearchSection() {
                     </div>
 
                     {/* Body Type Icons */}
-                    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4 pt-10 mt-8 border-t border-slate-100">
+                    <div className="flex flex-wrap justify-between gap-3 pt-8 mt-8 border-t border-slate-200/60">
                         {BODY_TYPES.map((type) => (
-                            <button key={type.label} className="group flex flex-col items-center p-3 rounded-xl hover:bg-slate-50 transition-all" onClick={() => { setSelectedBodyType(type.value || type.label); handleSubmit(); }}>
-                                <div className="relative h-10 w-full max-w-[100px] transition-transform group-hover:scale-110">
-                                    <Image src={type.image} alt={type.label} fill className="object-contain" />
+                            <button
+                                key={type.label}
+                                className="group flex-1 min-w-[120px] flex flex-col items-center justify-center p-4 rounded-2xl bg-slate-50/50 border border-slate-100 hover:bg-white hover:border-blue-200 hover:shadow-[0_8px_20px_-6px_rgba(37,99,235,0.12)] transition-all duration-300 active:scale-95"
+                                onClick={() => {
+                                    setSelectedBodyType(type.value || type.label);
+                                    handleSubmit();
+                                }}
+                            >
+                                <div className="relative h-12 w-full max-w-[90px] mb-3 transition-transform duration-500 group-hover:scale-[1.15] group-hover:-translate-y-1">
+                                    <Image src={type.image} alt={type.label} fill className="object-contain drop-shadow-sm" />
                                 </div>
-                                <span className="mt-3 text-[13px] font-bold text-slate-600 flex items-center gap-1 group-hover:text-blue-600">
-                                    {type.isBrandNew && <Star className="h-3 w-3 fill-blue-500 text-blue-500" />} {type.label}
+                                <span className="text-[13px] font-bold text-slate-700 flex items-center gap-1.5 group-hover:text-blue-600 transition-colors">
+                                    {type.isBrandNew && <Star className="h-3.5 w-3.5 fill-blue-500 text-blue-500 drop-shadow-sm" />}
+                                    {type.label}
                                 </span>
                             </button>
                         ))}
