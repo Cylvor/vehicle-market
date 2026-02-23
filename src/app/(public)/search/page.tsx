@@ -30,19 +30,21 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     };
 
     return (
-        <div className="min-h-screen bg-white text-slate-900 font-sans">
-            <div className="pt-28 pb-10 lg:pt-26 lg:pb-16">
-                <div className="container-width px-4 lg:px-6">
-                    <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-                        {/* Left filter bar with gap from page edge */}
-                        <aside className="w-full lg:w-72 xl:w-80 flex-shrink-0">
+        <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
+            <div className="pt-28 pb-10 lg:pt-32 lg:pb-16">
+                <div className="container mx-auto px-4 lg:px-8 max-w-[1400px]">
+                    <div className="flex flex-col lg:flex-row gap-8 items-start">
+
+                        {/* Left filter bar - Locked width */}
+                        <aside className="w-full lg:w-[320px] flex-shrink-0">
                             <FilterSidebar />
                         </aside>
 
-                        {/* Main results area balanced within site container */}
-                        <main className="flex-1 min-w-0">
+                        {/* Main results area - Takes remaining space */}
+                        <main className="flex-1 min-w-0 w-full">
                             <ResultsGrid filters={filters} />
                         </main>
+
                     </div>
                 </div>
             </div>
