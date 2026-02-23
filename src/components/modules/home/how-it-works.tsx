@@ -20,26 +20,48 @@ const STEPS = [
 
 export function HowItWorks() {
     return (
-        <section className="py-16 lg:py-20 bg-background">
-            <div className="container-width">
-                <span className="inline-flex items-center rounded-md border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-semibold tracking-wide text-accent">
-                    3 SIMPLE STEPS
-                </span>
-                <h2 className="mt-3 text-2xl md:text-3xl font-bold tracking-tight text-foreground">How It Works</h2>
-                <p className="mt-2 text-muted-foreground">Three simple steps to move from search to deal.</p>
+        <section className="py-24 bg-slate-50 border-t border-slate-200/60 relative overflow-hidden">
+            <div className="container-width px-6 relative z-10">
+                {/* Header Section */}
+                <div className="text-center max-w-2xl mx-auto mb-20 space-y-4">
+                    <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900">
+                        How It <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Works</span>
+                    </h2>
+                    <p className="text-slate-500 text-lg">
+                        The easiest way to move from your initial search to closing the best deal.
+                    </p>
+                </div>
 
-                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-5">
+                {/* Steps Layout */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 relative px-2">
+                    {/* Connecting Line (Desktop Only) */}
+                    <div className="hidden md:block absolute top-[45px] left-[15%] right-[15%] h-[2px] bg-gradient-to-r from-blue-200 via-indigo-200 to-blue-200 z-0"></div>
+
                     {STEPS.map((step, index) => (
-                        <article key={step.title} className="rounded-md border border-border/70 bg-card p-6 shadow-sm hover:-translate-y-1 hover:shadow-lg transition-all">
-                            <div className="flex items-center justify-between">
-                                <div className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-accent/10 text-accent ring-1 ring-accent/20">
-                                    <step.icon className="h-5 w-5" />
+                        <article
+                            key={step.title}
+                            className="group relative bg-white border border-slate-200 rounded-md p-8 pt-12 mt-6 transition-all duration-300 hover:border-blue-200 hover:shadow-xl hover:-translate-y-2 z-10"
+                        >
+                            {/* Floating Number Badge */}
+                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 h-16 w-16 rounded-full bg-white border-[3px] border-slate-50 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300 group-hover:border-blue-50">
+                                <div className="h-full w-full rounded-full bg-blue-600 flex items-center justify-center">
+                                    <span className="text-white font-black text-2xl">{index + 1}</span>
                                 </div>
-                                <span className="rounded-md bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">Step {index + 1}</span>
                             </div>
 
-                            <h3 className="mt-4 text-xl font-semibold text-foreground">{step.title}</h3>
-                            <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{step.description}</p>
+                            <div className="flex flex-col items-center text-center mt-6">
+                                {/* Icon */}
+                                <div className="mb-6 text-blue-600 transition-transform duration-500 group-hover:scale-110 group-hover:text-indigo-600">
+                                    <step.icon className="h-10 w-10 stroke-[1.5]" />
+                                </div>
+
+                                <h3 className="text-2xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors">
+                                    {step.title}
+                                </h3>
+                                <p className="text-slate-500 text-base leading-relaxed">
+                                    {step.description}
+                                </p>
+                            </div>
                         </article>
                     ))}
                 </div>
