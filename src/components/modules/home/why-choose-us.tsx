@@ -32,8 +32,8 @@ export function WhyChooseUs() {
   return (
     <section className="relative overflow-hidden py-24 bg-[#0a0a0a] text-white">
       {/* Background Glows - Deep Premium Look */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600/10 blur-[120px] rounded-full" />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-md" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600/10 blur-[120px] rounded-md" />
 
       <div className="container px-6 mx-auto max-w-7xl relative z-10">
         <div className="mb-16">
@@ -61,7 +61,7 @@ export function WhyChooseUs() {
                 {/* Icon Glass Container */}
                 <div className="mb-8 relative">
                     <div className={`absolute inset-0 blur-xl opacity-20 bg-gradient-to-r ${point.accent}`} />
-                    <div className="relative h-14 w-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-sm group-hover:border-white/20 transition-colors">
+                    <div className="relative h-14 w-14 rounded-md bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-sm group-hover:border-white/20 transition-colors">
                         <point.icon className="h-7 w-7 text-white" />
                     </div>
                 </div>

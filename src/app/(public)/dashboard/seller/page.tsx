@@ -30,12 +30,12 @@ export default async function SellerDashboardPage() {
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
             {/* Dark Seller Header */}
             <div className="relative overflow-hidden rounded-[20px] bg-slate-900 dark:bg-slate-950 p-8 shadow-2xl border border-slate-800 text-white">
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-md blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
                 <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div>
                         <div className="flex items-center gap-3 mb-2">
-                            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-400 border border-emerald-500/30 uppercase tracking-widest backdrop-blur-md">
+                            <span className="inline-flex items-center gap-1.5 rounded-md bg-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-400 border border-emerald-500/30 uppercase tracking-widest backdrop-blur-md">
                                 <DollarSign className="h-3.5 w-3.5" /> Seller Dashboard
                             </span>
                         </div>
@@ -47,7 +47,7 @@ export default async function SellerDashboardPage() {
                         </p>
                     </div>
 
-                    <div className="hidden lg:flex items-center gap-6 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md shadow-lg">
+                    <div className="hidden lg:flex items-center gap-6 p-4 rounded-md bg-white/5 border border-white/10 backdrop-blur-md shadow-lg">
                         <div className="text-center px-4 border-r border-white/10">
                             <div className="text-3xl font-bold font-mono text-white">{totalViews.toLocaleString()}</div>
                             <div className="text-xs text-slate-400 mt-1 uppercase tracking-wider">Total Views</div>
@@ -72,7 +72,7 @@ export default async function SellerDashboardPage() {
                             <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Active Listings</p>
                             <h3 className="text-4xl font-black text-slate-900 dark:text-white mt-2">{activeListings}</h3>
                         </div>
-                        <div className="p-3 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl border border-emerald-100 dark:border-emerald-500/20">
+                        <div className="p-3 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-md border border-emerald-100 dark:border-emerald-500/20">
                             <Car className="h-6 w-6" />
                         </div>
                     </div>
@@ -93,7 +93,7 @@ export default async function SellerDashboardPage() {
                             <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total Views</p>
                             <h3 className="text-4xl font-black text-slate-900 dark:text-white mt-2">{totalViews.toLocaleString()}</h3>
                         </div>
-                        <div className="p-3 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl border border-indigo-100 dark:border-indigo-500/20">
+                        <div className="p-3 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-md border border-indigo-100 dark:border-indigo-500/20">
                             <Activity className="h-6 w-6" />
                         </div>
                     </div>
@@ -116,12 +116,12 @@ export default async function SellerDashboardPage() {
                                 <p className="text-sm font-bold text-emerald-100 uppercase tracking-wider">Messages</p>
                                 <h3 className="text-4xl font-black mt-2">{receivedMessagesCount.toLocaleString()}</h3>
                             </div>
-                            <div className="p-3 bg-white/20 backdrop-blur-md rounded-xl shadow-inner">
+                            <div className="p-3 bg-white/20 backdrop-blur-md rounded-md shadow-inner">
                                 <BellNotification />
                             </div>
                         </div>
                         <div className="pt-4 mt-6 border-t border-white/20 flex items-center justify-between">
-                            <span className="text-sm font-bold bg-white text-emerald-700 px-3 py-1 rounded-full shadow-sm">
+                            <span className="text-sm font-bold bg-white text-emerald-700 px-3 py-1 rounded-md shadow-sm">
                                 {receivedMessagesCount.toLocaleString()} Messages Received
                             </span>
                             <ArrowUpRight className="h-5 w-5 text-white/70 group-hover:text-white transition-colors" />
@@ -138,13 +138,13 @@ export default async function SellerDashboardPage() {
                             <Zap className="h-5 w-5 text-amber-500" /> Currently Trending
                         </h3>
                         <Link href="/dashboard/seller/listings">
-                            <Button variant="outline" className="font-bold rounded-xl h-9 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 hover:text-emerald-700 dark:hover:text-emerald-400">Manage Listings</Button>
+                            <Button variant="outline" className="font-bold rounded-md h-9 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 hover:text-emerald-700 dark:hover:text-emerald-400">Manage Listings</Button>
                         </Link>
                     </div>
 
                     {trendingVehicle ? (
                         <div className="p-6 flex flex-col sm:flex-row gap-6 items-center sm:items-stretch">
-                            <div className="w-full sm:w-48 h-32 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 overflow-hidden relative shrink-0">
+                            <div className="w-full sm:w-48 h-32 rounded-md border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 overflow-hidden relative shrink-0">
                                 <Image
                                     src={trendingVehicle.image}
                                     alt={trendingVehicle.title}
@@ -190,7 +190,7 @@ export default async function SellerDashboardPage() {
 
                 {/* List New Vehicle CTA */}
                 <div className="relative overflow-hidden rounded-[20px] border border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 p-8 flex flex-col items-center justify-center text-center group hover:bg-emerald-50 dark:hover:bg-emerald-900/10 hover:border-emerald-300 dark:hover:border-emerald-700 transition-all">
-                    <div className="p-4 bg-white dark:bg-slate-800 rounded-2xl shadow-sm mb-6 group-hover:scale-110 group-hover:shadow-md transition-all">
+                    <div className="p-4 bg-white dark:bg-slate-800 rounded-md shadow-sm mb-6 group-hover:scale-110 group-hover:shadow-md transition-all">
                         <Car className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
                     </div>
                     <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Sell another vehicle</h3>
@@ -198,7 +198,7 @@ export default async function SellerDashboardPage() {
                         List your car in under 5 minutes and reach millions.
                     </p>
                     <Link href="/sell/create" className="w-full">
-                        <Button className="w-full h-12 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg border-none shadow-emerald-500/20">
+                        <Button className="w-full h-12 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-md shadow-lg border-none shadow-emerald-500/20">
                             Create New Listing
                         </Button>
                     </Link>
@@ -214,8 +214,8 @@ function BellNotification() {
         <div className="relative">
             <MessageSquare className="h-6 w-6" />
             <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 border border-emerald-300"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-md bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-md h-3 w-3 bg-emerald-500 border border-emerald-300"></span>
             </span>
         </div>
     );

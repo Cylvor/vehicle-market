@@ -18,10 +18,10 @@ export async function RecentlyAddedCars() {
     return (
         <section className="py-16 lg:py-20 bg-gradient-to-b from-background to-muted/30">
             <div className="container-width">
-                <div className="rounded-3xl border border-border/70 bg-card/70 p-4 md:p-6 lg:p-7 backdrop-blur-sm">
+                <div className="rounded-md border border-border/70 bg-card/70 p-4 md:p-6 lg:p-7 backdrop-blur-sm">
                     <div className="mb-6 flex items-end justify-between gap-4">
                         <div>
-                            <span className="inline-flex items-center rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-[10px] font-semibold tracking-wide text-accent uppercase">
+                            <span className="inline-flex items-center rounded-md border border-accent/30 bg-accent/10 px-3 py-1 text-[10px] font-semibold tracking-wide text-accent uppercase">
                                 NEW ARRIVALS
                             </span>
                             <h2 className="mt-2 text-xl md:text-2xl font-bold tracking-tight text-foreground">Recently Added Cars</h2>
@@ -33,7 +33,7 @@ export async function RecentlyAddedCars() {
                     </div>
 
                     {recentVehicles.length === 0 ? (
-                        <div className="rounded-2xl border border-border/70 bg-card p-10 text-center text-muted-foreground">
+                        <div className="rounded-md border border-border/70 bg-card p-10 text-center text-muted-foreground">
                             No active listings yet.
                         </div>
                     ) : (

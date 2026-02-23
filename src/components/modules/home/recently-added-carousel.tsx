@@ -80,7 +80,7 @@ export function RecentlyAddedCarousel({ vehicles }: RecentlyAddedCarouselProps) 
             </div>
 
             {/* Carousel Track */}
-            <div className="overflow-hidden rounded-2xl">
+            <div className="overflow-hidden rounded-md">
                 <div
                     className="flex transition-transform duration-700 ease-in-out"
                     style={{ transform: `translateX(-${activeSlide * 100}%)` }}
@@ -91,11 +91,11 @@ export function RecentlyAddedCarousel({ vehicles }: RecentlyAddedCarouselProps) 
                                 {slide.map((vehicle) => (
                                     <div
                                         key={vehicle.id}
-                                        className="group relative rounded-2xl border border-white/5 bg-slate-900/40 transition-all duration-500 hover:-translate-y-2 hover:border-blue-500/50 hover:shadow-[0_10px_30px_-10px_rgba(30,58,138,0.5)]"
+                                        className="group relative rounded-md border border-white/5 bg-slate-900/40 transition-all duration-500 hover:-translate-y-2 hover:border-blue-500/50 hover:shadow-[0_10px_30px_-10px_rgba(30,58,138,0.5)]"
                                     >
                                         {/* Luxury Badge */}
-                                        <div className="absolute left-3 top-3 z-30 flex items-center gap-1.5 rounded-full border border-blue-400/25 bg-[#020617]/85 px-2.5 py-1 shadow-sm backdrop-blur-md">
-                                            <span className="h-1 w-1 rounded-full bg-blue-500 animate-pulse"></span>
+                                        <div className="absolute left-3 top-3 z-30 flex items-center gap-1.5 rounded-md border border-blue-400/25 bg-[#020617]/85 px-2.5 py-1 shadow-sm backdrop-blur-md">
+                                            <span className="h-1 w-1 rounded-md bg-blue-500 animate-pulse"></span>
                                             <span className="text-[9px] font-bold uppercase tracking-widest text-blue-400">
                                                 Just Listed
                                             </span>
@@ -103,7 +103,7 @@ export function RecentlyAddedCarousel({ vehicles }: RecentlyAddedCarouselProps) 
                                         
                                         {/* Assuming VehicleCard handles its own internal layout, 
                                             we wrap it so the outer effects apply cleanly. */}
-                                        <div className="overflow-hidden rounded-2xl h-full">
+                                        <div className="overflow-hidden rounded-md h-full">
                                             <VehicleCard {...vehicle} />
                                         </div>
                                     </div>
@@ -121,7 +121,7 @@ export function RecentlyAddedCarousel({ vehicles }: RecentlyAddedCarouselProps) 
                         key={index}
                         onClick={() => setActiveSlide(index)}
                         aria-label={`Go to slide ${index + 1}`}
-                        className={`h-1.5 rounded-full transition-all duration-500 ${
+                        className={`h-1.5 rounded-md transition-all duration-500 ${
                             index === activeSlide 
                             ? "w-10 bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]" 
                             : "w-4 bg-white/20 hover:bg-white/40"

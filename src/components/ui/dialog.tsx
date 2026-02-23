@@ -81,7 +81,7 @@ export function DialogContent({ children, className = "" }: { children: React.Re
             {/* Modal */}
             <div
                 role="dialog"
-                className={`relative z-[100000] grid w-[90%] max-w-lg gap-4 border border-slate-200 bg-white p-6 shadow-xl animate-in zoom-in-95 duration-200 rounded-xl ${className}`}
+                className={`relative z-[100000] grid w-[90%] max-w-lg gap-4 border border-slate-200 bg-white p-6 shadow-xl animate-in zoom-in-95 duration-200 rounded-md ${className}`}
             >
                 <button
                     onClick={() => context.setOpen(false)}

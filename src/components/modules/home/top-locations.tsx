@@ -14,7 +14,7 @@ export function TopLocations() {
     return (
         <section className="py-16 lg:py-20 bg-background">
             <div className="container-width">
-                <span className="inline-flex items-center rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-semibold tracking-wide text-accent">
+                <span className="inline-flex items-center rounded-md border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-semibold tracking-wide text-accent">
                     HOT MARKETS
                 </span>
                 <h2 className="mt-3 text-2xl md:text-3xl font-bold tracking-tight text-foreground">Top Locations</h2>
@@ -25,7 +25,7 @@ export function TopLocations() {
                         <Link
                             key={location.name}
                             href={`/search?location=${encodeURIComponent(location.name)}`}
-                            className="rounded-2xl border border-border/70 bg-card p-4 shadow-sm hover:-translate-y-1 hover:border-accent/40 hover:bg-accent/10 hover:shadow-lg transition-all"
+                            className="rounded-md border border-border/70 bg-card p-4 shadow-sm hover:-translate-y-1 hover:border-accent/40 hover:bg-accent/10 hover:shadow-lg transition-all"
                         >
                             <div className="flex items-center gap-2 text-foreground font-semibold">
                                 <MapPin className="h-4 w-4 text-accent" />

@@ -23,8 +23,8 @@ export default function ContactPage() {
             </div>
 
             {/* Decorative Ambient Glow */}
-            <div className="pointer-events-none absolute -bottom-24 -left-24 h-96 w-96 rounded-full bg-blue-900/20 blur-[120px] z-0" />
-            <div className="pointer-events-none absolute top-1/2 right-0 h-64 w-64 rounded-full bg-blue-950/10 blur-[100px] z-0" />
+            <div className="pointer-events-none absolute -bottom-24 -left-24 h-96 w-96 rounded-md bg-blue-900/20 blur-[120px] z-0" />
+            <div className="pointer-events-none absolute top-1/2 right-0 h-64 w-64 rounded-md bg-blue-950/10 blur-[100px] z-0" />
 
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center">
 
@@ -43,7 +43,7 @@ export default function ContactPage() {
                     <div className="space-y-6">
                         {/* Call Us */}
                         <div className="bg-white/5 backdrop-blur-md p-6 rounded-[8px] border border-white/10 shadow-xl flex items-start gap-4 hover:bg-white/10 transition-colors">
-                            <div className="p-3 bg-blue-500/20 text-blue-400 rounded-lg">
+                            <div className="p-3 bg-blue-500/20 text-blue-400 rounded-md">
                                 <Phone className="h-6 w-6" />
                             </div>
                             <div>
@@ -55,7 +55,7 @@ export default function ContactPage() {
 
                         {/* Email Us */}
                         <div className="bg-white/5 backdrop-blur-md p-6 rounded-[8px] border border-white/10 shadow-xl flex items-start gap-4 hover:bg-white/10 transition-colors">
-                            <div className="p-3 bg-blue-500/20 text-blue-400 rounded-lg">
+                            <div className="p-3 bg-blue-500/20 text-blue-400 rounded-md">
                                 <Mail className="h-6 w-6" />
                             </div>
                             <div>
@@ -67,7 +67,7 @@ export default function ContactPage() {
 
                         {/* Visit Us */}
                         <div className="bg-white/5 backdrop-blur-md p-6 rounded-[8px] border border-white/10 shadow-xl flex items-start gap-4 hover:bg-white/10 transition-colors">
-                            <div className="p-3 bg-blue-500/20 text-blue-400 rounded-lg">
+                            <div className="p-3 bg-blue-500/20 text-blue-400 rounded-md">
                                 <MapPin className="h-6 w-6" />
                             </div>
                             <div>
@@ -82,7 +82,7 @@ export default function ContactPage() {
                     <div className="lg:col-span-2">
                         <div className="bg-white/5 backdrop-blur-xl p-8 rounded-[12px] border border-white/10 shadow-2xl relative overflow-hidden">
                             {/* Inner subtle glow */}
-                            <div className="absolute -top-24 -right-24 h-48 w-48 bg-blue-500/10 rounded-full blur-[60px]" />
+                            <div className="absolute -top-24 -right-24 h-48 w-48 bg-blue-500/10 rounded-md blur-[60px]" />
 
                             <form className="space-y-6 relative z-10">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

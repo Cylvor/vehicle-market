@@ -49,7 +49,7 @@ export function BuyerSidebar() {
     };
 
     return (
-        <div className="flex flex-col h-full bg-slate-900 dark:bg-slate-950 border border-slate-800 rounded-2xl shadow-xl overflow-hidden min-h-[calc(100vh-8rem)] text-slate-300">
+        <div className="flex flex-col h-full bg-slate-900 dark:bg-slate-950 border border-slate-800 rounded-md shadow-xl overflow-hidden min-h-[calc(100vh-8rem)] text-slate-300">
             <div className="flex-1 py-6 space-y-6">
                 <div className="px-4">
                     <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 px-2">
@@ -61,7 +61,7 @@ export function BuyerSidebar() {
                                 key={item.href}
                                 href={item.href}
                                 className={cn(
-                                    "flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200",
+                                    "flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-md transition-all duration-200",
                                     pathname === item.href
                                         ? "bg-slate-800 text-white shadow-inner"
                                         : "text-slate-400 hover:bg-slate-800/50 hover:text-slate-200"
@@ -78,7 +78,7 @@ export function BuyerSidebar() {
             <div className="p-4 border-t border-slate-800 bg-slate-950/50">
                 <Button
                     variant="ghost"
-                    className="w-full justify-start gap-3 text-slate-400 hover:text-rose-400 hover:bg-rose-950/50 rounded-xl transition-colors"
+                    className="w-full justify-start gap-3 text-slate-400 hover:text-rose-400 hover:bg-rose-950/50 rounded-md transition-colors"
                     onClick={handleSignOut}
                     disabled={isSigningOut}
                 >

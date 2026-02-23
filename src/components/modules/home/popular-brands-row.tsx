@@ -60,7 +60,7 @@ export function PopularBrandsRow({ brandCounts = {} }: { brandCounts?: Record<st
                         className="group flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors"
                     >
                         View All Manufacturers
-                        <div className="h-8 w-8 rounded-full border border-white/10 flex items-center justify-center group-hover:border-blue-500 group-hover:bg-blue-500 transition-all">
+                        <div className="h-8 w-8 rounded-md border border-white/10 flex items-center justify-center group-hover:border-blue-500 group-hover:bg-blue-500 transition-all">
                             <span className="text-white text-lg">→</span>
                         </div>
                     </Link>
@@ -78,7 +78,7 @@ export function PopularBrandsRow({ brandCounts = {} }: { brandCounts?: Record<st
                         >
                             <Link
                                 href={`/search?make=${encodeURIComponent(brand.name)}`}
-                                className="group relative block h-[360px] overflow-hidden rounded-2xl border border-white/10 bg-slate-900/50 transition-all hover:border-blue-500/50 hover:shadow-[0_0_30px_rgba(30,58,138,0.2)]"
+                                className="group relative block h-[360px] overflow-hidden rounded-md border border-white/10 bg-slate-900/50 transition-all hover:border-blue-500/50 hover:shadow-[0_0_30px_rgba(30,58,138,0.2)]"
                             >
                                 {/* Image with Better Visibility */}
                                 <div className="absolute inset-0 z-0">
@@ -101,7 +101,7 @@ export function PopularBrandsRow({ brandCounts = {} }: { brandCounts?: Record<st
                                 {/* Logo Placement (Larger & Clearer) */}
                                 <div className="absolute top-5 left-5 z-20">
                                     {/* CHANGE: Added shadow-lg and pure white background */}
-                                    <div className="bg-white h-12 w-20 flex items-center justify-center rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition-transform duration-500 group-hover:scale-105">
+                                    <div className="bg-white h-12 w-20 flex items-center justify-center rounded-md shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition-transform duration-500 group-hover:scale-105">
                                         {brand.logo ? (
                                             <div className="relative h-8 w-14">
                                                 <Image

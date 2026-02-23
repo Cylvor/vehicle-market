@@ -13,8 +13,8 @@ interface SellerBioProps {
 
 export function SellerBio({ name, type, rating, reviewCount, location, memberSince }: SellerBioProps) {
     return (
-        <div className="bg-card border rounded-lg p-6 shadow-sm mb-8 flex flex-col md:flex-row gap-6 items-start md:items-center">
-            <div className="h-24 w-24 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
+        <div className="bg-card border rounded-md p-6 shadow-sm mb-8 flex flex-col md:flex-row gap-6 items-start md:items-center">
+            <div className="h-24 w-24 rounded-md bg-muted flex items-center justify-center flex-shrink-0">
                 <User className="h-10 w-10 text-muted-foreground" />
             </div>
 

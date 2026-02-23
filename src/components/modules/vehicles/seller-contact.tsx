@@ -67,14 +67,14 @@ export function SellerContact({ vehicleId, sellerName, sellerLocation, sellerIma
     };
 
     return (
-        <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6 space-y-6">
+        <div className="rounded-md border bg-card text-card-foreground shadow-sm p-6 space-y-6">
             <div>
                 <h3 className="font-semibold text-lg">Contact Seller</h3>
             </div>
 
             <div className="space-y-4">
                 <div className="flex items-center gap-3 text-sm">
-                    <div className="relative h-10 w-10 overflow-hidden rounded-full border">
+                    <div className="relative h-10 w-10 overflow-hidden rounded-md border">
                         <img
                             src={sellerImageUrl}
                             alt={`${sellerName} profile image`}

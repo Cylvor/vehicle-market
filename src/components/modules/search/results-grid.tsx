@@ -1,6 +1,7 @@
 import { VehicleCard } from "@/components/modules/vehicles/vehicle-card";
 import { getVehicles } from "@/actions/vehicle";
 import { SortSelect } from "./filter-sidebar";
+import { QuickSearchInput } from "./quick-search-input";
 import { Grid3x3 } from "lucide-react";
 
 type ResultsGridFilters = {
@@ -25,7 +26,7 @@ export async function ResultsGrid({ filters }: ResultsGridProps) {
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-2 border-b border-slate-200">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-4 border-b border-slate-200">
                 <div>
                     <h2 className="text-2xl font-bold tracking-tight text-slate-900">
                         {results.length} {results.length === 1 ? "car" : "cars"} for sale
@@ -36,12 +37,12 @@ export async function ResultsGrid({ filters }: ResultsGridProps) {
                         </p>
                     )}
                 </div>
-                <SortSelect />
+                <QuickSearchInput initialQuery={filters?.q} />
             </div>
 
             {results.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-slate-300 bg-white p-12 md:p-16 text-center shadow-sm">
-                    <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-slate-50 text-slate-400 mb-4 border border-slate-100">
+                <div className="rounded-md border border-dashed border-slate-300 bg-white p-12 md:p-16 text-center shadow-sm">
+                    <div className="inline-flex h-16 w-16 items-center justify-center rounded-md bg-slate-50 text-slate-400 mb-4 border border-slate-100">
                         <Grid3x3 className="h-8 w-8" />
                     </div>
                     <h3 className="text-xl font-bold tracking-tight text-slate-900 mb-2">No vehicles found</h3>
