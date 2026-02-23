@@ -29,7 +29,7 @@ export function SellCarCtaBanner() {
                                 <Link href="/sell/create">List your car now</Link>
                             </Button>
                             <Button asChild variant="outline" className="h-11 px-6 font-semibold bg-background/90 backdrop-blur-sm">
-                                <Link href="/dashboard/listings">View seller dashboard</Link>
+                                <Link href="/dashboard/seller/listings">View seller dashboard</Link>
                             </Button>
                         </div>
                     </div>

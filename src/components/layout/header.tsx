@@ -57,10 +57,10 @@ export function Header() {
             <header className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ease-out ${effectiveIsScrolled ? "pt-0 px-0" : "pt-2 px-2 sm:px-4 lg:px-6"}`}>
                 {/* --- Floating / Fixed Nav Bar --- */}
                 <div
-                    className={`mx-auto flex h-16 items-center justify-between transition-all duration-500 ${effectiveIsScrolled ? "max-w-full px-4 sm:px-6 lg:px-8 rounded-none bg-white/90 backdrop-blur-xl shadow-md border-b border-slate-200/50" : "max-w-7xl px-3 rounded-lg " + (isTransparent
+                    className={`mx-auto flex h-16 max-w-7xl items-center justify-between rounded-full px-4 sm:px-6 transition-all duration-500 ${isTransparent
                         ? "bg-transparent border-transparent"
-                        : "bg-white/80 backdrop-blur-xl shadow-sm border border-slate-200/50"
-                    )}`}
+                        : "bg-white/80 backdrop-blur-xl shadow-lg border border-white/40 shadow-slate-200/50"
+                        }`}
                 >
                     {/* Logo */}
                     <Link
@@ -137,8 +137,7 @@ export function Header() {
                             <SignedIn>
                                 <Link
                                     href="/dashboard"
-                                    className={`text-sm font-bold transition-colors ${isTransparent ? "text-white hover:text-blue-300" : "text-slate-700 hover:text-blue-600"
-                                        }`}
+                                    className={`text-sm font-bold transition-colors ${isTransparent ? "text-white hover:text-blue-300" : "text-slate-700 hover:text-blue-600"}`}
                                 >
                                     Dashboard
                                 </Link>
@@ -152,7 +151,7 @@ export function Header() {
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                className={`flex items-center gap-2 rounded-md px-5 py-2.5 text-sm font-bold shadow-lg transition-all ${isTransparent
+                                className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold shadow-lg transition-all ${isTransparent
                                     ? "bg-white text-black hover:bg-gray-100 shadow-white/20"
                                     : "bg-black text-white hover:bg-slate-800 shadow-black/10"
                                     }`}

@@ -58,8 +58,8 @@ export async function toggleVehicleSavedInDb(vehicleId: string) {
             .delete(savedVehicles)
             .where(and(eq(savedVehicles.userId, userId), eq(savedVehicles.vehicleId, validatedId.data)));
 
-        revalidatePath("/dashboard/saved");
-        revalidatePath("/dashboard");
+        revalidatePath("/dashboard/buyer/saved");
+        revalidatePath("/dashboard/buyer");
 
         return { isSaved: false };
     }
@@ -69,8 +69,8 @@ export async function toggleVehicleSavedInDb(vehicleId: string) {
         vehicleId: validatedId.data,
     }).onConflictDoNothing({ target: [savedVehicles.userId, savedVehicles.vehicleId] });
 
-    revalidatePath("/dashboard/saved");
-    revalidatePath("/dashboard");
+    revalidatePath("/dashboard/buyer/saved");
+    revalidatePath("/dashboard/buyer");
 
     return { isSaved: true };
 }

@@ -40,7 +40,7 @@ export async function createVehicle(input: z.infer<typeof vehicleSchema>) {
     });
 
     revalidatePath("/admin/listings");
-    revalidatePath("/dashboard/listings");
+    revalidatePath("/dashboard/seller/listings");
 }
 
 export async function getUserVehicles() {
@@ -113,10 +113,10 @@ export async function getVehicles(filters?: VehicleFilters) {
         sort === "price-asc"
             ? asc(vehicles.price)
             : sort === "price-desc"
-              ? desc(vehicles.price)
-              : sort === "oldest"
-                ? asc(vehicles.createdAt)
-                : desc(vehicles.createdAt);
+                ? desc(vehicles.price)
+                : sort === "oldest"
+                    ? asc(vehicles.createdAt)
+                    : desc(vehicles.createdAt);
 
     const data = await db
         .select()
@@ -228,7 +228,7 @@ export async function updateVehicle(id: string, input: z.infer<typeof vehicleSch
         })
         .where(eq(vehicles.id, id));
 
-    revalidatePath("/dashboard/listings");
+    revalidatePath("/dashboard/seller/listings");
     revalidatePath(`/vehicles/${id}`);
     revalidatePath("/search");
 }
@@ -252,7 +252,7 @@ export async function deleteVehicle(id: string) {
 
     await db.delete(vehicles).where(eq(vehicles.id, id));
 
-    revalidatePath("/dashboard/listings");
+    revalidatePath("/dashboard/seller/listings");
     revalidatePath("/search");
 }
 
@@ -267,6 +267,6 @@ export async function deleteVehicleAsAdmin(id: string) {
 
     revalidatePath("/admin/listings");
     revalidatePath(`/admin/listings/${id}`);
-    revalidatePath("/dashboard/listings");
+    revalidatePath("/dashboard/seller/listings");
     revalidatePath("/search");
 }

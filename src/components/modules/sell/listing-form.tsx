@@ -163,7 +163,7 @@ export function ListingForm({ vehicleId, initialData, sellerName, sellerLocation
                 });
             }
 
-            router.push("/dashboard");
+            router.push("/dashboard/seller/listings");
         } catch (error) {
             console.error(error);
             toast.error("Something went wrong", {
