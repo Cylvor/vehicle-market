@@ -1,8 +1,31 @@
 import { Car, MessageSquare, TrendingUp, DollarSign, Activity, Zap, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { getSellerVehiclePerformance } from "@/actions/vehicle";
+import { getReceivedEnquiriesCount } from "@/actions/enquiry";
+import Image from "next/image";
 
-export default function SellerDashboardPage() {
+function getDaysAgo(date: Date) {
+    const diffMs = Date.now() - new Date(date).getTime();
+    const days = Math.max(0, Math.floor(diffMs / (1000 * 60 * 60 * 24)));
+    return days;
+}
+
+export default async function SellerDashboardPage() {
+    const performanceItems = await getSellerVehiclePerformance();
+    const receivedMessagesCount = await getReceivedEnquiriesCount();
+    const totalViews = performanceItems.reduce((accumulator, item) => accumulator + item.totalViews, 0);
+    const activeListings = performanceItems.filter((item) => item.status === "active").length;
+    const trendingPool = performanceItems.filter((item) => item.status === "active");
+    const trendingCandidates = trendingPool.length > 0 ? trendingPool : performanceItems;
+    const trendingVehicle = trendingCandidates.reduce<(typeof performanceItems)[number] | null>((best, current) => {
+        if (!best || current.totalViews > best.totalViews) {
+            return current;
+        }
+
+        return best;
+    }, null);
+
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
             {/* Dark Seller Header */}
@@ -20,13 +43,13 @@ export default function SellerDashboardPage() {
                             Performance Overview
                         </h1>
                         <p className="text-slate-400 mt-2 text-lg max-w-xl">
-                            Your performance metrics are looking great today. You have 1 active listing receiving high traffic.
+                            Track each listed vehicle's individual viewing performance in real time.
                         </p>
                     </div>
 
                     <div className="hidden lg:flex items-center gap-6 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md shadow-lg">
                         <div className="text-center px-4 border-r border-white/10">
-                            <div className="text-3xl font-bold font-mono text-white">8.4k</div>
+                            <div className="text-3xl font-bold font-mono text-white">{totalViews.toLocaleString()}</div>
                             <div className="text-xs text-slate-400 mt-1 uppercase tracking-wider">Total Views</div>
                         </div>
                         <div className="text-center px-4">
@@ -47,7 +70,7 @@ export default function SellerDashboardPage() {
                     <div className="flex justify-between items-start mb-4">
                         <div>
                             <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Active Listings</p>
-                            <h3 className="text-4xl font-black text-slate-900 dark:text-white mt-2">1</h3>
+                            <h3 className="text-4xl font-black text-slate-900 dark:text-white mt-2">{activeListings}</h3>
                         </div>
                         <div className="p-3 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl border border-emerald-100 dark:border-emerald-500/20">
                             <Car className="h-6 w-6" />
@@ -68,7 +91,7 @@ export default function SellerDashboardPage() {
                     <div className="flex justify-between items-start mb-4">
                         <div>
                             <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total Views</p>
-                            <h3 className="text-4xl font-black text-slate-900 dark:text-white mt-2">8,423</h3>
+                            <h3 className="text-4xl font-black text-slate-900 dark:text-white mt-2">{totalViews.toLocaleString()}</h3>
                         </div>
                         <div className="p-3 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl border border-indigo-100 dark:border-indigo-500/20">
                             <Activity className="h-6 w-6" />
@@ -91,7 +114,7 @@ export default function SellerDashboardPage() {
                         <div className="flex justify-between items-start mb-4">
                             <div>
                                 <p className="text-sm font-bold text-emerald-100 uppercase tracking-wider">Messages</p>
-                                <h3 className="text-4xl font-black mt-2">5</h3>
+                                <h3 className="text-4xl font-black mt-2">{receivedMessagesCount.toLocaleString()}</h3>
                             </div>
                             <div className="p-3 bg-white/20 backdrop-blur-md rounded-xl shadow-inner">
                                 <BellNotification />
@@ -99,7 +122,7 @@ export default function SellerDashboardPage() {
                         </div>
                         <div className="pt-4 mt-6 border-t border-white/20 flex items-center justify-between">
                             <span className="text-sm font-bold bg-white text-emerald-700 px-3 py-1 rounded-full shadow-sm">
-                                3 Unread Inquiries
+                                {receivedMessagesCount.toLocaleString()} Messages Received
                             </span>
                             <ArrowUpRight className="h-5 w-5 text-white/70 group-hover:text-white transition-colors" />
                         </div>
@@ -119,32 +142,50 @@ export default function SellerDashboardPage() {
                         </Link>
                     </div>
 
-                    <div className="p-6 flex flex-col sm:flex-row gap-6 items-center sm:items-stretch">
-                        <div className="w-full sm:w-48 h-32 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 overflow-hidden relative shrink-0">
-                            <div className="absolute inset-0 bg-[url('/images/hero/car1.jpg')] bg-cover bg-center hover:scale-110 transition-transform duration-700 cursor-pointer" />
-                            <div className="absolute top-2 left-2 bg-emerald-500 text-white text-[10px] font-black uppercase px-2 py-1 rounded-md tracking-wider shadow-sm">
-                                Active
-                            </div>
-                        </div>
-                        <div className="flex-1 flex flex-col justify-between w-full">
-                            <div>
-                                <div className="flex justify-between items-start">
-                                    <h4 className="text-xl font-bold text-slate-900 dark:text-white line-clamp-1 hover:text-emerald-600 transition-colors cursor-pointer">2020 Toyota Corolla ZR Hybrid</h4>
-                                    <span className="text-xl font-black text-emerald-600 dark:text-emerald-400">$32,500</span>
+                    {trendingVehicle ? (
+                        <div className="p-6 flex flex-col sm:flex-row gap-6 items-center sm:items-stretch">
+                            <div className="w-full sm:w-48 h-32 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 overflow-hidden relative shrink-0">
+                                <Image
+                                    src={trendingVehicle.image}
+                                    alt={trendingVehicle.title}
+                                    fill
+                                    className="object-cover hover:scale-110 transition-transform duration-700"
+                                    sizes="192px"
+                                />
+                                <div className="absolute top-2 left-2 bg-emerald-500 text-white text-[10px] font-black uppercase px-2 py-1 rounded-md tracking-wider shadow-sm">
+                                    {trendingVehicle.status === "sold" ? "Sold Out" : trendingVehicle.status}
                                 </div>
-                                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Listed 14 days ago • Sydney, NSW</p>
                             </div>
+                            <div className="flex-1 flex flex-col justify-between w-full">
+                                <div>
+                                    <div className="flex justify-between items-start gap-4">
+                                        <h4 className="text-xl font-bold text-slate-900 dark:text-white line-clamp-1">{trendingVehicle.title}</h4>
+                                        <span className="text-xl font-black text-emerald-600 dark:text-emerald-400">${trendingVehicle.price.toLocaleString()}</span>
+                                    </div>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                                        Listed {getDaysAgo(trendingVehicle.createdAt)} days ago • {trendingVehicle.sellerLocation || "Location not set"}
+                                    </p>
+                                </div>
 
-                            <div className="flex items-center gap-4 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 pb-1">
-                                <div className="text-sm font-medium">
-                                    <span className="text-slate-900 dark:text-white font-bold">1.2k</span> <span className="text-slate-500">views</span>
-                                </div>
-                                <div className="text-sm font-medium">
-                                    <span className="text-slate-900 dark:text-white font-bold">45</span> <span className="text-slate-500">saves</span>
+                                <div className="flex items-center gap-4 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 pb-1">
+                                    <div className="text-sm font-medium">
+                                        <span className="text-slate-900 dark:text-white font-bold">{trendingVehicle.totalViews.toLocaleString()}</span> <span className="text-slate-500">views</span>
+                                    </div>
+                                    <div className="text-sm font-medium">
+                                        <span className="text-slate-900 dark:text-white font-bold">{trendingVehicle.viewRate}%</span> <span className="text-slate-500">view rate</span>
+                                    </div>
+                                    <div className="text-sm font-medium">
+                                        <span className="text-slate-900 dark:text-white font-bold">{trendingVehicle.savedRate}%</span> <span className="text-slate-500">saved rate</span>
+                                    </div>
+                                    <div className="text-sm font-medium">
+                                        <span className="text-slate-900 dark:text-white font-bold">{trendingVehicle.totalSaved.toLocaleString()}</span> <span className="text-slate-500">saved</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    ) : (
+                        <div className="p-6 text-sm text-slate-500 dark:text-slate-400">No listings available to show trending data.</div>
+                    )}
                 </div>
 
                 {/* List New Vehicle CTA */}

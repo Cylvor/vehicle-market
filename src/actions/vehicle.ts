@@ -1,12 +1,12 @@
 "use server"
 
 import { db } from "@/db";
-import { vehicles } from "@/db/schema";
+import { savedVehicles, vehicleViews, vehicles } from "@/db/schema";
 import { vehicleSchema } from "@/lib/validations/vehicle";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { and, asc, desc, eq, gte, ilike, lte, or, SQL, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gte, ilike, inArray, lte, or, SQL, sql } from "drizzle-orm";
 
 type VehicleFilters = {
     make?: string;
@@ -144,6 +144,189 @@ export async function getVehicleById(id: string) {
     return canView ? vehicle : null;
 }
 
+export async function trackVehicleView(vehicleId: string) {
+    const { userId } = await auth();
+
+    await db.insert(vehicleViews).values({
+        vehicleId,
+        viewerUserId: userId ?? null,
+    });
+}
+
+type SellerVehiclePerformance = {
+    id: string;
+    title: string;
+    status: "pending" | "active" | "rejected" | "sold";
+    image: string;
+    price: number;
+    sellerLocation: string | null;
+    createdAt: Date;
+    totalViews: number;
+    viewRate: number;
+    totalSaved: number;
+    savedRate: number;
+};
+
+export async function getSellerVehiclePerformance(): Promise<SellerVehiclePerformance[]> {
+    const { userId } = await auth();
+
+    if (!userId) {
+        throw new Error("Unauthorized");
+    }
+
+    const listings = await db
+        .select({
+            id: vehicles.id,
+            year: vehicles.year,
+            make: vehicles.make,
+            model: vehicles.model,
+            variant: vehicles.variant,
+            price: vehicles.price,
+            sellerLocation: vehicles.sellerLocation,
+            status: vehicles.status,
+            images: vehicles.images,
+            createdAt: vehicles.createdAt,
+        })
+        .from(vehicles)
+        .where(eq(vehicles.userId, userId))
+        .orderBy(desc(vehicles.createdAt));
+
+    if (listings.length === 0) {
+        return [];
+    }
+
+    const listingIds = listings.map((listing) => listing.id);
+    const aggregatedViews = await db
+        .select({
+            vehicleId: vehicleViews.vehicleId,
+            totalViews: sql<number>`COUNT(*)`.mapWith(Number),
+        })
+        .from(vehicleViews)
+        .where(inArray(vehicleViews.vehicleId, listingIds))
+        .groupBy(vehicleViews.vehicleId);
+
+    const aggregatedSaved = await db
+        .select({
+            vehicleId: savedVehicles.vehicleId,
+            totalSaved: sql<number>`COUNT(*)`.mapWith(Number),
+        })
+        .from(savedVehicles)
+        .where(inArray(savedVehicles.vehicleId, listingIds))
+        .groupBy(savedVehicles.vehicleId);
+
+    const viewsByVehicle = new Map(
+        aggregatedViews.map((row) => [row.vehicleId, row.totalViews])
+    );
+
+    const savedByVehicle = new Map(
+        aggregatedSaved.map((row) => [row.vehicleId, row.totalSaved])
+    );
+
+    const totalViewsAcrossListings = listings.reduce(
+        (accumulator, listing) => accumulator + (viewsByVehicle.get(listing.id) ?? 0),
+        0
+    );
+
+    const totalSavedAcrossListings = listings.reduce(
+        (accumulator, listing) => accumulator + (savedByVehicle.get(listing.id) ?? 0),
+        0
+    );
+
+    return listings.map((listing) => {
+        const title = `${listing.year} ${listing.make} ${listing.model}${listing.variant ? ` ${listing.variant}` : ""}`;
+        const totalViews = viewsByVehicle.get(listing.id) ?? 0;
+        const totalSaved = savedByVehicle.get(listing.id) ?? 0;
+        const viewRate = totalViewsAcrossListings > 0
+            ? Number(((totalViews / totalViewsAcrossListings) * 100).toFixed(1))
+            : 0;
+        const savedRate = totalSavedAcrossListings > 0
+            ? Number(((totalSaved / totalSavedAcrossListings) * 100).toFixed(1))
+            : 0;
+
+        return {
+            id: listing.id,
+            title,
+            status: listing.status,
+            image: listing.images?.[0] || "/placeholder-car.png",
+            price: listing.price,
+            sellerLocation: listing.sellerLocation,
+            createdAt: listing.createdAt,
+            totalViews,
+            viewRate,
+            totalSaved,
+            savedRate,
+        };
+    });
+}
+
+type SellerPerformanceCharts = {
+    byDate: Array<{
+        date: string;
+        label: string;
+        views: number;
+        saved: number;
+    }>;
+};
+
+export async function getSellerPerformanceCharts(): Promise<SellerPerformanceCharts> {
+    const { userId } = await auth();
+
+    if (!userId) {
+        throw new Error("Unauthorized");
+    }
+
+    const listings = await db
+        .select({ id: vehicles.id })
+        .from(vehicles)
+        .where(eq(vehicles.userId, userId));
+
+    if (listings.length === 0) {
+        return { byDate: [] };
+    }
+
+    const listingIds = listings.map((listing) => listing.id);
+
+    const viewRows = await db
+        .select({
+            date: sql<string>`DATE(${vehicleViews.createdAt})::text`,
+            count: sql<number>`COUNT(*)`.mapWith(Number),
+        })
+        .from(vehicleViews)
+        .where(inArray(vehicleViews.vehicleId, listingIds))
+        .groupBy(sql`DATE(${vehicleViews.createdAt})`);
+
+    const savedRows = await db
+        .select({
+            date: sql<string>`DATE(${savedVehicles.createdAt})::text`,
+            count: sql<number>`COUNT(*)`.mapWith(Number),
+        })
+        .from(savedVehicles)
+        .where(inArray(savedVehicles.vehicleId, listingIds))
+        .groupBy(sql`DATE(${savedVehicles.createdAt})`);
+
+    const viewsByDate = new Map(viewRows.map((row) => [row.date, row.count]));
+    const savedByDate = new Map(savedRows.map((row) => [row.date, row.count]));
+
+    const byDate: SellerPerformanceCharts["byDate"] = [];
+    for (let offset = 6; offset >= 0; offset -= 1) {
+        const date = new Date();
+        date.setHours(0, 0, 0, 0);
+        date.setDate(date.getDate() - offset);
+
+        const dateKey = date.toISOString().slice(0, 10);
+        const label = date.toLocaleDateString("en-AU", { weekday: "short" });
+
+        byDate.push({
+            date: dateKey,
+            label,
+            views: viewsByDate.get(dateKey) ?? 0,
+            saved: savedByDate.get(dateKey) ?? 0,
+        });
+    }
+
+    return { byDate };
+}
+
 export async function getUserVehicleById(id: string) {
     const { userId } = await auth();
 
@@ -195,6 +378,34 @@ export async function updateVehicleStatus(id: string, status: "active" | "reject
     await db.update(vehicles).set({ status }).where(eq(vehicles.id, id));
     revalidatePath("/admin/listings");
     revalidatePath("/search");
+}
+
+export async function updateUserVehicleStatus(id: string, status: "active" | "sold") {
+    const { userId } = await auth();
+
+    if (!userId) {
+        throw new Error("Unauthorized");
+    }
+
+    const [existing] = await db
+        .select({ userId: vehicles.userId })
+        .from(vehicles)
+        .where(eq(vehicles.id, id))
+        .limit(1);
+
+    if (!existing || existing.userId !== userId) {
+        throw new Error("Unauthorized");
+    }
+
+    await db
+        .update(vehicles)
+        .set({ status, updatedAt: new Date() })
+        .where(eq(vehicles.id, id));
+
+    revalidatePath("/dashboard/seller/listings");
+    revalidatePath("/search");
+    revalidatePath(`/vehicles/${id}`);
+    revalidatePath("/");
 }
 
 export async function updateVehicle(id: string, input: z.infer<typeof vehicleSchema>) {

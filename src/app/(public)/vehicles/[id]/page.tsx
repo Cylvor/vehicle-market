@@ -1,7 +1,7 @@
 import { VehicleGallery } from "@/components/modules/vehicles/vehicle-gallery";
 import { VehicleInfo } from "@/components/modules/vehicles/vehicle-info";
 import { SellerContact } from "@/components/modules/vehicles/seller-contact";
-import { getVehicleById } from "@/actions/vehicle";
+import { getVehicleById, trackVehicleView } from "@/actions/vehicle";
 import { notFound } from "next/navigation";
 import { clerkClient } from "@clerk/nextjs/server";
 
@@ -20,6 +20,8 @@ export default async function VehicleDetailsPage({ params }: { params: Promise<{
     if (!vehicle) {
         notFound();
     }
+
+    await trackVehicleView(vehicle.id);
 
     const title = `${vehicle.year} ${vehicle.make} ${vehicle.model}${vehicle.variant ? ` ${vehicle.variant}` : ""}`;
     const description = vehicle.description ?? "No description provided.";
