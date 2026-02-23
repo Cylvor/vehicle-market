@@ -1,13 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, X, SlidersHorizontal } from "lucide-react";
+import { Search, ChevronRight, Bookmark, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const MAKES = ["Toyota", "Mazda", "Ford", "Hyundai", "Mitsubishi", "Kia", "Tesla", "BMW", "Mercedes-Benz"];
@@ -45,347 +45,185 @@ function useUpdateSearchParams() {
 export function FilterSidebar() {
     const searchParams = useSearchParams();
     const updateParams = useUpdateSearchParams();
-    const qParam = searchParams.get("q") ?? "";
-    const inputRef = useRef<HTMLInputElement | null>(null);
-    const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const priceDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const yearDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const minPriceRef = useRef<HTMLInputElement | null>(null);
-    const maxPriceRef = useRef<HTMLInputElement | null>(null);
-    const minYearRef = useRef<HTMLInputElement | null>(null);
-    const maxYearRef = useRef<HTMLInputElement | null>(null);
 
+    const qParam = searchParams.get("q") ?? "";
     const make = searchParams.get("make") ?? undefined;
+    const bodyType = searchParams.get("bodyType") ?? undefined;
     const minPriceParam = searchParams.get("minPrice") ?? "";
     const maxPriceParam = searchParams.get("maxPrice") ?? "";
-    const bodyType = searchParams.get("bodyType") ?? undefined;
     const minYearParam = searchParams.get("minYear") ?? "";
     const maxYearParam = searchParams.get("maxYear") ?? "";
 
-    // Count active filters
-    const activeFiltersCount = [
-        qParam,
-        make,
-        bodyType,
-        minPriceParam,
-        maxPriceParam,
-        minYearParam,
-        maxYearParam,
-    ].filter(Boolean).length;
+    const [searchQuery, setSearchQuery] = useState(qParam);
+    const [minPrice, setMinPrice] = useState(minPriceParam);
+    const [maxPrice, setMaxPrice] = useState(maxPriceParam);
+    const [minYear, setMinYear] = useState(minYearParam);
+    const [maxYear, setMaxYear] = useState(maxYearParam);
 
-    // Keep input in sync when URL changes (reset, back/forward, etc.)
-    useEffect(() => {
-        if (!inputRef.current) return;
-        if (inputRef.current.value !== qParam) {
-            inputRef.current.value = qParam;
-        }
-    }, [qParam]);
+    const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    // Keep numeric inputs in sync with URL changes (reset, back/forward, etc.)
-    useEffect(() => {
-        if (minPriceRef.current && minPriceRef.current.value !== minPriceParam) {
-            minPriceRef.current.value = minPriceParam;
-        }
-        if (maxPriceRef.current && maxPriceRef.current.value !== maxPriceParam) {
-            maxPriceRef.current.value = maxPriceParam;
-        }
-    }, [minPriceParam, maxPriceParam]);
+    useEffect(() => setSearchQuery(qParam), [qParam]);
+    useEffect(() => setMinPrice(minPriceParam), [minPriceParam]);
+    useEffect(() => setMaxPrice(maxPriceParam), [maxPriceParam]);
+    useEffect(() => setMinYear(minYearParam), [minYearParam]);
+    useEffect(() => setMaxYear(maxYearParam), [maxYearParam]);
 
-    useEffect(() => {
-        if (minYearRef.current && minYearRef.current.value !== minYearParam) {
-            minYearRef.current.value = minYearParam;
-        }
-        if (maxYearRef.current && maxYearRef.current.value !== maxYearParam) {
-            maxYearRef.current.value = maxYearParam;
-        }
-    }, [minYearParam, maxYearParam]);
+    const activeFiltersCount = [qParam, make, bodyType, minPriceParam, maxPriceParam, minYearParam, maxYearParam].filter(Boolean).length;
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
+        setSearchQuery(value);
         if (debounceRef.current) clearTimeout(debounceRef.current);
-        if (!value) {
-            updateParams({ q: undefined });
-            return;
-        }
-
-        debounceRef.current = setTimeout(() => updateParams({ q: value }), 300);
+        debounceRef.current = setTimeout(() => updateParams({ q: value || undefined }), 300);
     };
 
-    const handleSearchSubmit = (value?: string) => {
-        if (debounceRef.current) clearTimeout(debounceRef.current);
-        const nextValue = value ?? inputRef.current?.value ?? "";
-        updateParams({ q: nextValue || undefined });
-    };
-
-    const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
-            handleSearchSubmit((e.target as HTMLInputElement).value);
+    const handlePriceChange = (type: 'min' | 'max', value: string) => {
+        if (type === 'min') {
+            setMinPrice(value);
+            updateParams({ minPrice: value || undefined });
+        } else {
+            setMaxPrice(value);
+            updateParams({ maxPrice: value || undefined });
         }
     };
 
-    useEffect(() => {
-        return () => {
-            if (debounceRef.current) clearTimeout(debounceRef.current);
-            if (priceDebounceRef.current) clearTimeout(priceDebounceRef.current);
-            if (yearDebounceRef.current) clearTimeout(yearDebounceRef.current);
-        };
-    }, []);
+    const handleYearChange = (type: 'min' | 'max', value: string) => {
+        if (type === 'min') {
+            setMinYear(value);
+            updateParams({ minYear: value || undefined });
+        } else {
+            setMaxYear(value);
+            updateParams({ maxYear: value || undefined });
+        }
+    };
 
     const handleReset = () => {
-        if (debounceRef.current) clearTimeout(debounceRef.current);
-        if (priceDebounceRef.current) clearTimeout(priceDebounceRef.current);
-        if (yearDebounceRef.current) clearTimeout(yearDebounceRef.current);
-        if (inputRef.current) inputRef.current.value = "";
-        if (minPriceRef.current) minPriceRef.current.value = "";
-        if (maxPriceRef.current) maxPriceRef.current.value = "";
-        if (minYearRef.current) minYearRef.current.value = "";
-        if (maxYearRef.current) maxYearRef.current.value = "";
+        setSearchQuery("");
+        setMinPrice("");
+        setMaxPrice("");
+        setMinYear("");
+        setMaxYear("");
         updateParams({
-            q: undefined,
-            make: undefined,
-            model: undefined,
-            bodyType: undefined,
-            minPrice: undefined,
-            maxPrice: undefined,
-            minYear: undefined,
-            maxYear: undefined,
-            sort: undefined,
+            q: undefined, make: undefined, model: undefined, bodyType: undefined,
+            minPrice: undefined, maxPrice: undefined, minYear: undefined, maxYear: undefined, sort: undefined,
         });
     };
 
-    const handlePriceChange = () => {
-        const min = minPriceRef.current?.value ?? "";
-        const max = maxPriceRef.current?.value ?? "";
-
-        if (priceDebounceRef.current) clearTimeout(priceDebounceRef.current);
-
-        // clearing should apply immediately
-        if (!min && !max) {
-            updateParams({ minPrice: undefined, maxPrice: undefined });
-            return;
-        }
-
-        priceDebounceRef.current = setTimeout(() => {
-            updateParams({
-                minPrice: min || undefined,
-                maxPrice: max || undefined,
-            });
-        }, 350);
-    };
-
-    const handleYearChange = () => {
-        const min = minYearRef.current?.value ?? "";
-        const max = maxYearRef.current?.value ?? "";
-
-        if (yearDebounceRef.current) clearTimeout(yearDebounceRef.current);
-
-        if (!min && !max) {
-            updateParams({ minYear: undefined, maxYear: undefined });
-            return;
-        }
-
-        yearDebounceRef.current = setTimeout(() => {
-            updateParams({
-                minYear: min || undefined,
-                maxYear: max || undefined,
-            });
-        }, 350);
-    };
-
     return (
-        <aside className="sticky top-28 lg:top-32 h-fit">
-            <div className="rounded-[6px] border border-slate-200 bg-white shadow-sm p-6 md:p-8 space-y-6">
-                {/* Header */}
-                <div className="flex items-center justify-between pb-4 border-b border-slate-200">
-                    <div className="flex items-center gap-2">
-                        <div className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 ring-1 ring-blue-500/30">
-                            <SlidersHorizontal className="h-4 w-4" />
-                        </div>
-                        <h3 className="text-xl font-bold tracking-tight text-slate-900">Filters</h3>
-                        {activeFiltersCount > 0 && (
-                            <Badge className="ml-2 bg-blue-500 text-white hover:bg-blue-600 rounded-full px-2 py-0.5 text-xs font-semibold">
-                                {activeFiltersCount}
-                            </Badge>
-                        )}
-                    </div>
+        <aside className="sticky top-28 h-fit space-y-6">
+            <Button variant="outline" className="w-[140px] border-blue-600 text-blue-600 hover:bg-blue-50 hover:text-blue-700 rounded-full h-10 font-semibold bg-white shadow-sm">
+                <Bookmark className="w-4 h-4 mr-2" />
+                Save search
+            </Button>
+
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-5">
+                <div className="flex items-center justify-between">
+                    <h3 className="text-2xl font-bold tracking-tight text-slate-900">Filters</h3>
                     {activeFiltersCount > 0 && (
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 px-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100"
-                            onClick={handleReset}
-                        >
-                            <X className="h-4 w-4" />
-                        </Button>
+                        <button onClick={handleReset} className="text-sm font-semibold text-slate-400 hover:text-blue-600 transition-colors">
+                            Clear all
+                        </button>
                     )}
                 </div>
 
-                {/* Search Input */}
-                <div className="space-y-2">
-                    <Label className="text-base font-bold text-slate-900">Search Vehicles</Label>
-                    <div className="relative">
-                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
-                        <Input
-                            placeholder="Make, model, or variant..."
-                            className="pl-10 h-11 border border-slate-200 bg-white text-base font-medium text-slate-900 transition-all hover:border-blue-500/50 focus:border-blue-500 focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:ring-offset-0 rounded-[6px]"
-                            ref={inputRef}
-                            onChange={handleSearchChange}
-                            onKeyDown={handleSearchKeyDown}
-                            onBlur={(e) => handleSearchSubmit((e.target as HTMLInputElement).value)}
-                        />
-                    </div>
+                <div className="relative flex items-center bg-slate-100/80 rounded-lg p-1.5 focus-within:ring-2 ring-blue-500/20 transition-all">
+                    <Sparkles className="h-5 w-5 text-blue-600 ml-2 shrink-0" />
+                    <Input
+                        placeholder="Quick search"
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        className="border-0 bg-transparent shadow-none focus-visible:ring-0 text-base font-medium placeholder:text-slate-500 h-9"
+                    />
+                    <Badge variant="outline" className="mr-2 border-slate-300 text-[10px] font-bold tracking-wider px-1.5 py-0.5 uppercase bg-white text-slate-600">
+                        New
+                    </Badge>
+                    <Search className="h-5 w-5 text-slate-400 mr-2 shrink-0 cursor-pointer" />
                 </div>
 
-                {/* Accordion Filters */}
-                <Accordion type="multiple" defaultValue={["make", "price", "body", "year"]} className="w-full">
-                    {/* Make & Model */}
-                    <AccordionItem value="make" className="border-b border-slate-200">
-                        <AccordionTrigger className="text-base font-bold text-slate-900 hover:no-underline py-3">
-                            Make & Model
-                        </AccordionTrigger>
-                        <AccordionContent className="pt-4">
-                            <div className="space-y-3 max-h-[240px] overflow-y-auto pr-2 custom-scrollbar">
-                                {MAKES.map((m) => (
-                                    <div key={m} className="flex items-center space-x-3 group">
-                                        <Checkbox
-                                            id={`filter-make-${m}`}
-                                            checked={make === m}
-                                            onCheckedChange={(checked) =>
-                                                updateParams({ make: checked ? m : undefined })
-                                            }
-                                            className="h-5 w-5 rounded-[6px] border-2 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
-                                        />
-                                        <Label
-                                            htmlFor={`filter-make-${m}`}
-                                            className="text-sm font-medium text-slate-700 cursor-pointer group-hover:text-blue-600 transition-colors flex-1"
-                                        >
-                                            {m}
-                                        </Label>
-                                    </div>
-                                ))}
-                            </div>
-                        </AccordionContent>
-                    </AccordionItem>
+                <div className="flex flex-col pt-2 border-t border-slate-100">
+                    <FilterRow title="Location" isActive={false}><p className="text-slate-500">Location selection coming soon.</p></FilterRow>
 
-                    {/* Price Range */}
-                    <AccordionItem value="price" className="border-b border-slate-200">
-                        <AccordionTrigger className="text-base font-bold text-slate-900 hover:no-underline py-3">
-                            Price Range
-                        </AccordionTrigger>
-                        <AccordionContent className="pt-4">
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="space-y-2">
-                                    <Label className="text-xs font-bold text-slate-700">Min Price</Label>
-                                    <Input
-                                        type="number"
-                                        placeholder="$0"
-                                        min={0}
-                                        ref={minPriceRef}
-                                        onChange={handlePriceChange}
-                                        onBlur={handlePriceChange}
-                                        className="h-10 border border-slate-200 bg-white text-base font-medium text-slate-900 transition-all hover:border-blue-500/50 focus:border-blue-500 focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:ring-offset-0 rounded-[6px]"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label className="text-xs font-bold text-slate-700">Max Price</Label>
-                                    <Input
-                                        type="number"
-                                        placeholder="$∞"
-                                        min={0}
-                                        ref={maxPriceRef}
-                                        onChange={handlePriceChange}
-                                        onBlur={handlePriceChange}
-                                        className="h-10 border border-slate-200 bg-white text-base font-medium text-slate-900 transition-all hover:border-blue-500/50 focus:border-blue-500 focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:ring-offset-0 rounded-[6px]"
-                                    />
-                                </div>
+                    <FilterRow title="Year" isActive={!!(minYearParam || maxYearParam)}>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label className="text-slate-600 font-semibold">Min Year</Label>
+                                <Input type="number" placeholder="From" value={minYear} onChange={(e) => handleYearChange('min', e.target.value)} className="rounded-lg h-11" />
                             </div>
-                        </AccordionContent>
-                    </AccordionItem>
-
-                    {/* Body Type */}
-                    <AccordionItem value="body" className="border-b border-slate-200">
-                        <AccordionTrigger className="text-base font-bold text-slate-900 hover:no-underline py-3">
-                            Body Type
-                        </AccordionTrigger>
-                        <AccordionContent className="pt-4">
-                            <div className="space-y-3">
-                                {BODY_TYPES.map((type) => (
-                                    <div key={type} className="flex items-center space-x-3 group">
-                                        <Checkbox
-                                            id={`filter-body-${type}`}
-                                            checked={bodyType === type}
-                                            onCheckedChange={(checked) =>
-                                                updateParams({ bodyType: checked ? type : undefined })
-                                            }
-                                            className="h-5 w-5 rounded-[6px] border-2 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
-                                        />
-                                        <Label
-                                            htmlFor={`filter-body-${type}`}
-                                            className="text-sm font-medium text-slate-700 cursor-pointer group-hover:text-blue-600 transition-colors flex-1"
-                                        >
-                                            {type}
-                                        </Label>
-                                    </div>
-                                ))}
+                            <div className="space-y-2">
+                                <Label className="text-slate-600 font-semibold">Max Year</Label>
+                                <Input type="number" placeholder="To" value={maxYear} onChange={(e) => handleYearChange('max', e.target.value)} className="rounded-lg h-11" />
                             </div>
-                        </AccordionContent>
-                    </AccordionItem>
+                        </div>
+                    </FilterRow>
 
-                    {/* Year */}
-                    <AccordionItem value="year" className="border-b-0">
-                        <AccordionTrigger className="text-base font-bold text-slate-900 hover:no-underline py-3">
-                            Year
-                        </AccordionTrigger>
-                        <AccordionContent className="pt-4">
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="space-y-2">
-                                    <Label className="text-xs font-bold text-slate-700">From</Label>
-                                    <Input
-                                        type="number"
-                                        placeholder="1900"
-                                        min={1900}
-                                        max={2100}
-                                        ref={minYearRef}
-                                        onChange={handleYearChange}
-                                        onBlur={handleYearChange}
-                                        className="h-10 border border-slate-200 bg-white text-base font-medium text-slate-900 transition-all hover:border-blue-500/50 focus:border-blue-500 focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:ring-offset-0 rounded-[6px]"
-                                    />
+                    <FilterRow title="Make" isActive={!!make}>
+                        <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
+                            {MAKES.map((m) => (
+                                <div key={m} className="flex items-center space-x-3 group">
+                                    <Checkbox id={`make-${m}`} checked={make === m} onCheckedChange={(c) => updateParams({ make: c ? m : undefined })} className="h-5 w-5 rounded-[6px] border-slate-300 data-[state=checked]:bg-blue-600" />
+                                    <Label htmlFor={`make-${m}`} className="text-base font-medium cursor-pointer flex-1 group-hover:text-blue-600 transition-colors">
+                                        {m}
+                                    </Label>
                                 </div>
-                                <div className="space-y-2">
-                                    <Label className="text-xs font-bold text-slate-700">To</Label>
-                                    <Input
-                                        type="number"
-                                        placeholder="2025"
-                                        min={1900}
-                                        max={2100}
-                                        ref={maxYearRef}
-                                        onChange={handleYearChange}
-                                        onBlur={handleYearChange}
-                                        className="h-10 border border-slate-200 bg-white text-base font-medium text-slate-900 transition-all hover:border-blue-500/50 focus:border-blue-500 focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:ring-offset-0 rounded-[6px]"
-                                    />
+                            ))}
+                        </div>
+                    </FilterRow>
+
+                    <FilterRow title="Body type" isActive={!!bodyType}>
+                        <div className="space-y-4">
+                            {BODY_TYPES.map((type) => (
+                                <div key={type} className="flex items-center space-x-3 group">
+                                    <Checkbox id={`body-${type}`} checked={bodyType === type} onCheckedChange={(c) => updateParams({ bodyType: c ? type : undefined })} className="h-5 w-5 rounded-[6px] border-slate-300 data-[state=checked]:bg-blue-600" />
+                                    <Label htmlFor={`body-${type}`} className="text-base font-medium cursor-pointer flex-1 group-hover:text-blue-600 transition-colors">
+                                        {type}
+                                    </Label>
                                 </div>
+                            ))}
+                        </div>
+                    </FilterRow>
+
+                    <FilterRow title="Price" isActive={!!(minPriceParam || maxPriceParam)}>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label className="text-slate-600 font-semibold">Min Price</Label>
+                                <Input type="number" placeholder="$0" value={minPrice} onChange={(e) => handlePriceChange('min', e.target.value)} className="rounded-lg h-11" />
                             </div>
-                        </AccordionContent>
-                    </AccordionItem>
-                </Accordion>
-
-                {/* Reset Button */}
-                {activeFiltersCount > 0 && (
-                    <Button
-                        variant="outline"
-                        className="w-full h-11 border-2 border-slate-200 hover:border-destructive/50 hover:bg-destructive/5 hover:text-destructive transition-all font-bold rounded-[6px]"
-                        onClick={handleReset}
-                    >
-                        <X className="h-4 w-4 mr-2" />
-                        Clear All Filters
-                    </Button>
-                )}
+                            <div className="space-y-2">
+                                <Label className="text-slate-600 font-semibold">Max Price</Label>
+                                <Input type="number" placeholder="$ Any" value={maxPrice} onChange={(e) => handlePriceChange('max', e.target.value)} className="rounded-lg h-11" />
+                            </div>
+                        </div>
+                    </FilterRow>
+                </div>
             </div>
         </aside>
     );
 }
 
-// Sort Select Component
+function FilterRow({ title, children, isActive }: { title: string, children: React.ReactNode, isActive: boolean }) {
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+                <div className="flex items-center justify-between py-4 cursor-pointer group border-b border-slate-100 last:border-0 hover:bg-slate-50/50 -mx-6 px-6 transition-colors">
+                    <span className="text-[16px] font-semibold text-slate-800 group-hover:text-blue-600 transition-colors flex items-center gap-2">
+                        {title}
+                        {isActive && <span className="w-2 h-2 rounded-full bg-blue-600"></span>}
+                    </span>
+                    <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-slate-700 transition-colors" />
+                </div>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px] rounded-xl">
+                <DialogHeader>
+                    <DialogTitle className="text-xl font-bold text-slate-900">{title}</DialogTitle>
+                </DialogHeader>
+                <div className="pt-4 pb-2">
+                    {children}
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
+}
+
 export function SortSelect() {
     const router = useRouter();
     const pathname = usePathname();
@@ -409,10 +247,10 @@ export function SortSelect() {
 
     return (
         <div className="flex items-center gap-3">
-            <span className="text-sm font-bold text-slate-700">Sort by:</span>
+            <span className="text-sm font-bold text-slate-700 hidden sm:block">Sort by:</span>
             <div className="relative">
                 <select
-                    className="h-10 w-[200px] appearance-none border-2 border-slate-200 bg-white px-4 py-2 text-base font-medium text-slate-900 shadow-sm transition-all hover:border-blue-500/50 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:shadow-md cursor-pointer rounded-[6px]"
+                    className="h-11 w-full sm:w-[220px] appearance-none border border-slate-200 bg-white px-4 py-2 pr-10 text-sm font-semibold text-slate-900 shadow-sm transition-all hover:border-slate-300 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-lg cursor-pointer"
                     value={current}
                     onChange={handleChange}
                 >
@@ -422,9 +260,9 @@ export function SortSelect() {
                         </option>
                     ))}
                 </select>
-                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="m6 9 6 6 6-6"/>
+                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="m6 9 6 6 6-6" />
                     </svg>
                 </div>
             </div>

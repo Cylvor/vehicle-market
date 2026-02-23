@@ -44,27 +44,20 @@ export function VehicleCard({ id, title, price, image, mileage, fuel, year, tran
                 }
                 return;
             }
-
             setIsSaved(isVehicleSaved(id));
         }
 
         void resolveSavedState();
-
-        return () => {
-            isActive = false;
-        };
+        return () => { isActive = false; };
     }, [canPersistInDb, id, title, price, image, mileage, fuel, year, transmission]);
 
-    const toggleSaveVehicle = async () => {
-        if (isToggling) {
-            return;
-        }
-
+    const toggleSaveVehicle = async (e: React.MouseEvent) => {
+        e.preventDefault(); // Prevent link click when clicking heart
+        if (isToggling) return;
         setIsToggling(true);
 
         if (canPersistInDb) {
             const result = await toggleVehicleSavedInDb(id);
-
             if (result) {
                 setIsSaved(result.isSaved);
                 if (result.isSaved) {
@@ -79,14 +72,7 @@ export function VehicleCard({ id, title, price, image, mileage, fuel, year, tran
         }
 
         const { isSaved: nextIsSaved } = toggleVehicleSaved({
-            id,
-            title,
-            price,
-            image,
-            mileage,
-            fuel,
-            year,
-            transmission,
+            id, title, price, image, mileage, fuel, year, transmission,
         });
 
         setIsSaved(nextIsSaved);
@@ -95,55 +81,53 @@ export function VehicleCard({ id, title, price, image, mileage, fuel, year, tran
     };
 
     return (
-        <article className="font-sans group relative flex h-full flex-col overflow-hidden rounded-[6px] border border-slate-200 bg-white shadow-md transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl">
+        <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white border border-slate-200 transition-all hover:border-slate-300 hover:shadow-lg hover:shadow-slate-200/50">
             <Link href={`/vehicles/${id}`} className="absolute inset-0 z-10">
                 <span className="sr-only">View {title}</span>
             </Link>
 
-            <div className="relative aspect-[16/9] overflow-hidden bg-slate-100">
-                <Image
-                    src={image}
-                    alt={title}
-                    width={600}
-                    height={340}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
+            <div className="relative aspect-[4/3] overflow-hidden bg-slate-100 p-1.5 pb-0">
+                <div className="relative h-full w-full rounded-t-xl overflow-hidden">
+                    <Image
+                        src={image}
+                        alt={title}
+                        width={600}
+                        height={450}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                </div>
+                <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={toggleSaveVehicle}
+                    disabled={isToggling}
+                    className="absolute top-4 right-4 z-20 h-10 w-10 rounded-full bg-white/90 backdrop-blur shadow-sm hover:bg-white text-slate-400 hover:text-red-500 border border-slate-200/50 transition-colors"
+                >
+                    <Heart className="h-5 w-5" fill={isSaved ? "currentColor" : "none"} className={isSaved ? "text-red-500" : ""} />
+                </Button>
             </div>
 
-            <div className="flex flex-1 flex-col gap-4 p-5 md:p-6 font-sans">
-                <div className="flex items-start justify-between gap-3">
-                    <h3 className="font-sans line-clamp-2 text-xl font-semibold leading-tight text-slate-900">
-                        {title}
-                    </h3>
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={toggleSaveVehicle}
-                        disabled={isToggling}
-                        aria-pressed={isSaved}
-                        aria-label={isSaved ? "Unsave vehicle" : "Save vehicle"}
-                        className="z-20 h-10 w-10 shrink-0 rounded-full text-primary hover:bg-primary/10 hover:text-primary"
-                    >
-                        <Heart className="h-6 w-6" fill={isSaved ? "currentColor" : "none"} />
-                        <span className="sr-only">{isSaved ? "Unsave vehicle" : "Save vehicle"}</span>
-                    </Button>
-                </div>
+            <div className="flex flex-1 flex-col p-5">
+                <h3 className="line-clamp-2 text-lg font-bold leading-tight text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
+                    {title}
+                </h3>
 
-                <div className="mt-auto space-y-2">
-                    <div className="flex items-center gap-2 text-slate-500">
-                        <Gauge className="h-4 w-4" />
-                        <span className="text-sm font-medium">{mileage}</span>
+                <div className="mt-auto space-y-4 pt-2">
+                    <div className="flex items-baseline gap-1.5">
+                        <p className="text-[22px] font-extrabold tracking-tight text-slate-900">{price}</p>
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">Drive away</span>
                     </div>
 
-                    <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                        <p className="text-2xl font-bold tracking-tight text-slate-900">{price}</p>
-                        <span className="text-sm text-slate-500 underline">Drive away</span>
-                    </div>
-
-                    <div className="flex items-center gap-2 text-slate-500">
-                        <MapPin className="h-4 w-4" />
-                        <span className="text-sm">{year} • {fuel} • {transmission}</span>
+                    <div className="grid grid-cols-2 gap-y-2 gap-x-3 text-[13px] font-semibold text-slate-600 pt-4 border-t border-slate-100">
+                        <div className="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-100">
+                            <Gauge className="h-4 w-4 text-blue-500" />
+                            <span className="truncate">{mileage}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-100">
+                            <MapPin className="h-4 w-4 text-blue-500" />
+                            <span className="truncate">{year} • {fuel}</span>
+                        </div>
                     </div>
                 </div>
             </div>
