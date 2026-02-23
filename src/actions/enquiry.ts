@@ -1,9 +1,9 @@
 "use server"
 
 import { db } from "@/db";
-import { enquiries, vehicles } from "@/db/schema";
+import { enquiries, users, vehicles } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 
 const createEnquirySchema = z.object({
@@ -86,6 +86,21 @@ export async function getReceivedEnquiries() {
     return data;
 }
 
+export async function getReceivedEnquiriesCount() {
+    const { userId } = await auth();
+
+    if (!userId) {
+        throw new Error("Unauthorized");
+    }
+
+    const [row] = await db
+        .select({ count: sql<number>`count(*)`.mapWith(Number) })
+        .from(enquiries)
+        .where(eq(enquiries.sellerUserId, userId));
+
+    return row?.count ?? 0;
+}
+
 export async function getSentEnquiries() {
     const { userId } = await auth();
 
@@ -108,9 +123,13 @@ export async function getSentEnquiries() {
             vehicleMake: vehicles.make,
             vehicleModel: vehicles.model,
             vehicleVariant: vehicles.variant,
+            vehicleImages: vehicles.images,
+            sellerName: users.name,
+            sellerImageUrl: users.imageUrl,
         })
         .from(enquiries)
         .innerJoin(vehicles, eq(enquiries.vehicleId, vehicles.id))
+        .leftJoin(users, eq(users.clerkUserId, enquiries.sellerUserId))
         .where(eq(enquiries.buyerUserId, userId))
         .orderBy(desc(enquiries.createdAt));
 

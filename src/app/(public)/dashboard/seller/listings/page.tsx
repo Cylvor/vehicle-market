@@ -2,9 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Edit, Eye, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { deleteVehicle, getUserVehicles } from "@/actions/vehicle";
+import { deleteVehicle, getUserVehicles, updateUserVehicleStatus } from "@/actions/vehicle";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import Image from "next/image";
 
 function formatPrice(price: number) {
     return new Intl.NumberFormat("en-AU", {
@@ -73,13 +74,43 @@ export default async function MyListingsPage() {
                                     await deleteVehicle(listing.id);
                                 };
 
+                                const primaryImage = listing.images?.[0] || "/placeholder-car.png";
+
                                 return (
                                     <tr key={listing.id} className="bg-card hover:bg-muted/50 transition-colors">
-                                        <td className="px-4 py-3 font-medium">{title}</td>
+                                        <td className="px-4 py-3 font-medium">
+                                            <div className="flex items-center gap-3">
+                                                <div className="relative h-12 w-20 overflow-hidden rounded-md bg-muted">
+                                                    <Image
+                                                        src={primaryImage}
+                                                        alt={title}
+                                                        fill
+                                                        className="object-cover"
+                                                        sizes="80px"
+                                                    />
+                                                </div>
+                                                <span>{title}</span>
+                                            </div>
+                                        </td>
                                         <td className="px-4 py-3">
-                                            <Badge variant={getStatusBadgeVariant(listing.status)}>
-                                                {listing.status}
-                                            </Badge>
+                                            <div className="flex items-center gap-2">
+                                                <Badge variant={getStatusBadgeVariant(listing.status)}>
+                                                    {listing.status === "sold" ? "sold out" : listing.status}
+                                                </Badge>
+                                                {(listing.status === "active" || listing.status === "sold") && (
+                                                    <form action={async () => {
+                                                        "use server";
+                                                        await updateUserVehicleStatus(
+                                                            listing.id,
+                                                            listing.status === "active" ? "sold" : "active"
+                                                        );
+                                                    }}>
+                                                        <Button type="submit" variant="outline" size="sm">
+                                                            {listing.status === "active" ? "Mark Sold Out" : "Mark Active"}
+                                                        </Button>
+                                                    </form>
+                                                )}
+                                            </div>
                                         </td>
                                         <td className="px-4 py-3">{formatPrice(listing.price)}</td>
                                         <td className="px-4 py-3 text-muted-foreground">—</td>

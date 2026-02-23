@@ -76,3 +76,10 @@ export const savedVehicles = pgTable(
         savedVehiclesUserVehicleUnique: uniqueIndex("saved_vehicles_user_vehicle_unique").on(table.userId, table.vehicleId),
     })
 );
+
+export const vehicleViews = pgTable("vehicle_views", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    vehicleId: uuid("vehicle_id").notNull().references(() => vehicles.id, { onDelete: "cascade" }),
+    viewerUserId: text("viewer_user_id"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+});

@@ -1,7 +1,33 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, FileText, CheckCircle2, AlertTriangle, DollarSign, TrendingUp } from "lucide-react";
+import { Users, FileText, AlertTriangle, DollarSign } from "lucide-react";
+import { getAdminDashboardData } from "@/actions/admin";
+import Image from "next/image";
 
-export default function AdminDashboardPage() {
+function formatRelativeDate(date: Date) {
+    const now = new Date().getTime();
+    const diffMs = now - new Date(date).getTime();
+
+    const minute = 60 * 1000;
+    const hour = 60 * minute;
+    const day = 24 * hour;
+
+    if (diffMs < hour) {
+        const mins = Math.max(1, Math.floor(diffMs / minute));
+        return `${mins} min${mins === 1 ? "" : "s"} ago`;
+    }
+
+    if (diffMs < day) {
+        const hours = Math.floor(diffMs / hour);
+        return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+    }
+
+    const days = Math.floor(diffMs / day);
+    return `${days} day${days === 1 ? "" : "s"} ago`;
+}
+
+export default async function AdminDashboardPage() {
+    const stats = await getAdminDashboardData();
+
     return (
         <div className="space-y-8">
             <div>
@@ -16,8 +42,8 @@ export default function AdminDashboardPage() {
                         <Users className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">12,345</div>
-                        <p className="text-xs text-muted-foreground">+180 this week</p>
+                        <div className="text-2xl font-bold">{stats.totalUsers.toLocaleString()}</div>
+                        <p className="text-xs text-muted-foreground">+{stats.newUsersThisWeek.toLocaleString()} this week</p>
                     </CardContent>
                 </Card>
                 <Card>
@@ -26,8 +52,8 @@ export default function AdminDashboardPage() {
                         <FileText className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">4,231</div>
-                        <p className="text-xs text-muted-foreground">+54 this week</p>
+                        <div className="text-2xl font-bold">{stats.activeListings.toLocaleString()}</div>
+                        <p className="text-xs text-muted-foreground">+{stats.newListingsThisWeek.toLocaleString()} new this week</p>
                     </CardContent>
                 </Card>
                 <Card>
@@ -36,18 +62,20 @@ export default function AdminDashboardPage() {
                         <AlertTriangle className="h-4 w-4 text-orange-500" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-orange-600">23</div>
+                        <div className="text-2xl font-bold text-orange-600">{stats.pendingApprovals.toLocaleString()}</div>
                         <p className="text-xs text-muted-foreground">Action required</p>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Revenue (MTD)</CardTitle>
+                        <CardTitle className="text-sm font-medium">Enquiries (MTD)</CardTitle>
                         <DollarSign className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">$45,231</div>
-                        <p className="text-xs text-muted-foreground">+12% from last month</p>
+                        <div className="text-2xl font-bold">{stats.enquiriesMtd.toLocaleString()}</div>
+                        <p className="text-xs text-muted-foreground">
+                            {stats.enquiriesDeltaPct >= 0 ? "+" : ""}{stats.enquiriesDeltaPct}% from last month
+                        </p>
                     </CardContent>
                 </Card>
             </div>
@@ -60,21 +88,39 @@ export default function AdminDashboardPage() {
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-4">
-                            {[1, 2, 3, 4, 5].map((i) => (
-                                <div key={i} className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0">
-                                    <div className="flex items-center gap-4">
-                                        <div className="h-10 w-16 bg-muted rounded"></div>
-                                        <div>
-                                            <p className="font-medium text-sm">202{i} Toyota Camry</p>
-                                            <p className="text-xs text-muted-foreground">Listed by John Doe</p>
+                            {stats.recentListings.length === 0 ? (
+                                <p className="text-sm text-muted-foreground">No listings available yet.</p>
+                            ) : (
+                                stats.recentListings.map((listing) => {
+                                    const title = `${listing.year} ${listing.make} ${listing.model}`;
+                                    const image = listing.images?.[0] || "/placeholder-car.png";
+                                    const sellerName = listing.sellerDisplayName || listing.sellerFallbackName || "Unknown seller";
+
+                                    return (
+                                        <div key={listing.id} className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0">
+                                            <div className="flex items-center gap-4">
+                                                <div className="relative h-10 w-16 bg-muted rounded overflow-hidden">
+                                                    <Image
+                                                        src={image}
+                                                        alt={title}
+                                                        fill
+                                                        className="object-cover"
+                                                        sizes="64px"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <p className="font-medium text-sm">{title}</p>
+                                                    <p className="text-xs text-muted-foreground">Listed by {sellerName}</p>
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="font-medium text-sm">${listing.price.toLocaleString()}</p>
+                                                <p className="text-xs text-muted-foreground">{formatRelativeDate(listing.createdAt)}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="font-medium text-sm">$2{i},000</p>
-                                        <p className="text-xs text-muted-foreground">2 mins ago</p>
-                                    </div>
-                                </div>
-                            ))}
+                                    );
+                                })
+                            )}
                         </div>
                     </CardContent>
                 </Card>
