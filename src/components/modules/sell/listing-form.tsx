@@ -175,7 +175,7 @@ export function ListingForm({ vehicleId, initialData, sellerName, sellerLocation
     };
 
     return (
-        <div className="max-w-3xl mx-auto space-y-8 p-6 bg-card rounded-lg border shadow-sm">
+        <div className="max-w-3xl mx-auto space-y-8 p-6 bg-card rounded-md border shadow-sm">
             <div>
                 <h2 className="text-2xl font-bold">Create your listing</h2>
                 <p className="text-muted-foreground">Fill in the details below to list your vehicle.</p>
@@ -503,7 +503,7 @@ export function ListingForm({ vehicleId, initialData, sellerName, sellerLocation
                                     <button
                                         type="button"
                                         onClick={() => removeImage(idx)}
-                                        className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 hover:bg-red-500 transition-colors"
+                                        className="absolute top-1 right-1 bg-black/50 text-white rounded-md p-1 hover:bg-red-500 transition-colors"
                                     >
                                         <X className="h-4 w-4" />
                                     </button>

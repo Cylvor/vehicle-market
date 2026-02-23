@@ -7,9 +7,9 @@ export function FinanceEmiCta() {
     return (
         <section className="py-14 bg-muted/30">
             <div className="container-width">
-                <div className="rounded-3xl border border-border/70 bg-gradient-to-br from-card to-muted/40 p-6 md:p-8 lg:p-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 shadow-sm">
+                <div className="rounded-md border border-border/70 bg-gradient-to-br from-card to-muted/40 p-6 md:p-8 lg:p-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 shadow-sm">
                     <div>
-                        <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
+                        <div className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-accent/10 text-accent">
                             <Calculator className="h-5 w-5" />
                         </div>
                         <h2 className="mt-4 text-2xl md:text-3xl font-bold tracking-tight text-foreground">Finance / EMI Calculator</h2>
@@ -24,7 +24,7 @@ export function FinanceEmiCta() {
                 </div>
 
                 <div className="mt-5 hidden md:block">
-                    <div className="relative h-44 overflow-hidden rounded-2xl border border-border/70">
+                    <div className="relative h-44 overflow-hidden rounded-md border border-border/70">
                         <Image src="/images/hero/car1.jpg" alt="Finance planning car" fill className="object-cover" sizes="100vw" />
                     </div>
                 </div>

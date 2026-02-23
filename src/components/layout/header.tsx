@@ -57,7 +57,7 @@ export function Header() {
             <header className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ease-out ${effectiveIsScrolled ? "pt-0 px-0" : "pt-2 px-2 sm:px-4 lg:px-6"}`}>
                 {/* --- Floating / Fixed Nav Bar --- */}
                 <div
-                    className={`mx-auto flex h-16 items-center justify-between transition-all duration-500 ${effectiveIsScrolled ? "max-w-full px-4 sm:px-6 lg:px-8 rounded-none bg-white/90 backdrop-blur-xl shadow-md border-b border-slate-200/50" : "max-w-7xl px-3 rounded-lg " + (isTransparent
+                    className={`mx-auto flex h-16 items-center justify-between transition-all duration-500 ${effectiveIsScrolled ? "max-w-full px-4 sm:px-6 lg:px-8 rounded-none bg-white/90 backdrop-blur-xl shadow-md border-b border-slate-200/50" : "max-w-7xl px-3 rounded-md " + (isTransparent
                         ? "bg-transparent border-transparent"
                         : "bg-white/80 backdrop-blur-xl shadow-sm border border-slate-200/50"
                     )}`}
@@ -68,7 +68,7 @@ export function Header() {
                         onClick={() => setIsMenuOpen(false)}
                         className="group flex items-center gap-2.5 z-10"
                     >
-                        <div className={`flex h-10 w-10 items-center justify-center rounded-full transition-colors duration-300 ${isTransparent ? "bg-white/10 text-white backdrop-blur-md" : "bg-blue-600 text-white shadow-md shadow-blue-200"
+                        <div className={`flex h-10 w-10 items-center justify-center rounded-md transition-colors duration-300 ${isTransparent ? "bg-white/10 text-white backdrop-blur-md" : "bg-blue-600 text-white shadow-md shadow-blue-200"
                             }`}>
                             <Car className="h-5 w-5" />
                         </div>
@@ -100,7 +100,7 @@ export function Header() {
                                     {isHovered && !isTransparent && (
                                         <motion.div
                                             layoutId="nav-hover"
-                                            className="absolute inset-0 -z-10 rounded bg-slate-100"
+                                            className="absolute inset-0 -z-10 rounded-sm bg-slate-100"
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             exit={{ opacity: 0 }}
@@ -110,7 +110,7 @@ export function Header() {
                                     {isHovered && isTransparent && (
                                         <motion.div
                                             layoutId="nav-hover-transparent"
-                                            className="absolute inset-0 -z-10 rounded bg-white/10 backdrop-blur-md"
+                                            className="absolute inset-0 -z-10 rounded-sm bg-white/10 backdrop-blur-md"
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             exit={{ opacity: 0 }}
@@ -141,8 +141,8 @@ export function Header() {
                                 >
                                     Dashboard
                                 </Link>
-                                <div className="h-8 w-8 rounded-full border-2 border-transparent hover:border-blue-400 transition-all">
-                                    <UserButton afterSignOutUrl="/" appearance={{ elements: { avatarBox: "w-full h-full" } }} />
+                                <div className="h-8 w-8 rounded-md border-2 border-transparent hover:border-blue-400 transition-all">
+                                    <UserButton afterSignOutUrl="/" appearance={{ elements: { avatarBox: "w-full h-full rounded-md" } }} />
                                 </div>
                             </SignedIn>
                         </div>
@@ -151,7 +151,7 @@ export function Header() {
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                className={`flex items-center gap-2 rounded-md px-5 py-2.5 text-sm font-bold shadow-lg transition-all ${isTransparent
+                                className={`flex items-center gap-2 rounded-sm px-5 py-2.5 text-sm font-bold shadow-lg transition-all ${isTransparent
                                     ? "bg-white text-black hover:bg-gray-100 shadow-white/20"
                                     : "bg-black text-white hover:bg-slate-800 shadow-black/10"
                                     }`}
@@ -164,7 +164,7 @@ export function Header() {
                     {/* Mobile Menu Toggle */}
                     <button
                         onClick={() => setIsMenuOpen(true)}
-                        className={`md:hidden flex h-10 w-10 items-center justify-center rounded transition-colors ${isTransparent ? "bg-white/10 text-white" : "bg-slate-100 text-slate-900"
+                        className={`md:hidden flex h-10 w-10 items-center justify-center rounded-sm transition-colors ${isTransparent ? "bg-white/10 text-white" : "bg-slate-100 text-slate-900"
                             }`}
                     >
                         <Menu className="h-5 w-5" />
@@ -191,7 +191,7 @@ export function Header() {
                             animate={{ x: 0, opacity: 1 }}
                             exit={{ x: "100%", opacity: 0 }}
                             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                            className="fixed right-2 top-2 bottom-2 z-[80] w-[calc(100%-1rem)] max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl flex flex-col"
+                            className="fixed right-2 top-2 bottom-2 z-[80] w-[calc(100%-1rem)] max-w-sm overflow-hidden rounded-md bg-white shadow-2xl flex flex-col"
                         >
                             {/* Drawer Header */}
                             <div className="flex items-center justify-between p-6 border-b border-slate-100">
@@ -200,7 +200,7 @@ export function Header() {
                                 </span>
                                 <button
                                     onClick={() => setIsMenuOpen(false)}
-                                    className="flex h-10 w-10 items-center justify-center rounded bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
+                                    className="flex h-10 w-10 items-center justify-center rounded-sm bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
                                 >
                                     <X className="h-5 w-5" />
                                 </button>
@@ -210,17 +210,17 @@ export function Header() {
                             <div className="flex-1 overflow-y-auto p-6 space-y-8">
 
                                 {/* Mobile User Section */}
-                                <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 shadow-inner">
+                                <div className="p-5 bg-slate-50 rounded-md border border-slate-100 shadow-inner">
                                     <SignedIn>
                                         <div className="flex items-center gap-3 mb-4">
-                                            <UserButton afterSignOutUrl="/" />
+                                            <UserButton afterSignOutUrl="/" appearance={{ elements: { avatarBox: "rounded-md" } }} />
                                             <div>
                                                 <p className="text-sm font-bold text-slate-900 line-clamp-1">{user?.fullName}</p>
                                                 <p className="text-xs text-slate-500 line-clamp-1">{user?.primaryEmailAddress?.emailAddress}</p>
                                             </div>
                                         </div>
                                         <Link href="/dashboard" onClick={() => setIsMenuOpen(false)}>
-                                            <Button variant="outline" className="w-full rounded-xl flex items-center justify-center gap-2 border-slate-200">
+                                            <Button variant="outline" className="w-full rounded-sm flex items-center justify-center gap-2 border-slate-200">
                                                 <LayoutDashboard className="h-4 w-4" /> Go to Dashboard
                                             </Button>
                                         </Link>
@@ -228,7 +228,7 @@ export function Header() {
 
                                     <SignedOut>
                                         <SignInButton mode="modal">
-                                            <Button className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 shadow-md shadow-blue-200">
+                                            <Button className="w-full rounded-sm bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 shadow-md shadow-blue-200">
                                                 <LogIn className="h-4 w-4" /> Sign In / Register
                                             </Button>
                                         </SignInButton>
@@ -243,10 +243,10 @@ export function Header() {
                                             key={link.name}
                                             href={link.href}
                                             onClick={() => setIsMenuOpen(false)}
-                                            className="group flex items-center justify-between p-3 rounded-2xl text-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-all"
+                                            className="group flex items-center justify-between p-3 rounded-md text-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-all"
                                         >
                                             {link.name}
-                                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-transparent group-hover:bg-blue-100 transition-colors">
+                                            <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-transparent group-hover:bg-blue-100 transition-colors">
                                                 <ArrowRight className="h-4 w-4 text-transparent group-hover:text-blue-600 transition-colors" />
                                             </div>
                                         </Link>
@@ -260,7 +260,7 @@ export function Header() {
                                     <Search className="h-4 w-4" /> Search Marketplace
                                 </Link>
                                 <Link href="/sell/create" onClick={() => setIsMenuOpen(false)}>
-                                    <Button className="w-full h-14 rounded-2xl font-bold bg-black text-white hover:bg-slate-800 text-base shadow-xl flex items-center justify-center gap-2 transition-transform active:scale-95">
+                                    <Button className="w-full h-14 rounded-sm font-bold bg-black text-white hover:bg-slate-800 text-base shadow-xl flex items-center justify-center gap-2 transition-transform active:scale-95">
                                         <PlusCircle className="h-5 w-5" /> List Your Car Free
                                     </Button>
                                 </Link>

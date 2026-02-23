@@ -74,7 +74,7 @@ export default async function DashboardEnquiriesPage() {
                                             <span className="text-sm text-muted-foreground">Vehicle</span>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <div className="relative h-10 w-10 overflow-hidden rounded-full border bg-muted">
+                                            <div className="relative h-10 w-10 overflow-hidden rounded-md border bg-muted">
                                                 <Image
                                                     src={sellerImage}
                                                     alt={sellerName}

@@ -13,16 +13,16 @@ export function Footer() {
                             Australia's #1 marketplace for vehicles. We make buying and selling cars easy, safe, and transparent.
                         </p>
                         <div className="flex gap-4 pt-2">
-                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors p-2 -ml-2 rounded-full hover:bg-primary/5">
+                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors p-2 -ml-2 rounded-md hover:bg-primary/5">
                                 <Facebook className="h-5 w-5" />
                             </Link>
-                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors p-2 rounded-full hover:bg-primary/5">
+                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors p-2 rounded-md hover:bg-primary/5">
                                 <Twitter className="h-5 w-5" />
                             </Link>
-                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors p-2 rounded-full hover:bg-primary/5">
+                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors p-2 rounded-md hover:bg-primary/5">
                                 <Instagram className="h-5 w-5" />
                             </Link>
-                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors p-2 rounded-full hover:bg-primary/5">
+                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors p-2 rounded-md hover:bg-primary/5">
                                 <Linkedin className="h-5 w-5" />
                             </Link>
                         </div>

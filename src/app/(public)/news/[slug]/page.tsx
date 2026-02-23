@@ -55,14 +55,14 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
                             {article.title}
                         </h1>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+                            <div className="h-8 w-8 rounded-md bg-muted flex items-center justify-center">
                                 <User className="h-4 w-4" />
                             </div>
                             By <span className="font-medium text-foreground">{article.author}</span>
                         </div>
                     </div>
 
-                    <div className="aspect-video bg-muted rounded-xl mb-10 flex items-center justify-center text-muted-foreground">
+                    <div className="aspect-video bg-muted rounded-md mb-10 flex items-center justify-center text-muted-foreground">
                         ARTICLE HERO IMAGE
                     </div>
 
@@ -74,7 +74,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
 
                 {/* Sidebar */}
                 <div className="lg:col-span-4 space-y-8">
-                    <div className="rounded-lg border bg-card p-6 shadow-sm">
+                    <div className="rounded-md border bg-card p-6 shadow-sm">
                         <h3 className="font-semibold text-lg mb-4">Mentioned in this article</h3>
                         <div className="space-y-4">
                             <div className="flex gap-4 items-center">
@@ -90,7 +90,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
                         </div>
                     </div>
 
-                    <div className="rounded-lg bg-muted/50 p-6">
+                    <div className="rounded-md bg-muted/50 p-6">
                         <h3 className="font-semibold mb-2">Subscribe to our newsletter</h3>
                         <p className="text-sm text-muted-foreground mb-4">Get the latest reviews and automotive news delivered to your inbox.</p>
                         <div className="space-y-2">

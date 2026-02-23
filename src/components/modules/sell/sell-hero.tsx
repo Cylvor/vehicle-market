@@ -63,7 +63,7 @@ export function SellHero() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.8, delay: 0.2 }}
                         >
-                            <span className="mb-4 inline-block rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-400 backdrop-blur-md">
+                            <span className="mb-4 inline-block rounded-md border border-blue-400/30 bg-blue-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-400 backdrop-blur-md">
                                 SELLER HUB
                             </span>
                             <h1 className="text-5xl font-extrabold tracking-tight sm:text-7xl lg:text-8xl leading-[1.1]">
@@ -90,7 +90,7 @@ export function SellHero() {
             {/* --- Features Section --- */}
             <section className="py-20 lg:py-24 bg-gradient-to-b from-background to-muted/20">
                 <div className="container-width">
-                    <div className="rounded-3xl border border-border/70 bg-card/70 p-8 md:p-12 lg:p-14 backdrop-blur-sm shadow-2xl">
+                    <div className="rounded-md border border-border/70 bg-card/70 p-8 md:p-12 lg:p-14 backdrop-blur-sm shadow-2xl">
                         <div className="max-w-3xl mb-12">
                             <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">Why sell with us?</h2>
                             <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
@@ -106,9 +106,9 @@ export function SellHero() {
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                                    className="group relative rounded-2xl border border-border/50 bg-background/50 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/30 hover:bg-white/5 hover:shadow-xl"
+                                    className="group relative rounded-md border border-border/50 bg-background/50 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/30 hover:bg-white/5 hover:shadow-xl"
                                 >
-                                    <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10 text-blue-500 ring-1 ring-blue-500/20 group-hover:scale-110 group-hover:bg-blue-500 group-hover:text-white transition-all duration-300">
+                                    <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-md bg-blue-500/10 text-blue-500 ring-1 ring-blue-500/20 group-hover:scale-110 group-hover:bg-blue-500 group-hover:text-white transition-all duration-300">
                                         <feature.icon className="h-6 w-6" />
                                     </div>
                                     <h3 className="text-xl font-bold text-foreground mb-3">{feature.title}</h3>
@@ -120,7 +120,7 @@ export function SellHero() {
                         </div>
 
                         {/* Additional CTA */}
-                        <div className="mt-16 rounded-2xl border border-blue-500/20 bg-blue-500/5 p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div className="mt-16 rounded-md border border-blue-500/20 bg-blue-500/5 p-8 flex flex-col md:flex-row items-center justify-between gap-6">
                             <div>
                                 <h3 className="text-xl font-bold text-foreground">Ready to get started?</h3>
                                 <p className="text-muted-foreground">It takes less than 5 minutes to create your listing.</p>

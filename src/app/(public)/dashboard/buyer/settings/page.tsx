@@ -151,7 +151,7 @@ export default function AccountSettingsPage() {
                             alt={`${initialValues.fullName || "User"} profile`}
                             width={120}
                             height={120}
-                            className="h-28 w-28 rounded-full border object-cover md:h-32 md:w-32"
+                            className="h-28 w-28 rounded-md border object-cover md:h-32 md:w-32"
                         />
 
                         <div className="grid flex-1 gap-4">

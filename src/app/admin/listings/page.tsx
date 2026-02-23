@@ -16,7 +16,7 @@ export default async function AdminListingsPage() {
                 </div>
             </div>
 
-            <div className="border rounded-lg bg-card overflow-hidden">
+            <div className="border rounded-md bg-card overflow-hidden">
                 <table className="w-full text-sm text-left">
                     <thead className="bg-muted/50 text-muted-foreground font-medium border-b">
                         <tr>

@@ -19,9 +19,9 @@ export function Hero() {
             {/* --- Subtle Background Elements --- */}
             <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
                 {/* Top right blob */}
-                <div className="absolute -top-[10%] -right-[5%] w-[500px] h-[500px] rounded-full bg-blue-100/50 blur-[100px]" />
+                <div className="absolute -top-[10%] -right-[5%] w-[500px] h-[500px] rounded-md bg-blue-100/50 blur-[100px]" />
                 {/* Bottom left blob */}
-                <div className="absolute -bottom-[10%] -left-[5%] w-[600px] h-[600px] rounded-full bg-indigo-100/40 blur-[120px]" />
+                <div className="absolute -bottom-[10%] -left-[5%] w-[600px] h-[600px] rounded-md bg-indigo-100/40 blur-[120px]" />
             </div>
 
             {/* --- Main Content Container --- */}
@@ -50,7 +50,7 @@ export function Hero() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.7, delay: 0.2 }}
-                    className="w-full max-w-2xl bg-white rounded-xl shadow-2xl shadow-blue-900/5 ring-1 ring-slate-200/60 p-2 flex flex-col sm:flex-row items-center gap-2 focus-within:ring-2 focus-within:ring-blue-500 transition-all"
+                    className="w-full max-w-2xl bg-white rounded-md shadow-2xl shadow-blue-900/5 ring-1 ring-slate-200/60 p-2 flex flex-col sm:flex-row items-center gap-2 focus-within:ring-2 focus-within:ring-blue-500 transition-all"
                 >
                     {/* AI Search Input */}
                     <div className="relative flex-1 flex items-center w-full h-[48px] pl-4 pr-2">
@@ -65,7 +65,7 @@ export function Hero() {
                     </div>
 
                     {/* Search Button */}
-                    <button className="w-full sm:w-auto h-[48px] px-6 bg-slate-900 hover:bg-slate-800 active:scale-95 transition-all text-white font-semibold text-sm rounded-lg shadow-md flex items-center justify-center gap-2 flex-shrink-0">
+                    <button className="w-full sm:w-auto h-[48px] px-6 bg-slate-900 hover:bg-slate-800 active:scale-95 transition-all text-white font-semibold text-sm rounded-md shadow-md flex items-center justify-center gap-2 flex-shrink-0">
                         Search Now
                     </button>
                 </motion.div>
@@ -82,7 +82,7 @@ export function Hero() {
                         <button
                             key={index}
                             onClick={() => setSearchQuery(suggestion)}
-                            className="group flex items-center gap-2 rounded-lg border border-slate-200/60 bg-white/50 backdrop-blur-md px-4 py-1.5 text-sm font-medium text-slate-600 shadow-sm transition-all hover:-translate-y-0.5 hover:bg-white hover:text-blue-600 hover:border-blue-200 hover:shadow-md active:translate-y-0"
+                            className="group flex items-center gap-2 rounded-md border border-slate-200/60 bg-white/50 backdrop-blur-md px-4 py-1.5 text-sm font-medium text-slate-600 shadow-sm transition-all hover:-translate-y-0.5 hover:bg-white hover:text-blue-600 hover:border-blue-200 hover:shadow-md active:translate-y-0"
                         >
                             {suggestion}
                             <ArrowRight className="w-3.5 h-3.5 opacity-40 group-hover:opacity-100 transition-opacity" />

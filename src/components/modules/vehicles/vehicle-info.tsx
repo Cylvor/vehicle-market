@@ -32,28 +32,28 @@ export function VehicleInfo({ title, year, price, description, specs, features }
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center gap-2 p-3 bg-muted/40 rounded-lg">
+                <div className="flex items-center gap-2 p-3 bg-muted/40 rounded-md">
                     <Calendar className="h-5 w-5 text-muted-foreground" />
                     <div className="text-sm">
                         <p className="text-muted-foreground">Year</p>
                         <p className="font-medium">{year}</p>
                     </div>
                 </div>
-                <div className="flex items-center gap-2 p-3 bg-muted/40 rounded-lg">
+                <div className="flex items-center gap-2 p-3 bg-muted/40 rounded-md">
                     <Gauge className="h-5 w-5 text-muted-foreground" />
                     <div className="text-sm">
                         <p className="text-muted-foreground">Mileage</p>
                         <p className="font-medium">{specs.mileage}</p>
                     </div>
                 </div>
-                <div className="flex items-center gap-2 p-3 bg-muted/40 rounded-lg">
+                <div className="flex items-center gap-2 p-3 bg-muted/40 rounded-md">
                     <Fuel className="h-5 w-5 text-muted-foreground" />
                     <div className="text-sm">
                         <p className="text-muted-foreground">Fuel</p>
                         <p className="font-medium">{specs.fuel}</p>
                     </div>
                 </div>
-                <div className="flex items-center gap-2 p-3 bg-muted/40 rounded-lg">
+                <div className="flex items-center gap-2 p-3 bg-muted/40 rounded-md">
                     <Info className="h-5 w-5 text-muted-foreground" />
                     <div className="text-sm">
                         <p className="text-muted-foreground">Trans</p>
