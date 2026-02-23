@@ -33,7 +33,7 @@ export function SellHero() {
     return (
         <div className="flex flex-col">
             {/* --- Hero Section --- */}
-            <section className="relative h-[85svh] min-h-[600px] w-full overflow-hidden bg-black text-white">
+            <section className="relative h-[100svh] min-h-[600px] w-full overflow-hidden bg-black text-white">
                 <div className="absolute inset-0 z-0">
                     <AnimatePresence mode="wait">
                         <motion.div
@@ -73,7 +73,7 @@ export function SellHero() {
                             <p className="mt-6 max-w-xl text-lg text-gray-300 sm:text-xl leading-relaxed">
                                 Get the best price for your vehicle. List in minutes and reach thousands of potential buyers across Australia with our premium selling platform.
                             </p>
-                            
+
                             <div className="mt-10 flex flex-wrap gap-4">
                                 <Button asChild size="lg" className="h-14 px-10 text-lg font-bold bg-blue-600 hover:bg-blue-500 shadow-[0_0_20px_rgba(37,99,235,0.4)]">
                                     <Link href="/sell/create">Start Listing Now</Link>
@@ -100,8 +100,8 @@ export function SellHero() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                             {SELL_FEATURES.map((feature, index) => (
-                                <motion.div 
-                                    key={feature.title} 
+                                <motion.div
+                                    key={feature.title}
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
@@ -127,7 +127,7 @@ export function SellHero() {
                             </div>
                             <Button asChild className="shrink-0 h-12 px-8 font-bold bg-blue-600 hover:bg-blue-500">
                                 <Link href="/sell/create" className="flex items-center gap-2">
-                                   Create My Free Listing <Zap className="h-4 w-4 ml-1" />
+                                    Create My Free Listing <Zap className="h-4 w-4 ml-1" />
                                 </Link>
                             </Button>
                         </div>

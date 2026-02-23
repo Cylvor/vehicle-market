@@ -26,7 +26,7 @@ export function Header() {
 
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [hoveredLink, setHoveredLink] = useState(null);
+    const [hoveredLink, setHoveredLink] = useState<string | null>(null);
 
     // Handle scroll effect
     useEffect(() => {
@@ -54,8 +54,8 @@ export function Header() {
                 {/* --- Floating Nav Bar --- */}
                 <div
                     className={`mx-auto flex h-16 max-w-7xl items-center justify-between rounded-full px-4 sm:px-6 transition-all duration-500 ${isTransparent
-                            ? "bg-transparent border-transparent"
-                            : "bg-white/80 backdrop-blur-xl shadow-lg border border-white/40 shadow-slate-200/50"
+                        ? "bg-transparent border-transparent"
+                        : "bg-white/80 backdrop-blur-xl shadow-lg border border-white/40 shadow-slate-200/50"
                         }`}
                 >
                     {/* Logo */}
@@ -86,8 +86,8 @@ export function Header() {
                                     href={link.href}
                                     onMouseEnter={() => setHoveredLink(link.name)}
                                     className={`relative px-4 py-2 text-sm font-semibold transition-colors duration-300 ${isTransparent
-                                            ? "text-gray-200 hover:text-white"
-                                            : isActive ? "text-blue-700" : "text-slate-600 hover:text-slate-900"
+                                        ? "text-gray-200 hover:text-white"
+                                        : isActive ? "text-blue-700" : "text-slate-600 hover:text-slate-900"
                                         }`}
                                 >
                                     {link.name}
@@ -133,8 +133,7 @@ export function Header() {
                             <SignedIn>
                                 <Link
                                     href="/dashboard"
-                                    className={`text-sm font-bold transition-colors ${isTransparent ? "text-white hover:text-blue-300" : "text-slate-700 hover:text-blue-600"
-                                        }`}
+                                    className={`text-sm font-bold transition-colors ${isTransparent ? "text-white hover:text-blue-300" : "text-slate-700 hover:text-blue-600"}`}
                                 >
                                     Dashboard
                                 </Link>
@@ -149,8 +148,8 @@ export function Header() {
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold shadow-lg transition-all ${isTransparent
-                                        ? "bg-white text-black hover:bg-gray-100 shadow-white/20"
-                                        : "bg-black text-white hover:bg-slate-800 shadow-black/10"
+                                    ? "bg-white text-black hover:bg-gray-100 shadow-white/20"
+                                    : "bg-black text-white hover:bg-slate-800 shadow-black/10"
                                     }`}
                             >
                                 List for Free
