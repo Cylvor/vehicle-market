@@ -1,6 +1,6 @@
 "use client";
 
-import { Star } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { useRef } from "react";
 
 const REVIEWS = [
@@ -59,6 +59,20 @@ const REVIEWS = [
 export function CustomerReviews() {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+    const scroll = (direction: 'left' | 'right') => {
+        if (scrollContainerRef.current) {
+            const firstCard = scrollContainerRef.current.firstElementChild as HTMLElement;
+            if (firstCard) {
+                // card width + 24px gap
+                const scrollAmount = firstCard.offsetWidth + 24;
+                scrollContainerRef.current.scrollBy({
+                    left: direction === 'left' ? -scrollAmount : scrollAmount,
+                    behavior: "smooth"
+                });
+            }
+        }
+    };
+
     return (
         <section className="py-24 bg-white border-t border-slate-200/60 overflow-hidden relative">
             {/* Background Ambient styling */}
@@ -67,12 +81,6 @@ export function CustomerReviews() {
             <div className="container-width px-6 relative z-10">
                 <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
                     <div className="space-y-4">
-                        <div className="flex items-center gap-2">
-                            <span className="h-px w-8 bg-blue-600"></span>
-                            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-600">
-                                Real Feedback
-                            </span>
-                        </div>
                         <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900">
                             Customer <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Reviews</span>
                         </h2>
@@ -90,8 +98,26 @@ export function CustomerReviews() {
                     </div>
                 </div>
 
-                {/* Horizontal Scrolling Reviews Track */}
-                <div className="relative pt-4 -mx-4 px-4 sm:-mx-6 sm:px-6">
+                {/* Horizontal Scrolling Reviews Track with Buttons */}
+                <div className="relative group pt-4 -mx-4 px-4 sm:-mx-6 sm:px-6">
+                    {/* Carousel Controls */}
+                    <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex items-center justify-between pointer-events-none z-20 px-2 sm:px-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <button
+                            className="pointer-events-auto h-12 w-12 flex items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition-all duration-300 hover:border-blue-600 hover:text-blue-600 shadow-md hover:shadow-lg hover:scale-105"
+                            onClick={() => scroll('left')}
+                            aria-label="Previous reviews"
+                        >
+                            <ChevronLeft className="h-6 w-6 pr-0.5" />
+                        </button>
+                        <button
+                            className="pointer-events-auto h-12 w-12 flex items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition-all duration-300 hover:border-blue-600 hover:text-blue-600 shadow-md hover:shadow-lg hover:scale-105"
+                            onClick={() => scroll('right')}
+                            aria-label="Next reviews"
+                        >
+                            <ChevronRight className="h-6 w-6 pl-0.5" />
+                        </button>
+                    </div>
+
                     <div
                         ref={scrollContainerRef}
                         className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-12 pt-4 px-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
