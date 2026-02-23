@@ -15,7 +15,7 @@ export default function SellerDashboardLayout({
             <div className="container mx-auto px-4 py-8 flex-1">
                 <div className="flex flex-col lg:flex-row gap-8 h-full">
                     <aside className="w-full lg:w-64 flex-shrink-0">
-                        <Suspense fallback={<div className="w-64 h-full bg-emerald-200 dark:bg-emerald-800 rounded-xl animate-pulse" />}>
+                        <Suspense fallback={<div className="w-64 h-full bg-emerald-200 dark:bg-emerald-800 rounded-md animate-pulse" />}>
                             <SellerSidebar />
                         </Suspense>
                     </aside>

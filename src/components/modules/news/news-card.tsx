@@ -13,7 +13,7 @@ interface NewsCardProps {
 
 export function NewsCard({ title, excerpt, category, date, image, slug }: NewsCardProps) {
     return (
-        <Link href={`/news/${slug}`} className="group flex flex-col overflow-hidden rounded-lg border bg-card shadow-sm transition-all hover:shadow-md">
+        <Link href={`/news/${slug}`} className="group flex flex-col overflow-hidden rounded-md border bg-card shadow-sm transition-all hover:shadow-md">
             <div className="aspect-video w-full bg-muted relative overflow-hidden">
                 {/* Placeholder for image */}
                 <div className="absolute inset-0 flex items-center justify-center text-muted-foreground bg-secondary">

@@ -73,7 +73,7 @@ const SPEC_KEYS = [
 
 export function ComparisonTable() {
     return (
-        <div className="overflow-x-auto border rounded-xl shadow-sm bg-card">
+        <div className="overflow-x-auto border rounded-md shadow-sm bg-card">
             <table className="w-full text-left border-collapse">
                 <thead>
                     <tr>

@@ -12,7 +12,7 @@ export default async function AdminUsersPage() {
                 </div>
             </div>
 
-            <div className="border rounded-lg bg-card overflow-hidden">
+            <div className="border rounded-md bg-card overflow-hidden">
                 <table className="w-full text-sm text-left">
                     <thead className="bg-muted/50 text-muted-foreground font-medium border-b">
                         <tr>
@@ -38,10 +38,10 @@ export default async function AdminUsersPage() {
                                             <img
                                                 src={user.imageUrl}
                                                 alt={user.name || "User image"}
-                                                className="h-10 w-10 rounded-full object-cover border"
+                                                className="h-10 w-10 rounded-md object-cover border"
                                             />
                                         ) : (
-                                            <div className="h-10 w-10 rounded-full bg-muted border" />
+                                            <div className="h-10 w-10 rounded-md bg-muted border" />
                                         )}
                                     </td>
                                     <td className="px-6 py-4 font-medium">{user.name || "N/A"}</td>

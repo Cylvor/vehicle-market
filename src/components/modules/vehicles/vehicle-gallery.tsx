@@ -33,7 +33,7 @@ export function VehicleGallery({ images }: VehicleGalleryProps) {
             <button
                 type="button"
                 onClick={() => setIsFullscreenOpen(true)}
-                className="aspect-[16/10] relative overflow-hidden rounded-lg border bg-muted w-full"
+                className="aspect-[16/10] relative overflow-hidden rounded-md border bg-muted w-full"
                 aria-label="Open image in fullscreen"
             >
                 <Image
@@ -76,7 +76,7 @@ export function VehicleGallery({ images }: VehicleGalleryProps) {
                     <button
                         type="button"
                         onClick={() => setIsFullscreenOpen(false)}
-                        className="fixed right-4 top-4 z-[81] inline-flex h-10 w-10 items-center justify-center rounded-full border bg-background/90 text-foreground shadow-sm"
+                        className="fixed right-4 top-4 z-[81] inline-flex h-10 w-10 items-center justify-center rounded-md border bg-background/90 text-foreground shadow-sm"
                         aria-label="Close fullscreen image"
                     >
                         <X className="h-5 w-5" />

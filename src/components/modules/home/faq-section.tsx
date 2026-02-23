@@ -27,13 +27,13 @@ export function FaqSection() {
     return (
         <section className="py-16 lg:py-20 bg-muted/30">
             <div className="container-width">
-                <span className="inline-flex items-center rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-semibold tracking-wide text-accent">
+                <span className="inline-flex items-center rounded-md border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-semibold tracking-wide text-accent">
                     SUPPORT
                 </span>
                 <h2 className="mt-3 text-2xl md:text-3xl font-bold tracking-tight text-foreground">FAQ</h2>
                 <p className="mt-2 text-muted-foreground">Common questions about listing, verification, and buying safely.</p>
 
-                <div className="mt-8 rounded-2xl border border-border/70 bg-card p-2 md:p-4 shadow-sm">
+                <div className="mt-8 rounded-md border border-border/70 bg-card p-2 md:p-4 shadow-sm">
                     <Accordion type="single" collapsible className="w-full">
                         {FAQ_ITEMS.map((item) => (
                             <AccordionItem key={item.value} value={item.value}>

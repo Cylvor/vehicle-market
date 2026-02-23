@@ -135,7 +135,7 @@ export default async function AdminDashboardPage() {
                                     <span>Server Load</span>
                                     <span className="font-medium">24%</span>
                                 </div>
-                                <div className="h-2 bg-muted rounded-full overflow-hidden">
+                                <div className="h-2 bg-muted rounded-md overflow-hidden">
                                     <div className="h-full bg-green-500 w-[24%]"></div>
                                 </div>
                             </div>
@@ -144,7 +144,7 @@ export default async function AdminDashboardPage() {
                                     <span>Storage Used</span>
                                     <span className="font-medium">68%</span>
                                 </div>
-                                <div className="h-2 bg-muted rounded-full overflow-hidden">
+                                <div className="h-2 bg-muted rounded-md overflow-hidden">
                                     <div className="h-full bg-yellow-500 w-[68%]"></div>
                                 </div>
                             </div>
@@ -153,7 +153,7 @@ export default async function AdminDashboardPage() {
                                     <span>Daily API Calls</span>
                                     <span className="font-medium">8.2k / 10k</span>
                                 </div>
-                                <div className="h-2 bg-muted rounded-full overflow-hidden">
+                                <div className="h-2 bg-muted rounded-md overflow-hidden">
                                     <div className="h-full bg-blue-500 w-[82%]"></div>
                                 </div>
                             </div>

@@ -35,10 +35,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                 <div className="container mx-auto px-4 lg:px-8 max-w-[1400px]">
                     <div className="flex flex-col lg:flex-row gap-8 items-start">
 
-                        {/* Left filter bar - Locked width */}
-                        <aside className="w-full lg:w-[320px] flex-shrink-0">
-                            <FilterSidebar />
-                        </aside>
+                        {/* Left filter bar */}
+                        <FilterSidebar />
 
                         {/* Main results area - Takes remaining space */}
                         <main className="flex-1 min-w-0 w-full">

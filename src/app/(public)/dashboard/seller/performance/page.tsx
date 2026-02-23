@@ -76,15 +76,15 @@ export default async function SellerPerformancePage() {
                                         <p className="text-xs text-slate-500 dark:text-slate-400">{item.totalViews} views • {item.totalSaved} saved</p>
                                     </div>
                                     <div className="space-y-1.5">
-                                        <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+                                        <div className="h-2 rounded-md bg-slate-200 dark:bg-slate-800 overflow-hidden">
                                             <div
-                                                className="h-full rounded-full bg-blue-500"
+                                                className="h-full rounded-md bg-blue-500"
                                                 style={{ width: `${Math.max(2, (item.totalViews / maxVehicleValue) * 100)}%` }}
                                             />
                                         </div>
-                                        <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+                                        <div className="h-2 rounded-md bg-slate-200 dark:bg-slate-800 overflow-hidden">
                                             <div
-                                                className="h-full rounded-full bg-emerald-500"
+                                                className="h-full rounded-md bg-emerald-500"
                                                 style={{ width: `${Math.max(2, (item.totalSaved / maxVehicleValue) * 100)}%` }}
                                             />
                                         </div>

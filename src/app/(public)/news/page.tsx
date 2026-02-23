@@ -58,7 +58,7 @@ export default function NewsPage() {
 
                 <div className="relative z-10 flex h-full items-center justify-center text-center px-6">
                     <div className="max-w-3xl">
-                        <span className="mb-4 inline-block rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-400 backdrop-blur-md">
+                        <span className="mb-4 inline-block rounded-md border border-blue-400/30 bg-blue-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-400 backdrop-blur-md">
                             AUTO INSIGHTS
                         </span>
                         <h1 className="text-5xl font-extrabold tracking-tight sm:text-7xl leading-[1.1]">

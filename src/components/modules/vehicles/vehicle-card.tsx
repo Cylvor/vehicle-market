@@ -81,13 +81,13 @@ export function VehicleCard({ id, title, price, image, mileage, fuel, year, tran
     };
 
     return (
-        <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white border border-slate-200 transition-all hover:border-slate-300 hover:shadow-lg hover:shadow-slate-200/50">
+        <article className="group relative flex h-full flex-col overflow-hidden rounded-md bg-white border border-slate-200 transition-all hover:border-slate-300 hover:shadow-lg hover:shadow-slate-200/50">
             <Link href={`/vehicles/${id}`} className="absolute inset-0 z-10">
                 <span className="sr-only">View {title}</span>
             </Link>
 
             <div className="relative aspect-[4/3] overflow-hidden bg-slate-100 p-1.5 pb-0">
-                <div className="relative h-full w-full rounded-t-xl overflow-hidden">
+                <div className="relative h-full w-full rounded-t-md overflow-hidden">
                     <Image
                         src={image}
                         alt={title}
@@ -102,9 +102,9 @@ export function VehicleCard({ id, title, price, image, mileage, fuel, year, tran
                     size="icon"
                     onClick={toggleSaveVehicle}
                     disabled={isToggling}
-                    className="absolute top-4 right-4 z-20 h-10 w-10 rounded-full bg-white/90 backdrop-blur shadow-sm hover:bg-white text-slate-400 hover:text-red-500 border border-slate-200/50 transition-colors"
+                    className="absolute top-4 right-4 z-20 h-10 w-10 rounded-md bg-white/90 backdrop-blur shadow-sm hover:bg-white text-slate-400 hover:text-red-500 border border-slate-200/50 transition-colors"
                 >
-                    <Heart className="h-5 w-5" fill={isSaved ? "currentColor" : "none"} className={isSaved ? "text-red-500" : ""} />
+                    <Heart className={`h-5 w-5 ${isSaved ? "text-red-500" : ""}`} fill={isSaved ? "currentColor" : "none"} />
                 </Button>
             </div>
 
@@ -120,11 +120,11 @@ export function VehicleCard({ id, title, price, image, mileage, fuel, year, tran
                     </div>
 
                     <div className="grid grid-cols-2 gap-y-2 gap-x-3 text-[13px] font-semibold text-slate-600 pt-4 border-t border-slate-100">
-                        <div className="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-100">
+                        <div className="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1.5 rounded-md border border-slate-100">
                             <Gauge className="h-4 w-4 text-blue-500" />
                             <span className="truncate">{mileage}</span>
                         </div>
-                        <div className="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-100">
+                        <div className="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1.5 rounded-md border border-slate-100">
                             <MapPin className="h-4 w-4 text-blue-500" />
                             <span className="truncate">{year} • {fuel}</span>
                         </div>

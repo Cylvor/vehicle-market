@@ -41,7 +41,7 @@ export default async function AdminListingDetailsPage({ params }: { params: Prom
                 </Button>
             </div>
 
-            <div className="border rounded-lg bg-card p-6 space-y-6">
+            <div className="border rounded-md bg-card p-6 space-y-6">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
                         <h2 className="text-2xl font-semibold">{title}</h2>

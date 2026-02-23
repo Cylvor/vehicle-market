@@ -20,7 +20,7 @@ export default function ComparePage() {
 
             <ComparisonTable />
 
-            <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900 rounded-lg text-sm text-blue-800 dark:text-blue-300">
+            <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900 rounded-md text-sm text-blue-800 dark:text-blue-300">
                 <strong>Tip:</strong> You can add vehicles to this comparison directly from search results or vehicle detail pages.
             </div>
         </div>

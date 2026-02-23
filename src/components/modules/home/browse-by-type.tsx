@@ -28,9 +28,9 @@ export function BrowseByType() {
                         <Link
                             key={type.label}
                             href={`/search?type=${type.label.toLowerCase()}`}
-                            className="group flex flex-col items-center justify-center p-6 bg-card hover:bg-card/80 border border-border/40 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1"
+                            className="group flex flex-col items-center justify-center p-6 bg-card hover:bg-card/80 border border-border/40 rounded-md shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1"
                         >
-                            <div className="p-3 rounded-full bg-accent/10 text-accent group-hover:bg-accent group-hover:text-accent-foreground transition-colors duration-300 mb-3">
+                            <div className="p-3 rounded-md bg-accent/10 text-accent group-hover:bg-accent group-hover:text-accent-foreground transition-colors duration-300 mb-3">
                                 <type.icon className="h-6 w-6" />
                             </div>
                             <span className="font-semibold text-sm text-foreground">{type.label}</span>
