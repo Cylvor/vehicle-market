@@ -21,12 +21,12 @@ export function Header() {
     const { user } = useUser();
 
     // Determine if the current page starts with a transparent header
-    const transparentPages = ["/", "/sell", "/news", "/contact"];
+    const transparentPages = ["/sell", "/news", "/contact"];
     const isTransparentPage = transparentPages.includes(pathname);
 
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [hoveredLink, setHoveredLink] = useState(null);
+    const [hoveredLink, setHoveredLink] = useState<string | null>(null);
 
     // Handle scroll effect
     useEffect(() => {
@@ -46,17 +46,21 @@ export function Header() {
     }, [isMenuOpen]);
 
     // Calculate dynamic state
-    const isTransparent = isTransparentPage && !isScrolled && !isMenuOpen;
+    const isHomePage = pathname === "/";
+    const forceScrolled = !isHomePage; // Force the scrolled (fixed, rectangular) state on all pages except home
+    const effectiveIsScrolled = isScrolled || forceScrolled;
+
+    const isTransparent = isTransparentPage && !effectiveIsScrolled && !isMenuOpen;
 
     return (
         <>
-            <header className="fixed top-0 left-0 right-0 z-[60] pt-4 px-4 sm:px-6 lg:px-8 transition-all duration-500 ease-out">
-                {/* --- Floating Nav Bar --- */}
+            <header className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ease-out ${effectiveIsScrolled ? "pt-0 px-0" : "pt-2 px-2 sm:px-4 lg:px-6"}`}>
+                {/* --- Floating / Fixed Nav Bar --- */}
                 <div
-                    className={`mx-auto flex h-16 max-w-7xl items-center justify-between rounded-full px-4 sm:px-6 transition-all duration-500 ${isTransparent
-                            ? "bg-transparent border-transparent"
-                            : "bg-white/80 backdrop-blur-xl shadow-lg border border-white/40 shadow-slate-200/50"
-                        }`}
+                    className={`mx-auto flex h-16 items-center justify-between transition-all duration-500 ${effectiveIsScrolled ? "max-w-full px-4 sm:px-6 lg:px-8 rounded-none bg-white/90 backdrop-blur-xl shadow-md border-b border-slate-200/50" : "max-w-7xl px-3 rounded-lg " + (isTransparent
+                        ? "bg-transparent border-transparent"
+                        : "bg-white/80 backdrop-blur-xl shadow-sm border border-slate-200/50"
+                    )}`}
                 >
                     {/* Logo */}
                     <Link
@@ -86,8 +90,8 @@ export function Header() {
                                     href={link.href}
                                     onMouseEnter={() => setHoveredLink(link.name)}
                                     className={`relative px-4 py-2 text-sm font-semibold transition-colors duration-300 ${isTransparent
-                                            ? "text-gray-200 hover:text-white"
-                                            : isActive ? "text-blue-700" : "text-slate-600 hover:text-slate-900"
+                                        ? "text-gray-200 hover:text-white"
+                                        : isActive ? "text-blue-700" : "text-slate-600 hover:text-slate-900"
                                         }`}
                                 >
                                     {link.name}
@@ -96,7 +100,7 @@ export function Header() {
                                     {isHovered && !isTransparent && (
                                         <motion.div
                                             layoutId="nav-hover"
-                                            className="absolute inset-0 -z-10 rounded-full bg-slate-100"
+                                            className="absolute inset-0 -z-10 rounded bg-slate-100"
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             exit={{ opacity: 0 }}
@@ -106,7 +110,7 @@ export function Header() {
                                     {isHovered && isTransparent && (
                                         <motion.div
                                             layoutId="nav-hover-transparent"
-                                            className="absolute inset-0 -z-10 rounded-full bg-white/10 backdrop-blur-md"
+                                            className="absolute inset-0 -z-10 rounded bg-white/10 backdrop-blur-md"
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             exit={{ opacity: 0 }}
@@ -148,9 +152,9 @@ export function Header() {
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold shadow-lg transition-all ${isTransparent
-                                        ? "bg-white text-black hover:bg-gray-100 shadow-white/20"
-                                        : "bg-black text-white hover:bg-slate-800 shadow-black/10"
+                                className={`flex items-center gap-2 rounded-md px-5 py-2.5 text-sm font-bold shadow-lg transition-all ${isTransparent
+                                    ? "bg-white text-black hover:bg-gray-100 shadow-white/20"
+                                    : "bg-black text-white hover:bg-slate-800 shadow-black/10"
                                     }`}
                             >
                                 List for Free
@@ -161,7 +165,7 @@ export function Header() {
                     {/* Mobile Menu Toggle */}
                     <button
                         onClick={() => setIsMenuOpen(true)}
-                        className={`md:hidden flex h-10 w-10 items-center justify-center rounded-full transition-colors ${isTransparent ? "bg-white/10 text-white" : "bg-slate-100 text-slate-900"
+                        className={`md:hidden flex h-10 w-10 items-center justify-center rounded transition-colors ${isTransparent ? "bg-white/10 text-white" : "bg-slate-100 text-slate-900"
                             }`}
                     >
                         <Menu className="h-5 w-5" />
@@ -197,7 +201,7 @@ export function Header() {
                                 </span>
                                 <button
                                     onClick={() => setIsMenuOpen(false)}
-                                    className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
+                                    className="flex h-10 w-10 items-center justify-center rounded bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
                                 >
                                     <X className="h-5 w-5" />
                                 </button>
