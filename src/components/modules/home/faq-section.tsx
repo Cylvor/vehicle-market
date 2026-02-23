@@ -1,49 +1,95 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+"use client";
+
+import { useState } from "react";
+import { Plus, Minus } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const FAQ_ITEMS = [
     {
-        value: "fees",
         question: "Are there any fees to list a vehicle?",
-        answer: "Basic listings are free. Premium promotion options may include additional charges in the future.",
+        answer: "Basic listings are completely free. We may introduce premium promotion options in the future, but our core service remains free to help you sell your car.",
     },
     {
-        value: "verification",
         question: "How do you verify sellers?",
-        answer: "Seller profiles and listing activity are reviewed to reduce spam and improve buyer trust.",
+        answer: "We employ a rigorous review process for seller profiles and listing activities. This helps reduce spam, prevents fraud, and significantly improves buyer trust in our community.",
     },
     {
-        value: "safety",
         question: "How can I stay safe when meeting a seller?",
-        answer: "Use in-app messaging first, meet in public places, and complete proper ownership checks before payment.",
+        answer: "Always use our in-app messaging first. We strongly recommend meeting in well-lit, public places, bringing a friend along, and completing proper ownership checks before any payment is made.",
     },
     {
-        value: "inspection",
         question: "Can I request an inspection before buying?",
-        answer: "Yes. You can coordinate inspections directly with the seller before making a final decision.",
+        answer: "Absolutely. We encourage all buyers to coordinate independent, professional inspections directly with the seller to ensure complete peace of mind before making a final decision.",
     },
 ];
 
 export function FaqSection() {
-    return (
-        <section className="py-16 lg:py-20 bg-muted/30">
-            <div className="container-width">
-                <span className="inline-flex items-center rounded-md border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-semibold tracking-wide text-accent">
-                    SUPPORT
-                </span>
-                <h2 className="mt-3 text-2xl md:text-3xl font-bold tracking-tight text-foreground">FAQ</h2>
-                <p className="mt-2 text-muted-foreground">Common questions about listing, verification, and buying safely.</p>
+    const [openIndex, setOpenIndex] = useState<number | null>(0);
 
-                <div className="mt-8 rounded-md border border-border/70 bg-card p-2 md:p-4 shadow-sm">
-                    <Accordion type="single" collapsible className="w-full">
-                        {FAQ_ITEMS.map((item) => (
-                            <AccordionItem key={item.value} value={item.value}>
-                                <AccordionTrigger className="text-left font-semibold hover:text-accent transition-colors">{item.question}</AccordionTrigger>
-                                <AccordionContent className="text-sm text-muted-foreground leading-relaxed">
-                                    {item.answer}
-                                </AccordionContent>
-                            </AccordionItem>
-                        ))}
-                    </Accordion>
+    const toggleFaq = (index: number) => {
+        setOpenIndex(openIndex === index ? null : index);
+    };
+
+    return (
+        <section className="py-24 bg-white relative overflow-hidden">
+            <div className="container-width px-6 relative z-10">
+                <div className="max-w-3xl mx-auto">
+                    <div className="text-center mb-16 space-y-4">
+
+                        <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900">
+                            Frequently Asked <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Questions</span>
+                        </h2>
+                        <p className="text-slate-500 text-lg">
+                            Everything you need to know about listing, verification, and buying safely.
+                        </p>
+                    </div>
+
+                    <div className="space-y-4">
+                        {FAQ_ITEMS.map((faq, index) => {
+                            const isOpen = openIndex === index;
+                            return (
+                                <div
+                                    key={index}
+                                    className={`rounded-2xl border transition-all duration-300 overflow-hidden ${isOpen
+                                        ? 'border-blue-200 bg-blue-50/50 shadow-md'
+                                        : 'border-slate-200 bg-white hover:border-blue-200 hover:shadow-sm'
+                                        }`}
+                                >
+                                    <button
+                                        onClick={() => toggleFaq(index)}
+                                        className="w-full flex items-center justify-between p-6 text-left focus:outline-none group"
+                                        aria-expanded={isOpen}
+                                    >
+                                        <h3 className={`text-lg font-semibold pr-8 transition-colors ${isOpen ? 'text-blue-700' : 'text-slate-900 group-hover:text-blue-600'
+                                            }`}>
+                                            {faq.question}
+                                        </h3>
+                                        <div className={`shrink-0 h-8 w-8 rounded-full flex items-center justify-center transition-all duration-300 ${isOpen
+                                            ? 'bg-blue-600 text-white'
+                                            : 'bg-slate-100 text-slate-500 group-hover:bg-blue-100 group-hover:text-blue-600'
+                                            }`}>
+                                            {isOpen ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+                                        </div>
+                                    </button>
+
+                                    <AnimatePresence initial={false}>
+                                        {isOpen && (
+                                            <motion.div
+                                                initial={{ height: 0, opacity: 0 }}
+                                                animate={{ height: "auto", opacity: 1 }}
+                                                exit={{ height: 0, opacity: 0 }}
+                                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                            >
+                                                <div className="p-6 pt-0 text-slate-600 leading-relaxed text-base">
+                                                    {faq.answer}
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
         </section>
