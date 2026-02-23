@@ -75,14 +75,14 @@ function CustomSelect({
         <div className="relative" ref={ref}>
             <button
                 type="button"
-                className={`h-[56px] w-full rounded-md bg-slate-50 border border-transparent px-4 text-left text-[15px] font-semibold transition-colors flex items-center justify-between shadow-sm
-                    ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-slate-100 focus:bg-white focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500/10 cursor-pointer'}
-                    ${value ? 'text-slate-900' : 'text-slate-400'}`}
+                className={`h-[56px] w-full rounded-md border px-4 text-left text-[15px] font-semibold transition-all flex items-center justify-between
+                    ${disabled ? 'bg-slate-50 border-slate-200 opacity-60 cursor-not-allowed' : 'bg-white border-slate-300 hover:border-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer'}
+                    ${value ? 'text-slate-900' : 'text-slate-600'}`}
                 onClick={() => !disabled && setIsOpen(!isOpen)}
                 disabled={disabled}
             >
                 <span className="block truncate">{selectedOption ? selectedOption.label : placeholder}</span>
-                <ChevronDown className={`h-5 w-5 text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`h-5 w-5 text-slate-500 transition-transform ${isOpen ? 'rotate-180 text-blue-600' : ''}`} />
             </button>
 
             {isOpen && !disabled && (
@@ -190,7 +190,7 @@ export function QuickSearchSection() {
     return (
         <section ref={sectionRef} className={`py-12 bg-slate-50 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
             <div className="container-width px-6">
-                <div className="rounded-md bg-white border border-slate-200/60 shadow-md p-8 md:p-10">
+                <div className="rounded-md bg-white border border-slate-200 shadow-[0_0_15px_rgba(0,0,0,0.03)] p-8 md:p-10">
 
                     {/* Header */}
                     <div className="flex flex-col md:flex-row items-start justify-between gap-6 mb-8">
@@ -259,7 +259,7 @@ export function QuickSearchSection() {
                                     ${priceRange[0].toLocaleString()} - {priceRange[1] >= 100000 ? '$100k+' : '$' + priceRange[1].toLocaleString()}
                                 </span>
                             </div>
-                            <div className="h-[56px] w-full rounded-md bg-slate-50 border border-transparent px-5 flex items-center shadow-sm hover:bg-slate-100 transition-colors">
+                            <div className="h-[56px] w-full rounded-md bg-white border border-slate-300 px-5 flex items-center hover:border-slate-400 transition-colors">
                                 <Slider
                                     defaultValue={[0, 100000]}
                                     value={priceRange}
