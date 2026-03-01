@@ -9,9 +9,6 @@ export default function SellerDashboardLayout({
 }) {
     return (
         <div className="h-screen flex flex-col pt-16 bg-slate-50 overflow-hidden">
-            <Suspense fallback={<div className="h-12 border-b bg-muted" />}>
-                <DashboardModeToggle currentMode="seller" />
-            </Suspense>
             <div className="flex flex-1 overflow-hidden">
                 <aside className="hidden lg:block w-64 flex-shrink-0 z-10 overflow-y-auto border-r border-slate-200 bg-white">
                     <Suspense fallback={<div className="w-full h-full bg-slate-50 animate-pulse" />}>
