@@ -8,13 +8,13 @@ export default function BuyerDashboardLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="h-screen flex flex-col pt-16 md:pt-20 bg-emerald-50/30 dark:bg-emerald-950/20 overflow-hidden">
+        <div className="h-screen flex flex-col pt-16 bg-slate-50 overflow-hidden">
             <Suspense fallback={<div className="h-12 border-b bg-muted" />}>
                 <DashboardModeToggle currentMode="buyer" />
             </Suspense>
             <div className="flex flex-1 overflow-hidden">
-                <aside className="hidden lg:block w-64 flex-shrink-0 z-10 overflow-y-auto border-r border-slate-800 bg-slate-900 dark:bg-slate-950">
-                    <Suspense fallback={<div className="w-full h-full bg-slate-900 animate-pulse" />}>
+                <aside className="hidden lg:block w-64 flex-shrink-0 z-10 overflow-y-auto border-r border-slate-200 bg-white">
+                    <Suspense fallback={<div className="w-full h-full bg-slate-50 animate-pulse" />}>
                         <BuyerSidebar />
                     </Suspense>
                 </aside>

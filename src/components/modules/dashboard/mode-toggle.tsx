@@ -29,40 +29,40 @@ export function DashboardModeToggle({ currentMode }: { currentMode: "buyer" | "s
     };
 
     return (
-        <div className="w-full border-b bg-white/50 dark:bg-slate-950/50 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="w-full border-b border-slate-200 bg-white">
             <div className="w-full px-4 md:px-6 flex items-center justify-between">
                 <Tabs value={currentMode} onValueChange={onTabChange}>
-                    <TabsList className="bg-transparent p-0 h-12 w-full justify-start rounded-none border-b-0">
+                    <TabsList className="bg-transparent p-0 h-10 w-full justify-start rounded-none border-b-0">
                         <TabsTrigger
                             value="buyer"
-                            className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-semibold text-slate-500 shadow-none transition-none data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-600 data-[state=active]:shadow-none hover:text-slate-900 dark:hover:text-white"
+                            className="relative h-10 rounded-none border-b-2 border-transparent px-4 py-2.5 text-sm font-bold text-slate-500 shadow-none transition-none data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:shadow-none hover:text-slate-900"
                         >
                             Buying Dashboard
                         </TabsTrigger>
                         <TabsTrigger
                             value="seller"
-                            className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-semibold text-slate-500 shadow-none transition-none data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-600 data-[state=active]:shadow-none hover:text-slate-900 dark:hover:text-white"
+                            className="relative h-10 rounded-none border-b-2 border-transparent px-4 py-2.5 text-sm font-bold text-slate-500 shadow-none transition-none data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:shadow-none hover:text-slate-900"
                         >
                             Selling Dashboard
                         </TabsTrigger>
                     </TabsList>
                 </Tabs>
 
-                <div className="flex items-center gap-1 sm:gap-2">
+                <div className="flex items-center gap-2">
                     <UserSettingsModal>
-                        <Button variant="ghost" size="sm" className="text-slate-500 hover:text-slate-900 dark:hover:text-white">
-                            <Settings className="h-4 w-4 sm:mr-2" />
+                        <Button variant="outline" size="sm" className="h-8 border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800 hover:border-blue-300 shadow-sm font-bold px-3">
+                            <Settings className="h-4 w-4 sm:mr-1.5" />
                             <span className="hidden sm:inline">Settings</span>
                         </Button>
                     </UserSettingsModal>
                     <Button
-                        variant="ghost"
+                        variant="outline"
                         size="sm"
-                        className="text-slate-500 hover:text-rose-600 dark:hover:text-rose-500"
+                        className="h-8 border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100 hover:text-rose-800 hover:border-rose-300 shadow-sm font-bold px-3"
                         onClick={handleSignOut}
                         disabled={isSigningOut}
                     >
-                        <LogOut className="h-4 w-4 sm:mr-2" />
+                        <LogOut className="h-4 w-4 sm:mr-1.5" />
                         <span className="hidden sm:inline">{isSigningOut ? "Signing Out..." : "Sign Out"}</span>
                     </Button>
                 </div>
