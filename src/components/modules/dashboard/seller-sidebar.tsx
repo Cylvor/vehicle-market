@@ -45,7 +45,7 @@ export function SellerSidebar() {
     const pathname = usePathname();
 
     return (
-        <div className="flex flex-col h-full bg-slate-900 dark:bg-slate-950 border border-slate-800 rounded-md shadow-xl overflow-hidden min-h-[calc(100vh-8rem)] text-slate-300">
+        <div className="flex flex-col min-h-full bg-slate-900 dark:bg-slate-950 text-slate-300 pb-10">
 
             <div className="p-4 border-b border-slate-800 bg-slate-800/50">
                 <Link href="/sell/create" className="w-full">

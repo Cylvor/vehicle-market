@@ -30,7 +30,7 @@ export function DashboardModeToggle({ currentMode }: { currentMode: "buyer" | "s
 
     return (
         <div className="w-full border-b bg-white/50 dark:bg-slate-950/50 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="container mx-auto px-4 flex items-center justify-between">
+            <div className="w-full px-4 md:px-6 flex items-center justify-between">
                 <Tabs value={currentMode} onValueChange={onTabChange}>
                     <TabsList className="bg-transparent p-0 h-12 w-full justify-start rounded-none border-b-0">
                         <TabsTrigger

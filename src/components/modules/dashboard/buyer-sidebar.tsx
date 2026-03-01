@@ -31,7 +31,7 @@ export function BuyerSidebar() {
     const pathname = usePathname();
 
     return (
-        <div className="flex flex-col h-full bg-slate-900 dark:bg-slate-950 border border-slate-800 rounded-md shadow-xl overflow-hidden min-h-[calc(100vh-8rem)] text-slate-300">
+        <div className="flex flex-col min-h-full bg-slate-900 dark:bg-slate-950 text-slate-300 pb-10">
             <div className="flex-1 py-6 space-y-6">
                 <div className="px-4">
                     <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 px-2">
