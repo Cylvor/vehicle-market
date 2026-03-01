@@ -45,11 +45,11 @@ export function SellerSidebar() {
     const pathname = usePathname();
 
     return (
-        <div className="flex flex-col min-h-full bg-slate-900 dark:bg-slate-950 text-slate-300 pb-10">
+        <div className="flex flex-col min-h-full bg-white text-slate-600 pb-10">
 
-            <div className="p-4 border-b border-slate-800 bg-slate-800/50">
+            <div className="p-4 border-b border-slate-100 bg-white">
                 <Link href="/sell/create" className="w-full">
-                    <Button className="w-full gap-2 bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-900/20 shadow-lg font-semibold rounded-md border-none">
+                    <Button className="w-full gap-2 bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/20 shadow-lg font-bold rounded-md border-none">
                         <PlusCircle className="h-4 w-4" />
                         Create Listing
                     </Button>
@@ -67,13 +67,13 @@ export function SellerSidebar() {
                                 key={item.href}
                                 href={item.href}
                                 className={cn(
-                                    "flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-md transition-all duration-200",
+                                    "flex items-center gap-3 px-3 py-2.5 text-sm rounded-md transition-all duration-200",
                                     pathname === item.href
-                                        ? "bg-slate-800 text-white shadow-inner"
-                                        : "text-slate-400 hover:bg-slate-800/50 hover:text-slate-200"
+                                        ? "bg-blue-50 text-blue-700 font-semibold shadow-sm"
+                                        : "font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                                 )}
                             >
-                                <item.icon className={cn("h-4 w-4", pathname === item.href ? "text-emerald-400" : "text-slate-500")} />
+                                <item.icon className={cn("h-4 w-4", pathname === item.href ? "text-blue-600" : "text-slate-400")} />
                                 {item.title}
                             </Link>
                         ))}
