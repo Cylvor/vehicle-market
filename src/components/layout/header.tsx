@@ -135,12 +135,14 @@ export function Header() {
                             </SignedOut>
 
                             <SignedIn>
-                                <Link
-                                    href="/dashboard"
-                                    className={`text-sm font-bold transition-colors ${isTransparent ? "text-white hover:text-blue-300" : "text-slate-700 hover:text-blue-600"}`}
-                                >
-                                    Dashboard
-                                </Link>
+                                {!pathname.startsWith('/dashboard') && (
+                                    <Link
+                                        href="/dashboard"
+                                        className={`text-sm font-bold transition-colors ${isTransparent ? "text-white hover:text-blue-300" : "text-slate-700 hover:text-blue-600"}`}
+                                    >
+                                        Dashboard
+                                    </Link>
+                                )}
                                 <div className="h-8 w-8 rounded-md border-2 border-transparent hover:border-blue-400 transition-all">
                                     <UserButton afterSignOutUrl="/" appearance={{ elements: { avatarBox: "w-full h-full rounded-md" } }} />
                                 </div>
