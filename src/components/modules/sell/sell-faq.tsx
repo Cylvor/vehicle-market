@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Plus, Minus } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 
 const FAQS = [
     {
@@ -35,12 +34,14 @@ export function SellFaq() {
     };
 
     return (
-        <section className="py-20 lg:py-24 bg-transparent">
-            <div className="container-width">
+        <section className="py-24 bg-white relative overflow-hidden">
+            <div className="container-width px-6 relative z-10">
                 <div className="max-w-3xl mx-auto">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">Frequently asked questions</h2>
-                        <p className="mt-4 text-lg text-muted-foreground">
+                    <div className="text-center mb-16 space-y-4">
+                        <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900">
+                            Frequently Asked <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Questions</span>
+                        </h2>
+                        <p className="text-slate-500 text-lg">
                             Everything you need to know about selling your car on our platform.
                         </p>
                     </div>
@@ -51,33 +52,37 @@ export function SellFaq() {
                             return (
                                 <div
                                     key={index}
-                                    className="rounded-xl border border-border/60 bg-card overflow-hidden transition-all duration-300 hover:border-blue-500/30"
+                                    className={`rounded-2xl border transition-all duration-300 overflow-hidden ${isOpen
+                                        ? 'border-blue-200 bg-blue-50/50 shadow-md'
+                                        : 'border-slate-200 bg-white hover:border-blue-200 hover:shadow-sm'
+                                        }`}
                                 >
                                     <button
                                         onClick={() => toggleFaq(index)}
-                                        className="w-full flex items-center justify-between p-6 text-left focus:outline-none"
+                                        className="w-full flex items-center justify-between p-6 text-left focus:outline-none group"
                                         aria-expanded={isOpen}
                                     >
-                                        <h3 className="text-lg font-semibold text-foreground pr-8">{faq.question}</h3>
-                                        <div className={`shrink-0 h-6 w-6 rounded-full flex items-center justify-center transition-all ${isOpen ? 'bg-blue-500 text-white' : 'bg-muted text-muted-foreground'}`}>
+                                        <h3 className={`text-lg font-semibold pr-8 transition-colors ${isOpen ? 'text-blue-700' : 'text-slate-900 group-hover:text-blue-600'
+                                            }`}>
+                                            {faq.question}
+                                        </h3>
+                                        <div className={`shrink-0 h-8 w-8 rounded-full flex items-center justify-center transition-all duration-300 ${isOpen
+                                            ? 'bg-blue-600 text-white'
+                                            : 'bg-slate-100 text-slate-500 group-hover:bg-blue-100 group-hover:text-blue-600'
+                                            }`}>
                                             {isOpen ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
                                         </div>
                                     </button>
 
-                                    <AnimatePresence initial={false}>
-                                        {isOpen && (
-                                            <motion.div
-                                                initial={{ height: 0, opacity: 0 }}
-                                                animate={{ height: "auto", opacity: 1 }}
-                                                exit={{ height: 0, opacity: 0 }}
-                                                transition={{ duration: 0.3, ease: "easeInOut" }}
-                                            >
-                                                <div className="p-6 pt-0 text-muted-foreground leading-relaxed">
-                                                    {faq.answer}
-                                                </div>
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
+                                    <div
+                                        className={`transition-all duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'} grid`}
+                                    >
+                                        <div className="overflow-hidden">
+                                            <div className="p-6 pt-0 text-slate-600 leading-relaxed text-base">
+                                                {faq.answer}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             );
                         })}
