@@ -8,8 +8,21 @@ const DialogContext = React.createContext<{
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 } | null>(null);
 
-export function Dialog({ children }: { children: React.ReactNode }) {
-    const [open, setOpen] = React.useState(false);
+export function Dialog({ children, open: controlledOpen, onOpenChange }: { children: React.ReactNode, open?: boolean, onOpenChange?: React.Dispatch<React.SetStateAction<boolean>> }) {
+    const [internalOpen, setInternalOpen] = React.useState(false);
+
+    const isControlled = controlledOpen !== undefined;
+    const open = isControlled ? controlledOpen : internalOpen;
+
+    const setOpen = React.useCallback((val: boolean | ((prevState: boolean) => boolean)) => {
+        const newVal = typeof val === 'function' ? val(open) : val;
+        if (!isControlled) {
+            setInternalOpen(newVal);
+        }
+        if (onOpenChange) {
+            onOpenChange(newVal);
+        }
+    }, [isControlled, open, onOpenChange]);
 
     // Close on escape key
     React.useEffect(() => {
@@ -26,7 +39,7 @@ export function Dialog({ children }: { children: React.ReactNode }) {
             document.body.style.overflow = "";
             window.removeEventListener("keydown", handleKeyDown);
         };
-    }, [open]);
+    }, [open, setOpen]);
 
     return (
         <DialogContext.Provider value={{ open, setOpen }}>
@@ -110,5 +123,13 @@ export function DialogTitle({ children, className = "" }: { children: React.Reac
         <h2 className={`text-lg font-semibold leading-none tracking-tight ${className}`}>
             {children}
         </h2>
+    );
+}
+
+export function DialogDescription({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+    return (
+        <p className={`text-sm text-slate-500 ${className}`}>
+            {children}
+        </p>
     );
 }
