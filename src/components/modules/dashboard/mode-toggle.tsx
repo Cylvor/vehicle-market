@@ -15,25 +15,23 @@ export function DashboardModeToggle({ currentMode }: { currentMode: "buyer" | "s
     };
 
     return (
-        <div className="w-full border-b bg-white/50 dark:bg-slate-950/50 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="container mx-auto px-4">
-                <Tabs value={currentMode} onValueChange={onTabChange} className="w-full">
-                    <TabsList className="bg-transparent p-0 h-12 w-full justify-start rounded-none border-b-0">
-                        <TabsTrigger
-                            value="buyer"
-                            className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-semibold text-slate-500 shadow-none transition-none data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-600 data-[state=active]:shadow-none hover:text-slate-900 dark:hover:text-white"
-                        >
-                            Buying Dashboard
-                        </TabsTrigger>
-                        <TabsTrigger
-                            value="seller"
-                            className="relative h-12 rounded-none border-b-2 border-transparent px-4 pb-3 pt-2 font-semibold text-slate-500 shadow-none transition-none data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-600 data-[state=active]:shadow-none hover:text-slate-900 dark:hover:text-white"
-                        >
-                            Selling Dashboard
-                        </TabsTrigger>
-                    </TabsList>
-                </Tabs>
-            </div>
+        <div className="w-full bg-white px-4 py-4 border-b border-slate-100">
+            <Tabs value={currentMode} onValueChange={onTabChange} className="w-full">
+                <TabsList className="bg-slate-100/50 p-1 h-12 w-full grid grid-cols-2 rounded-xl border border-slate-200">
+                    <TabsTrigger
+                        value="buyer"
+                        className="relative h-9.5 rounded-lg border border-transparent px-3 py-2 text-sm font-bold text-slate-500 shadow-none transition-all data-[state=active]:bg-white data-[state=active]:border-slate-200 data-[state=active]:text-blue-600 data-[state=active]:shadow-sm hover:text-slate-900"
+                    >
+                        Buying
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="seller"
+                        className="relative h-9.5 rounded-lg border border-transparent px-3 py-2 text-sm font-bold text-slate-500 shadow-none transition-all data-[state=active]:bg-white data-[state=active]:border-slate-200 data-[state=active]:text-blue-600 data-[state=active]:shadow-sm hover:text-slate-900"
+                    >
+                        Selling
+                    </TabsTrigger>
+                </TabsList>
+            </Tabs>
         </div>
     );
 }

@@ -2,28 +2,31 @@
 
 import { useState } from "react";
 import { Plus, Minus } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 
-const FAQ_ITEMS = [
+const FAQS = [
     {
-        question: "Are there any fees to list a vehicle?",
-        answer: "Basic listings are completely free. We may introduce premium promotion options in the future, but our core service remains free to help you sell your car.",
+        question: "How much does it cost to list my car?",
+        answer: "Listing your car on our platform is completely free. We only charge a small success fee when your car is sold to ensure maximum value for both buyers and sellers.",
     },
     {
-        question: "How do you verify sellers?",
-        answer: "We employ a rigorous review process for seller profiles and listing activities. This helps reduce spam, prevents fraud, and significantly improves buyer trust in our community.",
+        question: "How do you determine the valuation of my car?",
+        answer: "Our intelligent pricing engine uses real-time market data, recent sales of similar models, and the specific condition details you provide to suggest the most competitive asking price.",
     },
     {
-        question: "How can I stay safe when meeting a seller?",
-        answer: "Always use our in-app messaging first. We strongly recommend meeting in well-lit, public places, bringing a friend along, and completing proper ownership checks before any payment is made.",
+        question: "Is my personal information kept secure?",
+        answer: "Absolutely. We protect your privacy by keeping your contact details hidden. All communication happens securely through our in-platform messaging system.",
     },
     {
-        question: "Can I request an inspection before buying?",
-        answer: "Absolutely. We encourage all buyers to coordinate independent, professional inspections directly with the seller to ensure complete peace of mind before making a final decision.",
+        question: "How do I ensure a safe transaction with the buyer?",
+        answer: "We strongly recommend meeting in a safe, public place for test drives. For payment, we provide guidelines on secure methods, and our verified badges help identify trusted buyers.",
+    },
+    {
+        question: "Can I edit my listing after it's published?",
+        answer: "Yes, you can edit your listing details, price, and photos at any time from your Seller Dashboard to keep it fresh and attractive to buyers.",
     },
 ];
 
-export function FaqSection() {
+export function SellFaq() {
     const [openIndex, setOpenIndex] = useState<number | null>(0);
 
     const toggleFaq = (index: number) => {
@@ -35,17 +38,16 @@ export function FaqSection() {
             <div className="container-width px-6 relative z-10">
                 <div className="max-w-3xl mx-auto">
                     <div className="text-center mb-16 space-y-4">
-
                         <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900">
                             Frequently Asked <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Questions</span>
                         </h2>
                         <p className="text-slate-500 text-lg">
-                            Everything you need to know about listing, verification, and buying safely.
+                            Everything you need to know about selling your car on our platform.
                         </p>
                     </div>
 
                     <div className="space-y-4">
-                        {FAQ_ITEMS.map((faq, index) => {
+                        {FAQS.map((faq, index) => {
                             const isOpen = openIndex === index;
                             return (
                                 <div
@@ -72,20 +74,15 @@ export function FaqSection() {
                                         </div>
                                     </button>
 
-                                    <AnimatePresence initial={false}>
-                                        {isOpen && (
-                                            <motion.div
-                                                initial={{ height: 0, opacity: 0 }}
-                                                animate={{ height: "auto", opacity: 1 }}
-                                                exit={{ height: 0, opacity: 0 }}
-                                                transition={{ duration: 0.3, ease: "easeInOut" }}
-                                            >
-                                                <div className="p-6 pt-0 text-slate-600 leading-relaxed text-base">
-                                                    {faq.answer}
-                                                </div>
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
+                                    <div
+                                        className={`transition-all duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'} grid`}
+                                    >
+                                        <div className="overflow-hidden">
+                                            <div className="p-6 pt-0 text-slate-600 leading-relaxed text-base">
+                                                {faq.answer}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             );
                         })}

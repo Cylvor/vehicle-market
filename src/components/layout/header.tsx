@@ -51,13 +51,14 @@ export function Header() {
     const effectiveIsScrolled = isScrolled || forceScrolled;
 
     const isTransparent = isTransparentPage && !effectiveIsScrolled && !isMenuOpen;
+    const isDashboard = pathname.startsWith("/dashboard");
 
     return (
         <>
             <header className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ease-out ${effectiveIsScrolled ? "pt-0 px-0" : "pt-2 px-2 sm:px-4 lg:px-6"}`}>
                 {/* --- Floating / Fixed Nav Bar --- */}
                 <div
-                    className={`mx-auto flex h-16 items-center justify-between transition-all duration-500 ${effectiveIsScrolled ? "max-w-full px-4 sm:px-6 lg:px-8 rounded-none bg-white/90 backdrop-blur-xl shadow-md border-b border-slate-200/50" : "max-w-7xl px-3 rounded-md " + (isTransparent
+                    className={`mx-auto flex h-16 items-center justify-between transition-all duration-500 ${effectiveIsScrolled ? `max-w-full px-4 sm:px-6 lg:px-8 rounded-none bg-white/90 backdrop-blur-xl ${isDashboard ? 'border-b-0' : 'shadow-md border-b border-slate-200/50'}` : "max-w-7xl px-3 rounded-md " + (isTransparent
                         ? "bg-transparent border-transparent"
                         : "bg-white/80 backdrop-blur-xl shadow-sm border border-slate-200/50"
                     )}`}
@@ -135,12 +136,14 @@ export function Header() {
                             </SignedOut>
 
                             <SignedIn>
-                                <Link
-                                    href="/dashboard"
-                                    className={`text-sm font-bold transition-colors ${isTransparent ? "text-white hover:text-blue-300" : "text-slate-700 hover:text-blue-600"}`}
-                                >
-                                    Dashboard
-                                </Link>
+                                {!pathname.startsWith('/dashboard') && (
+                                    <Link
+                                        href="/dashboard"
+                                        className={`text-sm font-bold transition-colors ${isTransparent ? "text-white hover:text-blue-300" : "text-slate-700 hover:text-blue-600"}`}
+                                    >
+                                        Dashboard
+                                    </Link>
+                                )}
                                 <div className="h-8 w-8 rounded-md border-2 border-transparent hover:border-blue-400 transition-all">
                                     <UserButton afterSignOutUrl="/" appearance={{ elements: { avatarBox: "w-full h-full rounded-md" } }} />
                                 </div>

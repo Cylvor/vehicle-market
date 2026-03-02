@@ -2,17 +2,18 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useClerk } from "@clerk/nextjs";
-import { useState } from "react";
 import { cn } from "@/lib/utils";
 import {
     LayoutDashboard,
     Heart,
     MessageSquare,
     Settings,
-    LogOut,
+    LogOut
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useClerk } from "@clerk/nextjs";
+import { useState } from "react";
+import { UserSettingsModal } from "@/components/modules/dashboard/user-settings-modal";
+import { DashboardModeToggle } from "@/components/modules/dashboard/mode-toggle";
 
 const buyerItems = [
     {
@@ -30,11 +31,6 @@ const buyerItems = [
         href: "/dashboard/buyer/enquiries",
         icon: MessageSquare,
     },
-    {
-        title: "Account Settings",
-        href: "/dashboard/buyer/settings",
-        icon: Settings,
-    },
 ];
 
 export function BuyerSidebar() {
@@ -49,7 +45,10 @@ export function BuyerSidebar() {
     };
 
     return (
-        <div className="flex flex-col h-full bg-slate-900 dark:bg-slate-950 border border-slate-800 rounded-md shadow-xl overflow-hidden min-h-[calc(100vh-8rem)] text-slate-300">
+        <div className="flex flex-col min-h-full bg-white text-slate-600">
+            {/* Dashboard Mode Switcher */}
+            <DashboardModeToggle currentMode="buyer" />
+
             <div className="flex-1 py-6 space-y-6">
                 <div className="px-4">
                     <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 px-2">
@@ -61,13 +60,13 @@ export function BuyerSidebar() {
                                 key={item.href}
                                 href={item.href}
                                 className={cn(
-                                    "flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-md transition-all duration-200",
+                                    "flex items-center gap-3 px-3 py-2.5 text-sm rounded-md transition-all duration-200",
                                     pathname === item.href
-                                        ? "bg-slate-800 text-white shadow-inner"
-                                        : "text-slate-400 hover:bg-slate-800/50 hover:text-slate-200"
+                                        ? "bg-blue-50 text-blue-700 font-semibold shadow-sm"
+                                        : "font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                                 )}
                             >
-                                <item.icon className={cn("h-4 w-4", pathname === item.href ? "text-emerald-400" : "text-slate-500")} />
+                                <item.icon className={cn("h-4 w-4", pathname === item.href ? "text-blue-600" : "text-slate-400")} />
                                 {item.title}
                             </Link>
                         ))}
@@ -75,16 +74,27 @@ export function BuyerSidebar() {
                 </div>
             </div>
 
-            <div className="p-4 border-t border-slate-800 bg-slate-950/50">
-                <Button
-                    variant="ghost"
-                    className="w-full justify-start gap-3 text-slate-400 hover:text-rose-400 hover:bg-rose-950/50 rounded-md transition-colors"
-                    onClick={handleSignOut}
-                    disabled={isSigningOut}
-                >
-                    <LogOut className="h-4 w-4" />
-                    {isSigningOut ? "Signing Out..." : "Sign Out"}
-                </Button>
+            {/* Account Management footer section */}
+            <div className="px-4 py-6 border-t border-slate-100 mt-auto bg-slate-50/50">
+                <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 px-2">
+                    Account
+                </div>
+                <div className="space-y-1">
+                    <UserSettingsModal>
+                        <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-md transition-all duration-200 font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900">
+                            <Settings className="h-4 w-4 text-slate-400" />
+                            Settings
+                        </button>
+                    </UserSettingsModal>
+                    <button
+                        onClick={handleSignOut}
+                        disabled={isSigningOut}
+                        className="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-md transition-all duration-200 font-medium text-slate-600 hover:bg-rose-50 hover:text-rose-700"
+                    >
+                        <LogOut className="h-4 w-4 text-slate-400" />
+                        {isSigningOut ? "Signing out..." : "Sign out"}
+                    </button>
+                </div>
             </div>
         </div>
     );
