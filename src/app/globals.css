@@ -260,9 +260,15 @@
     background-clip: padding-box;
   }
 
-  /* Hide outer scrollbar on dashboard pages */
+  /* Hide outer scrollbar on dashboard pages (still scrollable) */
   html:has(.dashboard-layout) {
-    overflow: hidden;
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
+  html:has(.dashboard-layout)::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Edge, Safari */
   }
 }
 
