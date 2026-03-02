@@ -8,7 +8,7 @@ export default function BuyerDashboardLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="h-screen flex flex-col pt-16 bg-slate-50 overflow-hidden">
+        <div className="dashboard-layout h-screen flex flex-col pt-16 bg-slate-50 overflow-hidden">
             <div className="flex flex-1 overflow-hidden">
                 <aside className="hidden lg:block w-64 flex-shrink-0 z-10 overflow-y-auto border-r border-slate-200 bg-white">
                     <Suspense fallback={<div className="w-full h-full bg-slate-50 animate-pulse" />}>

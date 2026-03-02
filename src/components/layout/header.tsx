@@ -41,7 +41,7 @@ export function Header() {
         if (isMenuOpen) {
             document.body.style.overflow = "hidden";
         } else {
-            document.body.style.overflow = "unset";
+            document.body.style.overflow = "";
         }
     }, [isMenuOpen]);
 
@@ -58,11 +58,16 @@ export function Header() {
             <header className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ease-out ${effectiveIsScrolled ? "pt-0 px-0" : "pt-2 px-2 sm:px-4 lg:px-6"}`}>
                 {/* --- Floating / Fixed Nav Bar --- */}
                 <div
-                    className={`mx-auto flex h-16 items-center justify-between transition-all duration-500 ${effectiveIsScrolled ? `max-w-full px-4 sm:px-6 lg:px-8 rounded-none bg-white/90 backdrop-blur-xl ${isDashboard ? 'border-b-0' : 'shadow-md border-b border-slate-200/50'}` : "max-w-7xl px-3 rounded-md " + (isTransparent
+                    className={`relative mx-auto flex h-16 items-center justify-between transition-all duration-500 ${effectiveIsScrolled ? `max-w-full px-4 sm:px-6 lg:px-8 rounded-none bg-white/90 backdrop-blur-xl ${isDashboard ? 'border-b-0' : 'shadow-md border-b border-slate-200/50'}` : "max-w-7xl px-3 rounded-md " + (isTransparent
                         ? "bg-transparent border-transparent"
                         : "bg-white/80 backdrop-blur-xl shadow-sm border border-slate-200/50"
                     )}`}
                 >
+                    {/* Conditional shadow specifically for dashboard avoiding the sidebar on large screens */}
+                    {isDashboard && effectiveIsScrolled && (
+                        <div className="absolute bottom-0 right-0 left-0 lg:left-64 h-[1px] shadow-md bg-slate-200/50 pointer-events-none z-[-1]"></div>
+                    )}
+
                     {/* Logo */}
                     <Link
                         href="/"

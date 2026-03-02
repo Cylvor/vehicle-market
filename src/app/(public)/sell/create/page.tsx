@@ -31,23 +31,17 @@ export default async function CreateListingPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 py-12 lg:py-16">
-            <div className="container-width">
-                <div className="mb-10 max-w-2xl px-4 md:px-0">
-                    <span className="mb-3 inline-block rounded-md border border-blue-400/30 bg-blue-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-blue-500">
-                        OFFER YOUR VEHICLE
-                    </span>
-                    <h1 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">
-                        Create Your Listing
+        <div className="min-h-screen bg-slate-100 pt-24 pb-16">
+            <div className="container-width pt-10 lg:pt-14">
+                <div className="max-w-4xl mx-auto mb-6 px-1">
+                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+                        {`Create a new listing`}
                     </h1>
-                    <p className="mt-2 text-muted-foreground leading-relaxed">
-                        Complete the details below to reach thousands of car buyers across Australia.
+                    <p className="mt-1 text-sm text-slate-500">
+                        Fill in the details below to list your vehicle for sale.
                     </p>
                 </div>
-                
-                <div className="rounded-md border border-border/70 bg-card/60 p-5 md:p-8 lg:p-10 backdrop-blur-md shadow-xl">
-                    <ListingForm sellerName={sellerName} sellerLocation={sellerLocation} />
-                </div>
+                <ListingForm sellerName={sellerName} sellerLocation={sellerLocation} />
             </div>
         </div>
     );
