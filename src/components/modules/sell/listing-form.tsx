@@ -9,7 +9,6 @@ import { useUploadThing } from "@/lib/uploadthing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { X, Loader2, ImagePlus } from "lucide-react";
@@ -175,27 +174,30 @@ export function ListingForm({ vehicleId, initialData, sellerName, sellerLocation
     };
 
     return (
-        <div className="max-w-3xl mx-auto space-y-8 p-6 bg-card rounded-md border shadow-sm">
-            <div>
-                <h2 className="text-2xl font-bold">Create your listing</h2>
-                <p className="text-muted-foreground">Fill in the details below to list your vehicle.</p>
-            </div>
-
-            <Separator />
-
+        <div className="max-w-4xl mx-auto">
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    <div className="space-y-4">
-                        <h3 className="text-lg font-semibold">Seller Details</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-0">
+
+                    {/* ── Section 1: Seller Details ── */}
+                    <div className="bg-white border border-slate-200 rounded-md p-6 sm:p-8">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="w-1 h-6 bg-blue-600 rounded-sm" />
+                            <h3 className="text-base font-semibold text-slate-900">Seller Details</h3>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <FormField
                                 control={form.control}
                                 name="sellerName"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Name</FormLabel>
+                                        <FormLabel className="text-sm font-medium text-slate-600">Full Name</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Your full name" {...field} value={field.value ?? ''} />
+                                            <Input
+                                                className="h-10 rounded-md border-slate-200 bg-white placeholder:text-slate-300 focus-visible:ring-1 focus-visible:ring-blue-500 focus-visible:border-blue-500"
+                                                placeholder="John Doe"
+                                                {...field}
+                                                value={field.value ?? ''}
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -206,9 +208,14 @@ export function ListingForm({ vehicleId, initialData, sellerName, sellerLocation
                                 name="sellerLocation"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Location</FormLabel>
+                                        <FormLabel className="text-sm font-medium text-slate-600">Location</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="City, State" {...field} value={field.value ?? ''} />
+                                            <Input
+                                                className="h-10 rounded-md border-slate-200 bg-white placeholder:text-slate-300 focus-visible:ring-1 focus-visible:ring-blue-500 focus-visible:border-blue-500"
+                                                placeholder="Melbourne, VIC"
+                                                {...field}
+                                                value={field.value ?? ''}
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -217,83 +224,90 @@ export function ListingForm({ vehicleId, initialData, sellerName, sellerLocation
                         </div>
                     </div>
 
-                    <Separator />
+                    <div className="h-3" />
 
-                    {/* Vehicle Identity */}
-                    <div className="space-y-4">
-                        <h3 className="text-lg font-semibold">Vehicle Details</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <FormField
-                                control={form.control}
-                                name="year"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Year</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="number"
-                                                placeholder="2024"
-                                                {...field}
-                                                value={field.value ?? ''}
-                                                onChange={e => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="make"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Make</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Toyota" {...field} value={field.value ?? ''} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="model"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Model</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Camry" {...field} value={field.value ?? ''} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="variant"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Variant</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="SE" {...field} value={field.value ?? ''} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                    {/* ── Section 2: Vehicle Details ── */}
+                    <div className="bg-white border border-slate-200 rounded-md p-6 sm:p-8">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="w-1 h-6 bg-blue-600 rounded-sm" />
+                            <h3 className="text-base font-semibold text-slate-900">Vehicle Details</h3>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-5">
+                            {/* Row: Year / Make / Model / Variant */}
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <FormField
+                                    control={form.control}
+                                    name="year"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-sm font-medium text-slate-600">Year</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    className="h-10 rounded-md border-slate-200 bg-white placeholder:text-slate-300 focus-visible:ring-1 focus-visible:ring-blue-500"
+                                                    type="number"
+                                                    placeholder="2024"
+                                                    {...field}
+                                                    value={field.value ?? ''}
+                                                    onChange={e => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="make"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-sm font-medium text-slate-600">Make</FormLabel>
+                                            <FormControl>
+                                                <Input className="h-10 rounded-md border-slate-200 bg-white placeholder:text-slate-300 focus-visible:ring-1 focus-visible:ring-blue-500" placeholder="Toyota" {...field} value={field.value ?? ''} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="model"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-sm font-medium text-slate-600">Model</FormLabel>
+                                            <FormControl>
+                                                <Input className="h-10 rounded-md border-slate-200 bg-white placeholder:text-slate-300 focus-visible:ring-1 focus-visible:ring-blue-500" placeholder="Camry" {...field} value={field.value ?? ''} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="variant"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-sm font-medium text-slate-600">Variant <span className="text-slate-400 font-normal">(Optional)</span></FormLabel>
+                                            <FormControl>
+                                                <Input className="h-10 rounded-md border-slate-200 bg-white placeholder:text-slate-300 focus-visible:ring-1 focus-visible:ring-blue-500" placeholder="Ascent Sport" {...field} value={field.value ?? ''} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+
+                            {/* Row: Body / Fuel / Transmission / Odometer */}
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 <FormField
                                     control={form.control}
                                     name="bodyType"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Body Type</FormLabel>
+                                            <FormLabel className="text-sm font-medium text-slate-600">Body Type</FormLabel>
                                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                 <FormControl>
-                                                    <SelectTrigger>
+                                                    <SelectTrigger className="h-10 rounded-md border-slate-200 bg-white focus:ring-1 focus:ring-blue-500">
                                                         <SelectValue placeholder="Select" />
                                                     </SelectTrigger>
                                                 </FormControl>
@@ -312,10 +326,10 @@ export function ListingForm({ vehicleId, initialData, sellerName, sellerLocation
                                     name="fuel"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Fuel</FormLabel>
+                                            <FormLabel className="text-sm font-medium text-slate-600">Fuel Type</FormLabel>
                                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                 <FormControl>
-                                                    <SelectTrigger>
+                                                    <SelectTrigger className="h-10 rounded-md border-slate-200 bg-white focus:ring-1 focus:ring-blue-500">
                                                         <SelectValue placeholder="Select" />
                                                     </SelectTrigger>
                                                 </FormControl>
@@ -329,17 +343,15 @@ export function ListingForm({ vehicleId, initialData, sellerName, sellerLocation
                                         </FormItem>
                                     )}
                                 />
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
                                 <FormField
                                     control={form.control}
                                     name="transmission"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Transmission</FormLabel>
+                                            <FormLabel className="text-sm font-medium text-slate-600">Transmission</FormLabel>
                                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                 <FormControl>
-                                                    <SelectTrigger>
+                                                    <SelectTrigger className="h-10 rounded-md border-slate-200 bg-white focus:ring-1 focus:ring-blue-500">
                                                         <SelectValue placeholder="Select" />
                                                     </SelectTrigger>
                                                 </FormControl>
@@ -358,11 +370,12 @@ export function ListingForm({ vehicleId, initialData, sellerName, sellerLocation
                                     name="odometer"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Odometer (km)</FormLabel>
+                                            <FormLabel className="text-sm font-medium text-slate-600">Odometer (km)</FormLabel>
                                             <FormControl>
                                                 <Input
+                                                    className="h-10 rounded-md border-slate-200 bg-white placeholder:text-slate-300 focus-visible:ring-1 focus-visible:ring-blue-500"
                                                     type="number"
-                                                    placeholder="0"
+                                                    placeholder="45,000"
                                                     {...field}
                                                     value={field.value ?? ''}
                                                     onChange={e => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
@@ -373,38 +386,66 @@ export function ListingForm({ vehicleId, initialData, sellerName, sellerLocation
                                     )}
                                 />
                             </div>
-                        </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* Row: Colour / Tags */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <FormField
+                                    control={form.control}
+                                    name="colour"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-sm font-medium text-slate-600">Colour</FormLabel>
+                                            <FormControl>
+                                                <Input className="h-10 rounded-md border-slate-200 bg-white placeholder:text-slate-300 focus-visible:ring-1 focus-visible:ring-blue-500" placeholder="Polar White" {...field} value={field.value ?? ''} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="tags"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-sm font-medium text-slate-600">Search Tags <span className="text-slate-400 font-normal">(comma separated)</span></FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    className="h-10 rounded-md border-slate-200 bg-white placeholder:text-slate-300 focus-visible:ring-1 focus-visible:ring-blue-500"
+                                                    placeholder="One owner, Log books, Rego included"
+                                                    value={(field.value ?? []).join(", ")}
+                                                    onChange={(e) => {
+                                                        const tags = e.target.value
+                                                            .split(",")
+                                                            .map((tag) => tag.trim())
+                                                            .filter(Boolean);
+                                                        field.onChange(tags);
+                                                    }}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+
+                            {/* Key Features */}
                             <FormField
                                 control={form.control}
-                                name="colour"
+                                name="features"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Colour</FormLabel>
+                                        <FormLabel className="text-sm font-medium text-slate-600">Key Features <span className="text-slate-400 font-normal">(comma separated)</span></FormLabel>
                                         <FormControl>
-                                            <Input placeholder="White" {...field} value={field.value ?? ''} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="tags"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Tags</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="One owner, Service history, Rego included"
+                                            <Textarea
+                                                className="rounded-md border-slate-200 bg-white placeholder:text-slate-300 focus-visible:ring-1 focus-visible:ring-blue-500 min-h-[80px] resize-y text-sm"
+                                                placeholder="Leather seats, Sunroof, Apple CarPlay, Adaptive Cruise Control"
                                                 value={(field.value ?? []).join(", ")}
                                                 onChange={(e) => {
-                                                    const tags = e.target.value
+                                                    const features = e.target.value
                                                         .split(",")
-                                                        .map((tag) => tag.trim())
+                                                        .map((feature) => feature.trim())
                                                         .filter(Boolean);
-                                                    field.onChange(tags);
+                                                    field.onChange(features);
                                                 }}
                                             />
                                         </FormControl>
@@ -413,114 +454,106 @@ export function ListingForm({ vehicleId, initialData, sellerName, sellerLocation
                                 )}
                             />
                         </div>
-
-                        <FormField
-                            control={form.control}
-                            name="features"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Features</FormLabel>
-                                    <FormControl>
-                                        <Textarea
-                                            placeholder="Enter features separated by commas"
-                                            value={(field.value ?? []).join(", ")}
-                                            onChange={(e) => {
-                                                const features = e.target.value
-                                                    .split(",")
-                                                    .map((feature) => feature.trim())
-                                                    .filter(Boolean);
-                                                field.onChange(features);
-                                            }}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
                     </div>
 
-                    <Separator />
+                    <div className="h-3" />
 
-                    {/* Description & Price */}
-                    <div className="space-y-4">
-                        <h3 className="text-lg font-semibold">Description & Price</h3>
-                        <FormField
-                            control={form.control}
-                            name="price"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Price ($)</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="number"
-                                            placeholder="0"
-                                            {...field}
-                                            value={field.value ?? ''}
-                                            onChange={e => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="description"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Description</FormLabel>
-                                    <FormControl>
-                                        <Textarea
-                                            placeholder="Tell buyers about your car..."
-                                            className="min-h-[150px]"
-                                            {...field}
-                                            value={field.value ?? ''}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                    {/* ── Section 3: Pricing & Description ── */}
+                    <div className="bg-white border border-slate-200 rounded-md p-6 sm:p-8">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="w-1 h-6 bg-blue-600 rounded-sm" />
+                            <h3 className="text-base font-semibold text-slate-900">Pricing & Description</h3>
+                        </div>
+                        <div className="space-y-5">
+                            <FormField
+                                control={form.control}
+                                name="price"
+                                render={({ field }) => (
+                                    <FormItem className="max-w-xs">
+                                        <FormLabel className="text-sm font-medium text-slate-600">Listing Price</FormLabel>
+                                        <FormControl>
+                                            <div className="relative">
+                                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-medium select-none">$</span>
+                                                <Input
+                                                    className="h-10 rounded-md border-slate-200 bg-white pl-7 font-semibold text-slate-900 placeholder:text-slate-300 placeholder:font-normal focus-visible:ring-1 focus-visible:ring-blue-500"
+                                                    type="number"
+                                                    placeholder="25,000"
+                                                    {...field}
+                                                    value={field.value ?? ''}
+                                                    onChange={e => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
+                                                />
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="description"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="text-sm font-medium text-slate-600">Description</FormLabel>
+                                        <FormControl>
+                                            <Textarea
+                                                className="rounded-md border-slate-200 bg-white placeholder:text-slate-300 focus-visible:ring-1 focus-visible:ring-blue-500 min-h-[140px] resize-y text-sm leading-relaxed"
+                                                placeholder="Tell buyers about your vehicle's history, condition, and why you're selling..."
+                                                {...field}
+                                                value={field.value ?? ''}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
                     </div>
 
-                    <Separator />
+                    <div className="h-3" />
 
-                    {/* Photos */}
-                    <div className="space-y-4">
-                        <h3 className="text-lg font-semibold">Photos</h3>
-                        <p className="text-sm text-muted-foreground">
-                            Select images to preview. They will be uploaded when you publish.
+                    {/* ── Section 4: Photos ── */}
+                    <div className="bg-white border border-slate-200 rounded-md p-6 sm:p-8">
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="w-1 h-6 bg-blue-600 rounded-sm" />
+                            <h3 className="text-base font-semibold text-slate-900">Photos</h3>
+                        </div>
+                        <p className="text-sm text-slate-400 mb-5 ml-4">
+                            Upload high-quality images. The first image will be the cover photo.
                         </p>
 
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                             {[...existingImages, ...newImagePreviews].map((preview, idx) => (
-                                <div key={idx} className="relative aspect-[4/3] group">
+                                <div key={idx} className="relative aspect-[4/3] group rounded-md overflow-hidden border border-slate-200 bg-slate-50">
                                     <img
                                         src={preview}
                                         alt={`Preview ${idx + 1}`}
-                                        className="w-full h-full object-cover rounded-md border"
+                                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                                     />
+                                    {idx === 0 && (
+                                        <span className="absolute bottom-1.5 left-1.5 bg-blue-600 text-white text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-sm tracking-wide">
+                                            Cover
+                                        </span>
+                                    )}
                                     <button
                                         type="button"
                                         onClick={() => removeImage(idx)}
-                                        className="absolute top-1 right-1 bg-black/50 text-white rounded-md p-1 hover:bg-red-500 transition-colors"
+                                        className="absolute top-1.5 right-1.5 bg-white/90 text-slate-600 rounded-md p-1 opacity-0 group-hover:opacity-100 hover:bg-red-500 hover:text-white transition-all"
                                     >
-                                        <X className="h-4 w-4" />
+                                        <X className="h-3.5 w-3.5" />
                                     </button>
                                 </div>
                             ))}
 
-                            {/* Add Image Button */}
+                            {/* Add Image */}
                             <button
                                 type="button"
                                 onClick={() => fileInputRef.current?.click()}
-                                className="aspect-[4/3] border-2 border-dashed rounded-md flex flex-col items-center justify-center gap-2 text-muted-foreground hover:text-foreground hover:border-foreground/50 transition-colors cursor-pointer"
+                                className="aspect-[4/3] border-2 border-dashed border-slate-200 bg-slate-50 rounded-md flex flex-col items-center justify-center gap-2 text-slate-400 hover:text-blue-600 hover:border-blue-400 hover:bg-blue-50/50 transition-colors cursor-pointer"
                             >
-                                <ImagePlus className="h-8 w-8" />
+                                <ImagePlus className="h-6 w-6" />
                                 <span className="text-xs font-medium">Add Photos</span>
                             </button>
 
-                            {/* Hidden file input */}
                             <input
                                 ref={fileInputRef}
                                 type="file"
@@ -532,25 +565,40 @@ export function ListingForm({ vehicleId, initialData, sellerName, sellerLocation
                         </div>
 
                         {selectedFiles.length > 0 && (
-                            <p className="text-xs text-muted-foreground">
-                                {selectedFiles.length} image{selectedFiles.length > 1 ? "s" : ""} selected
+                            <p className="text-xs text-blue-600 font-medium mt-3">
+                                {selectedFiles.length} image{selectedFiles.length > 1 ? "s" : ""} attached
                             </p>
                         )}
 
                         {form.formState.errors.images && (
-                            <p className="text-sm font-medium text-destructive">
+                            <p className="text-sm font-medium text-red-500 mt-3">
                                 {form.formState.errors.images.message}
                             </p>
                         )}
                     </div>
 
-                    <div className="pt-4 flex justify-end gap-4">
-                        <Button type="button" variant="outline" onClick={() => router.back()}>Cancel</Button>
-                        <Button type="submit" size="lg" disabled={isSubmitting || isUploading}>
+                    <div className="h-3" />
+
+                    {/* ── Actions ── */}
+                    <div className="bg-white border border-slate-200 rounded-md px-6 sm:px-8 py-4 flex items-center justify-end gap-3">
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            onClick={() => router.back()}
+                            className="h-9 px-5 rounded-md text-sm font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-100"
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            type="submit"
+                            disabled={isSubmitting || isUploading}
+                            className="h-9 px-6 rounded-md bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition-colors"
+                        >
                             {(isSubmitting || isUploading) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            {isUploading ? "Uploading Images..." : isEditMode ? "Save Changes" : "Publish Listing"}
+                            {isUploading ? "Uploading..." : isEditMode ? "Save Changes" : "Publish Listing"}
                         </Button>
                     </div>
+
                 </form>
             </Form>
         </div>
