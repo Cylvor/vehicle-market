@@ -1,7 +1,7 @@
-import { Car, MessageSquare, TrendingUp, DollarSign, Activity, Zap, ArrowUpRight } from "lucide-react";
+import { Car, MessageSquare, TrendingUp, DollarSign, Activity, Zap, ArrowUpRight, TrendingDown } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { getSellerVehiclePerformance } from "@/actions/vehicle";
+import { getSellerVehiclePerformance, getSellerPerformanceCharts } from "@/actions/vehicle";
 import { getReceivedEnquiriesCount } from "@/actions/enquiry";
 import Image from "next/image";
 
@@ -14,6 +14,15 @@ function getDaysAgo(date: Date) {
 export default async function SellerDashboardPage() {
     const performanceItems = await getSellerVehiclePerformance();
     const receivedMessagesCount = await getReceivedEnquiriesCount();
+    const performanceCharts = await getSellerPerformanceCharts();
+
+    // Calculate engagement: (Today's views - Yesterday's views)
+    const todayData = performanceCharts.byDate[6];
+    const yesterdayData = performanceCharts.byDate[5];
+    const dailyViewDiff = (todayData?.views || 0) - (yesterdayData?.views || 0);
+    const viewTrendIsUp = dailyViewDiff >= 0;
+    const engagementText = dailyViewDiff === 0 ? "No Change" : `${dailyViewDiff > 0 ? '+' : ''}${dailyViewDiff} Views`;
+
     const totalViews = performanceItems.reduce((accumulator, item) => accumulator + item.totalViews, 0);
     const activeListings = performanceItems.filter((item) => item.status === "active").length;
     const trendingPool = performanceItems.filter((item) => item.status === "active");
@@ -53,11 +62,11 @@ export default async function SellerDashboardPage() {
                             <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Total Views</div>
                         </div>
                         <div className="text-center px-4">
-                            <div className="flex items-center justify-center gap-1 text-blue-600">
-                                <TrendingUp className="h-5 w-5" />
-                                <span className="text-3xl font-bold font-mono">+12%</span>
+                            <div className={`flex items-center justify-center gap-1 ${viewTrendIsUp ? 'text-blue-600' : 'text-slate-500'}`}>
+                                {viewTrendIsUp ? <TrendingUp className="h-5 w-5" /> : <TrendingDown className="h-5 w-5" />}
+                                <span className="text-3xl font-bold font-mono text-slate-900">{totalViews > 0 ? todayData?.views || 0 : 0}</span>
                             </div>
-                            <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Engagement</div>
+                            <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Views Today</div>
                         </div>
                     </div>
                 </div>
@@ -78,7 +87,7 @@ export default async function SellerDashboardPage() {
                     </div>
                     <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
                         <span className="text-sm font-medium text-blue-600 flex items-center gap-1">
-                            <TrendingUp className="h-4 w-4" /> 100% capacity
+                            <Activity className="h-4 w-4" /> Selling Overview
                         </span>
                         <Link href="/sell/create" className="text-sm font-bold text-blue-600 flex items-center hover:underline">
                             Add new <ArrowUpRight className="h-4 w-4" />
@@ -98,10 +107,10 @@ export default async function SellerDashboardPage() {
                         </div>
                     </div>
                     <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                        <span className="text-sm font-medium text-indigo-600 flex items-center gap-1">
-                            <TrendingUp className="h-4 w-4" /> +12% vs last wk
+                        <span className={`text-sm font-medium flex items-center gap-1 ${viewTrendIsUp ? 'text-indigo-600' : 'text-slate-500'}`}>
+                            {viewTrendIsUp ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />} {engagementText}
                         </span>
-                        <span className="text-sm font-medium text-slate-500">Past 30 days</span>
+                        <span className="text-sm font-medium text-slate-500">Since Yesterday</span>
                     </div>
                 </div>
 

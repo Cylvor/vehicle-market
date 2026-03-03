@@ -1,8 +1,50 @@
-import { Heart, MessageSquare, Activity, Search, ShieldCheck, Clock, Settings, Zap, Gauge } from "lucide-react";
+import { Heart, MessageSquare, Activity, Search, ShieldCheck, Clock, Settings, Zap, Gauge, DollarSign } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { getSavedVehiclesForCurrentUser } from "@/actions/saved-vehicles";
+import { getSentEnquiries } from "@/actions/enquiry";
+import Image from "next/image";
 
-export default function BuyerDashboardPage() {
+function getDaysAgo(date: string | Date) {
+    const diffMs = Date.now() - new Date(date).getTime();
+    const MathFloor = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    if (MathFloor === 0) return "Today";
+    if (MathFloor === 1) return "Yesterday";
+    return `${MathFloor} days ago`;
+}
+
+export default async function BuyerDashboardPage() {
+    const savedVehicles = await getSavedVehiclesForCurrentUser();
+    const activeEnquiries = await getSentEnquiries();
+
+    // Recent activity merged list
+    const recentActivity = [
+        ...savedVehicles.map((v) => ({
+            id: `save-${v.id}`,
+            title: v.title,
+            image: v.image,
+            date: v.savedAt || new Date(),
+            type: "saved" as const,
+            priceStr: v.price
+        })),
+        ...activeEnquiries.map((e) => {
+            const vehicleImage = Array.isArray(e.vehicleImages) ? e.vehicleImages[0] : "/images/hero/car1.jpg";
+            return {
+                id: `enq-${e.id}`,
+                title: `${e.vehicleYear} ${e.vehicleMake} ${e.vehicleModel}`,
+                image: typeof vehicleImage === "string" ? vehicleImage : "/images/hero/car1.jpg",
+                date: e.createdAt,
+                type: "enquiry" as const,
+                priceStr: "Enquiry Sent"
+            }
+        })
+    ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5);
+
+    const totalWatchlistValue = savedVehicles.reduce((acc, curr) => {
+        const val = parseInt(curr.price.replace(/[^0-9]/g, "")) || 0;
+        return acc + val;
+    }, 0);
+
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
             {/* Header Area */}
@@ -23,7 +65,7 @@ export default function BuyerDashboardPage() {
                             Welcome back
                         </h1>
                         <p className="text-slate-500 mt-2 text-lg max-w-xl">
-                            You have 4 saved vehicles and 3 active enquiries. The market is moving fast today.
+                            You have {savedVehicles.length} saved vehicles and {activeEnquiries.length} active enquiries. The market is moving fast today.
                         </p>
                     </div>
                 </div>
@@ -36,15 +78,15 @@ export default function BuyerDashboardPage() {
                     <div className="flex justify-between items-start mb-4">
                         <div>
                             <p className="text-sm font-bold text-slate-500 uppercase tracking-wider">Saved Vehicles</p>
-                            <h3 className="text-4xl font-black text-slate-900 mt-2">4</h3>
+                            <h3 className="text-4xl font-black text-slate-900 mt-2">{savedVehicles.length}</h3>
                         </div>
                         <div className="p-3 bg-rose-50 text-rose-600 rounded-md border border-rose-100">
                             <Heart className="h-6 w-6" />
                         </div>
                     </div>
                     <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                        <span className="text-sm font-medium text-blue-600 flex items-center gap-1">
-                            <Clock className="h-4 w-4" /> 2 new this week
+                        <span className="text-sm font-medium text-rose-600 flex items-center gap-1">
+                            <Clock className="h-4 w-4" /> Updated dynamically
                         </span>
                     </div>
                 </div>
@@ -54,15 +96,15 @@ export default function BuyerDashboardPage() {
                     <div className="flex justify-between items-start mb-4">
                         <div>
                             <p className="text-sm font-bold text-slate-500 uppercase tracking-wider">Active Enquiries</p>
-                            <h3 className="text-4xl font-black text-slate-900 mt-2">3</h3>
+                            <h3 className="text-4xl font-black text-slate-900 mt-2">{activeEnquiries.length}</h3>
                         </div>
                         <div className="p-3 bg-blue-50 text-blue-600 rounded-md border border-blue-100">
                             <MessageSquare className="h-6 w-6" />
                         </div>
                     </div>
                     <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                        <span className="text-sm font-medium text-amber-600 flex items-center gap-1">
-                            <Clock className="h-4 w-4" /> 1 unread reply
+                        <span className="text-sm font-medium text-slate-500 flex items-center gap-1">
+                            <MessageSquare className="h-4 w-4" /> Awaiting responses
                         </span>
                     </div>
                 </div>
@@ -75,16 +117,18 @@ export default function BuyerDashboardPage() {
                     <div className="relative z-10">
                         <div className="flex justify-between items-start mb-4">
                             <div>
-                                <p className="text-sm font-bold text-blue-100 uppercase tracking-wider">Search Alerts</p>
-                                <h3 className="text-4xl font-black mt-2">12</h3>
+                                <p className="text-sm font-bold text-blue-100 uppercase tracking-wider">Watchlist Value</p>
+                                <h3 className="text-3xl font-black mt-2">
+                                    {new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 }).format(totalWatchlistValue)}
+                                </h3>
                             </div>
                             <div className="p-3 bg-white/20 backdrop-blur-md rounded-md shadow-inner">
-                                <Activity className="h-6 w-6" />
+                                <DollarSign className="h-6 w-6" />
                             </div>
                         </div>
                         <div className="pt-4 mt-6 border-t border-white/20 flex items-center justify-between">
                             <span className="text-sm font-bold bg-white text-blue-700 px-3 py-1 rounded-md shadow-sm flex items-center gap-1">
-                                <Zap className="h-4 w-4" /> Last alert: Toyota SUV
+                                <Zap className="h-4 w-4" /> Total price of saved vehicles
                             </span>
                         </div>
                     </div>
@@ -122,20 +166,29 @@ export default function BuyerDashboardPage() {
                     <Settings className="h-5 w-5 text-blue-600" /> Recent Activity
                 </h3>
                 <div className="space-y-6">
-                    {[1, 2].map((i) => (
-                        <div key={i} className="flex items-start gap-4 pb-6 border-b border-slate-100 last:border-0 last:pb-0">
-                            <div className="h-16 w-24 shrink-0 rounded-md bg-slate-100 overflow-hidden relative border border-slate-200">
-                                <div className="absolute inset-0 bg-[url('/images/hero/car3.jpg')] bg-cover bg-center" />
+                    {recentActivity.length > 0 ? (
+                        recentActivity.map((item) => (
+                            <div key={item.id} className="flex items-start gap-4 pb-6 border-b border-slate-100 last:border-0 last:pb-0">
+                                <div className="h-16 w-24 shrink-0 rounded-md bg-slate-100 overflow-hidden relative border border-slate-200">
+                                    <Image src={item.image} alt={item.title} fill className="object-cover" sizes="96px" />
+                                </div>
+                                <div className="flex-1">
+                                    <h4 className="font-bold text-slate-900 text-lg line-clamp-1">{item.title}</h4>
+                                    <p className="text-slate-500 mt-1 flex items-center gap-2">
+                                        <span className={`inline-block px-2 py-0.5 rounded text-xs font-bold ${item.type === 'saved' ? 'bg-rose-50 text-rose-600' : 'bg-blue-50 text-blue-600'}`}>
+                                            {item.type === 'saved' ? 'Saved' : 'Enquired'}
+                                        </span>
+                                        • {getDaysAgo(item.date)}
+                                    </p>
+                                </div>
+                                <div className="hidden sm:flex flex-col items-end">
+                                    <span className="font-bold text-slate-900">{item.priceStr}</span>
+                                </div>
                             </div>
-                            <div className="flex-1">
-                                <h4 className="font-bold text-slate-900 text-lg hover:text-blue-600 transition-colors cursor-pointer">2021 Toyota RAV4 Cruiser</h4>
-                                <p className="text-slate-500 mt-1">Price dropped by $1,200 yesterday</p>
-                            </div>
-                            <Button variant="outline" size="sm" className="hidden sm:flex rounded-md font-bold hover:bg-blue-50 hover:text-blue-700">
-                                View Details
-                            </Button>
-                        </div>
-                    ))}
+                        ))
+                    ) : (
+                        <div className="text-slate-500 text-center py-6">No recent activity found. Start saving vehicles or making enquiries!</div>
+                    )}
                 </div>
             </div>
         </div>
