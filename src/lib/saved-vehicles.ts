@@ -9,6 +9,7 @@ export type SavedVehicle = {
     fuel: string;
     year: string;
     transmission: string;
+    savedAt?: string;
 };
 
 function isSavedVehicleArray(value: unknown): value is SavedVehicle[] {
