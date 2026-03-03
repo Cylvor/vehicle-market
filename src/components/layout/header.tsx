@@ -11,7 +11,7 @@ import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/n
 const NAV_LINKS = [
     { name: "Buy", href: "/search" },
     { name: "Sell", href: "/sell" },
-    { name: "Research", href: "/research/compare" },
+    { name: "Research", href: "/research" },
     { name: "News", href: "/news" },
     { name: "Contact", href: "/contact" },
 ];

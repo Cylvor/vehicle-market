@@ -144,6 +144,17 @@ export async function getVehicleById(id: string) {
     return canView ? vehicle : null;
 }
 
+export async function getVehiclesByIds(ids: string[]) {
+    if (!ids || ids.length === 0) return [];
+
+    const data = await db
+        .select()
+        .from(vehicles)
+        .where(and(inArray(vehicles.id, ids), eq(vehicles.status, "active")));
+
+    return data;
+}
+
 export async function trackVehicleView(vehicleId: string) {
     const { userId } = await auth();
 
