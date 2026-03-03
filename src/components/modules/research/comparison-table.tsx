@@ -1,116 +1,163 @@
-import { Badge } from "@/components/ui/badge";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useCompare } from "@/hooks/use-compare";
+import { getVehiclesByIds } from "@/actions/vehicle";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
-import Image from "next/image"; // Theoretically used, but we'll use divs for placeholders as per SVG strategy
+import { X, ExternalLink, Loader2, PlusCircle } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { formatCurrency } from "@/lib/utils";
 
-interface VehicleSpec {
-    id: string;
-    name: string;
-    price: string;
-    image: string;
-    specs: {
-        [key: string]: string;
-    };
-}
-
-const COMPARISON_DATA: VehicleSpec[] = [
-    {
-        id: "1",
-        name: "2023 Tesla Model 3 Long Range",
-        price: "$58,900",
-        image: "/vehicles/tesla-model-3.svg",
-        specs: {
-            "Body Type": "Sedan",
-            "Transmission": "Automatic",
-            "Engine": "Electric",
-            "Drive Type": "AWD",
-            "Fuel Consumption": "14.0 kWh/100km",
-            "ANCAP Rating": "5 Stars",
-            "Warranty": "4 Years / 80,000km",
-        },
-    },
-    {
-        id: "2",
-        name: "2023 BMW 3 Series 330i",
-        price: "$93,400",
-        image: "/vehicles/bmw-m3.svg",
-        specs: {
-            "Body Type": "Sedan",
-            "Transmission": "8 Sp Automatic",
-            "Engine": "2.0L Turbo 4cyl",
-            "Drive Type": "RWD",
-            "Fuel Consumption": "6.4 L/100km",
-            "ANCAP Rating": "5 Stars",
-            "Warranty": "3 Years / Unlimited km",
-        },
-    },
-    {
-        id: "3",
-        name: "2023 Mercedes-Benz C-Class C200",
-        price: "$89,900",
-        image: "/vehicles/mercedes-c-class.svg", // Hypothetical mock
-        specs: {
-            "Body Type": "Sedan",
-            "Transmission": "9 Sp Automatic",
-            "Engine": "1.5L Turbo 4cyl Hybrid",
-            "Drive Type": "RWD",
-            "Fuel Consumption": "6.9 L/100km",
-            "ANCAP Rating": "5 Stars",
-            "Warranty": "5 Years / Unlimited km",
-        },
-    }
-];
-
+// Specs to compare from our vehicle schema
 const SPEC_KEYS = [
-    "Body Type",
-    "Transmission",
-    "Engine",
-    "Drive Type",
-    "Fuel Consumption",
-    "ANCAP Rating",
-    "Warranty",
+    { label: "Price", key: "price", render: (v: any) => formatCurrency(v.price) },
+    { label: "Year", key: "year" },
+    { label: "Make", key: "make" },
+    { label: "Model", key: "model" },
+    { label: "Variant", key: "variant", render: (v: any) => v.variant || "-" },
+    { label: "Odometer", key: "odometer", render: (v: any) => `${v.odometer.toLocaleString()} km` },
+    { label: "Fuel Type", key: "fuel" },
+    { label: "Transmission", key: "transmission" },
+    { label: "Body Type", key: "bodyType" },
+    { label: "Colour", key: "colour", render: (v: any) => v.colour || "-" },
 ];
 
 export function ComparisonTable() {
+    const { compareItems, removeVehicle, isMounted } = useCompare();
+    const [vehicles, setVehicles] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        if (!isMounted) return;
+
+        const loadVehicles = async () => {
+            setIsLoading(true);
+            try {
+                if (compareItems.length > 0) {
+                    const data = await getVehiclesByIds(compareItems);
+                    // Sort data to match the order in compareItems
+                    const orderedData = compareItems
+                        .map(id => data.find(v => v.id === id))
+                        .filter(Boolean);
+                    setVehicles(orderedData);
+                } else {
+                    setVehicles([]);
+                }
+            } catch (error) {
+                console.error("Failed to load vehicles for comparison", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadVehicles();
+    }, [compareItems, isMounted]);
+
+    if (!isMounted || isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center p-24 text-slate-400">
+                <Loader2 className="h-10 w-10 animate-spin mb-4 text-emerald-500" />
+                <p>Loading your vehicles...</p>
+            </div>
+        );
+    }
+
+    if (vehicles.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center p-16 md:p-24 bg-slate-900 border border-slate-800 rounded-xl text-center">
+                <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mb-6">
+                    <X className="h-8 w-8 text-slate-500" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-2">No Vehicles Selected</h3>
+                <p className="text-slate-400 mb-8 max-w-md">
+                    You haven't added any vehicles to your comparison yet. Go to the research page to find vehicles you'd like to compare.
+                </p>
+                <Button asChild className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold">
+                    <Link href="/research">
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Find Vehicles
+                    </Link>
+                </Button>
+            </div>
+        );
+    }
+
     return (
-        <div className="overflow-x-auto border rounded-md shadow-sm bg-card">
+        <div className="overflow-x-auto border border-emerald-900/50 rounded-xl shadow-2xl shadow-black/40 bg-slate-900/80 backdrop-blur-sm">
             <table className="w-full text-left border-collapse">
                 <thead>
                     <tr>
-                        <th className="p-4 border-b border-r bg-muted/30 w-48 min-w-[12rem]">
-                            <span className="text-muted-foreground font-medium">Specs</span>
+                        <th className="p-4 md:p-6 border-b border-r border-slate-800 bg-slate-950/50 w-48 min-w-[12rem] sticky left-0 z-10 backdrop-blur-md">
+                            <span className="text-emerald-400 uppercase tracking-wider text-xs font-bold">Specifications</span>
                         </th>
-                        {COMPARISON_DATA.map((vehicle) => (
-                            <th key={vehicle.id} className="p-4 border-b min-w-[16rem] align-top relative">
-                                <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-muted-foreground hover:text-destructive">
+                        {vehicles.map((vehicle) => (
+                            <th key={vehicle.id} className="p-4 md:p-6 border-b border-slate-800 min-w-[16rem] w-[300px] align-top relative bg-slate-900/50">
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => removeVehicle(vehicle.id)}
+                                    className="absolute top-2 right-2 text-slate-500 hover:text-red-400 hover:bg-slate-800 z-10"
+                                    title="Remove from comparison"
+                                >
                                     <X className="h-4 w-4" />
                                 </Button>
-                                <div className="aspect-video bg-muted rounded-md mb-4 flex items-center justify-center text-xs text-muted-foreground">
-                                    {/* Placeholder for actual image */}
-                                    IMAGE
+                                <div className="aspect-video bg-slate-950 rounded-lg mb-4 flex items-center justify-center text-xs text-slate-600 overflow-hidden relative border border-slate-800">
+                                    <Image
+                                        src={vehicle.images?.[0] || "/placeholder-car.png"}
+                                        alt={vehicle.model}
+                                        fill
+                                        className="object-cover"
+                                    />
                                 </div>
-                                <h3 className="font-bold text-lg leading-tight mb-2 h-12 line-clamp-2">
-                                    {vehicle.name}
+                                <h3 className="font-bold text-lg leading-tight mb-2 h-12 line-clamp-2 text-slate-100">
+                                    {vehicle.year} {vehicle.make} {vehicle.model}
                                 </h3>
-                                <p className="text-xl font-bold text-primary mb-4">{vehicle.price}</p>
-                                <Button className="w-full">View Details</Button>
+                                <p className="text-2xl font-black text-white mb-4">{formatCurrency(vehicle.price)}</p>
+                                <Button asChild className="w-full bg-slate-800 hover:bg-emerald-600 text-emerald-400 hover:text-white border border-slate-700 hover:border-emerald-500 transition-all">
+                                    <Link href={`/vehicles/${vehicle.id}`}>
+                                        View Details <ExternalLink className="ml-2 h-4 w-4" />
+                                    </Link>
+                                </Button>
                             </th>
                         ))}
                     </tr>
                 </thead>
-                <tbody className="divide-y">
-                    {SPEC_KEYS.map((key) => (
-                        <tr key={key} className="hover:bg-muted/50 transition-colors">
-                            <td className="p-4 border-r bg-muted/10 font-medium text-sm text-muted-foreground">
-                                {key}
+                <tbody className="divide-y divide-slate-800/50 text-slate-300">
+                    {SPEC_KEYS.map((spec) => (
+                        <tr key={spec.key} className="hover:bg-slate-800/30 transition-colors">
+                            <td className="p-4 border-r border-slate-800/50 bg-slate-950/30 font-semibold text-sm text-slate-400 sticky left-0 z-10 backdrop-blur-sm">
+                                {spec.label}
                             </td>
-                            {COMPARISON_DATA.map((vehicle) => (
-                                <td key={`${vehicle.id}-${key}`} className="p-4 text-sm">
-                                    {vehicle.specs[key] || "-"}
+                            {vehicles.map((vehicle) => (
+                                <td key={`${vehicle.id}-${spec.key}`} className="p-4 text-sm whitespace-nowrap lg:whitespace-normal font-medium text-slate-200">
+                                    {spec.render ? spec.render(vehicle) : vehicle[spec.key as keyof typeof vehicle] || "-"}
                                 </td>
                             ))}
                         </tr>
                     ))}
+                    {/* Features Row */}
+                    <tr className="hover:bg-slate-800/30 transition-colors">
+                        <td className="p-4 border-r border-slate-800/50 bg-slate-950/30 font-semibold text-sm text-slate-400 sticky left-0 z-10 backdrop-blur-sm align-top">
+                            Key Features
+                        </td>
+                        {vehicles.map((vehicle) => (
+                            <td key={`${vehicle.id}-features`} className="p-4 text-sm align-top">
+                                {vehicle.features && vehicle.features.length > 0 ? (
+                                    <ul className="list-disc pl-4 space-y-1 text-slate-300 marker:text-emerald-500">
+                                        {vehicle.features.slice(0, 5).map((feature: string, i: number) => (
+                                            <li key={i} className="truncate" title={feature}>{feature}</li>
+                                        ))}
+                                        {vehicle.features.length > 5 && (
+                                            <li className="text-slate-500 italic">+{vehicle.features.length - 5} more</li>
+                                        )}
+                                    </ul>
+                                ) : (
+                                    <span className="text-slate-500 italic">No features listed</span>
+                                )}
+                            </td>
+                        ))}
+                    </tr>
                 </tbody>
             </table>
         </div>
